@@ -35,12 +35,14 @@
             this.Stop = new System.Windows.Forms.Button();
             this.mLabel = new System.Windows.Forms.Label();
             this.mUITimer = new System.Windows.Forms.Timer(this.components);
+            this.label1 = new System.Windows.Forms.Label();
+            this.mFMLEProfileList = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
             // 
             // Start
             // 
             this.Start.Enabled = false;
-            this.Start.Location = new System.Drawing.Point(12, 34);
+            this.Start.Location = new System.Drawing.Point(12, 35);
             this.Start.Name = "Start";
             this.Start.Size = new System.Drawing.Size(75, 23);
             this.Start.TabIndex = 0;
@@ -51,7 +53,7 @@
             // Restart
             // 
             this.Restart.Enabled = false;
-            this.Restart.Location = new System.Drawing.Point(94, 34);
+            this.Restart.Location = new System.Drawing.Point(94, 35);
             this.Restart.Name = "Restart";
             this.Restart.Size = new System.Drawing.Size(75, 23);
             this.Restart.TabIndex = 1;
@@ -62,7 +64,7 @@
             // Stop
             // 
             this.Stop.Enabled = false;
-            this.Stop.Location = new System.Drawing.Point(176, 34);
+            this.Stop.Location = new System.Drawing.Point(176, 35);
             this.Stop.Name = "Stop";
             this.Stop.Size = new System.Drawing.Size(75, 23);
             this.Stop.TabIndex = 2;
@@ -74,7 +76,7 @@
             // 
             this.mLabel.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.mLabel.Font = new System.Drawing.Font("MS UI Gothic", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.mLabel.Location = new System.Drawing.Point(12, 8);
+            this.mLabel.Location = new System.Drawing.Point(12, 9);
             this.mLabel.Name = "mLabel";
             this.mLabel.Size = new System.Drawing.Size(238, 23);
             this.mLabel.TabIndex = 3;
@@ -85,11 +87,31 @@
             this.mUITimer.Interval = 500;
             this.mUITimer.Tick += new System.EventHandler(this.mUITimer_Tick);
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(12, 66);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(86, 12);
+            this.label1.TabIndex = 4;
+            this.label1.Text = "FMEプロファイル：";
+            // 
+            // mFMLEProfileList
+            // 
+            this.mFMLEProfileList.FormattingEnabled = true;
+            this.mFMLEProfileList.Location = new System.Drawing.Point(94, 63);
+            this.mFMLEProfileList.Name = "mFMLEProfileList";
+            this.mFMLEProfileList.Size = new System.Drawing.Size(156, 20);
+            this.mFMLEProfileList.TabIndex = 5;
+            this.mFMLEProfileList.SelectedIndexChanged += new System.EventHandler(this.mFMLEProfileList_SelectedIndexChanged);
+            // 
             // FMEStatus
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(262, 69);
+            this.ClientSize = new System.Drawing.Size(262, 91);
+            this.Controls.Add(this.mFMLEProfileList);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.mLabel);
             this.Controls.Add(this.Stop);
             this.Controls.Add(this.Restart);
@@ -102,6 +124,7 @@
             this.TopMost = true;
             this.Load += new System.EventHandler(this.FMEStatus_Load);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -112,5 +135,7 @@
         private System.Windows.Forms.Button Stop;
         private System.Windows.Forms.Label mLabel;
         private System.Windows.Forms.Timer mUITimer;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.ComboBox mFMLEProfileList;
     }
 }

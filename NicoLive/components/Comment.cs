@@ -31,6 +31,7 @@ namespace NicoLive
         private string mMail;
         private string mText;
 		private bool   mBackStage;
+        private string mElapsedTime;
 
         // アクセッサ
         public string Xml
@@ -91,6 +92,13 @@ namespace NicoLive
         {
             get { return mBackStage; }
             set { mBackStage = value; }
+        }
+
+        public string ElapsedTime
+        {
+            get { return mElapsedTime; }
+            set { mElapsedTime = value; }
+
         }
 
         //-------------------------------------------------------------------------
@@ -199,41 +207,41 @@ namespace NicoLive
         //-------------------------------------------------------------------------
         // NGコメントかどうか
         //-------------------------------------------------------------------------
-        public bool IsNG
-        {
-            get
-            {
-                return false;
-                /*
-                if (!mNGChecked)
-                {
-                    //NG ngList = NG.Instance;
-                    mNG = ngList.CheckNG(Text);
-                    mNGChecked = true;
-                }
-                return mNG;
-                 */
-            }
-        }
+        //public bool IsNG
+        //{
+        //    get
+        //    {
+        //        return false;
+        //        /*
+        //        if (!mNGChecked)
+        //        {
+        //            //NG ngList = NG.Instance;
+        //            mNG = ngList.CheckNG(Text);
+        //            mNGChecked = true;
+        //        }
+        //        return mNG;
+        //         */
+        //    }
+        //}
 
         //-------------------------------------------------------------------------
         // スルーコメントかどうか
         //-------------------------------------------------------------------------
-        public bool IsIgnore
-        {
-            get
-            {
-                if (Text.StartsWith("/telop ") ||
-                    Text.StartsWith("/press ") ||
-                    Text.StartsWith("/info ") ||
-                    Text.StartsWith("/chukei ")) return false;
+        //public bool IsIgnore
+        //{
+        //    get
+        //    {
+        //        if (Text.StartsWith("/telop ") ||
+        //            Text.StartsWith("/press ") ||
+        //            Text.StartsWith("/info ") ||
+        //            Text.StartsWith("/chukei ")) return false;
 
-                return (
-                    (Text.StartsWith("/")) ||
-                    (Text.StartsWith("■映像："))
-                    );
-            }
-        }
+        //        return (
+        //            (Text.StartsWith("/")) ||
+        //            (Text.StartsWith("■映像："))
+        //            );
+        //    }
+        //}
 
         //-------------------------------------------------------------------------
         // 投票コメントかどうか

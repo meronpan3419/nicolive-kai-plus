@@ -3,7 +3,7 @@
   <Profiles />
   <Settings>
     <Setting Name="password" Type="System.String" Scope="User">
-      <Value Profile="(Default)">hogehoge</Value>
+      <Value Profile="(Default)">pass</Value>
     </Setting>
     <Setting Name="last_lv" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
@@ -12,7 +12,7 @@
       <Value Profile="(Default)">11</Value>
     </Setting>
     <Setting Name="user_id" Type="System.String" Scope="User">
-      <Value Profile="(Default)">hogehoge@hoge.com</Value>
+      <Value Profile="(Default)">mail@example.com</Value>
     </Setting>
     <Setting Name="warp_cnt" Type="System.UInt32" Scope="User">
       <Value Profile="(Default)">30</Value>
@@ -21,7 +21,7 @@
       <Value Profile="(Default)">50001</Value>
     </Setting>
     <Setting Name="imakoko_user" Type="System.String" Scope="User">
-      <Value Profile="(Default)">hogehoge</Value>
+      <Value Profile="(Default)" />
     </Setting>
     <Setting Name="MainLocation" Type="System.Drawing.Point" Scope="User">
       <Value Profile="(Default)">0, 0</Value>
@@ -54,7 +54,7 @@
       <Value Profile="(Default)">90</Value>
     </Setting>
     <Setting Name="column_width_3" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">780</Value>
+      <Value Profile="(Default)">500</Value>
     </Setting>
     <Setting Name="auto_wakutori" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
@@ -174,10 +174,10 @@
       <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="auto_reconnect" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
+      <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="skip5min" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
+      <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="sekigaeMinutes" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">11</Value>
@@ -229,6 +229,102 @@
     </Setting>
     <Setting Name="fme_session" Type="System.String" Scope="User">
       <Value Profile="(Default)">C:\ProgramData\Adobe\Flash Media Live Encoder 3.2\fmesessions.dat</Value>
+    </Setting>
+    <Setting Name="use_xsplit" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="enable_xsplit_scene_change" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="owner_comment" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="imakoko_genzaichi_auto_comment" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="imakoko_genzaichi_auto_comment_int" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
+    <Setting Name="imakoko_genzaichi_owner" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="imakoko_genzaichi_hidden" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="speak_nick" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="ng_notice" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="fmle_profile_path" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="fmle_default_profile" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="send_keepalive" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="wakumachi_view" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="column_width_4" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">80</Value>
+    </Setting>
+    <Setting Name="column_width_5" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">80</Value>
+    </Setting>
+    <Setting Name="slash_comment" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="hashamark_comment" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="comment_sort_desc" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="font" Type="System.Drawing.Font" Scope="User">
+      <Value Profile="(Default)">ＭＳ ゴシック, 14.25pt</Value>
+    </Setting>
+    <Setting Name="speed_template" Type="System.String" Scope="User">
+      <Value Profile="(Default)">時速 @SPEED kmです</Value>
+    </Setting>
+    <Setting Name="address_template" Type="System.String" Scope="User">
+      <Value Profile="(Default)">現在地は「 @ADDRESS」です</Value>
+    </Setting>
+    <Setting Name="address_template2" Type="System.String" Scope="User">
+      <Value Profile="(Default)">/perm 現在地は「 @ADDRESS」です</Value>
+    </Setting>
+    <Setting Name="use_nle" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="fme_dos_min" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="viewer_top" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="viewer_big" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="use_hq" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="use_xsplit_shortcut" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="tw_hash" Type="System.String" Scope="User">
+      <Value Profile="(Default)">#nicolive #nicolivekaiplus</Value>
+    </Setting>
+    <Setting Name="viewer_pos" Type="System.Drawing.Point" Scope="User">
+      <Value Profile="(Default)">0, 0</Value>
+    </Setting>
+    <Setting Name="viewer_auto_boot" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="cont_waku_notice" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
     </Setting>
   </Settings>
 </SettingsFile>

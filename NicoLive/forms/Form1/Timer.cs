@@ -5,12 +5,14 @@
 // $Id$
 //-------------------------------------------------------------------------
 using System;
+using System.Diagnostics;
+
 
 namespace NicoLive
 {
     partial class Form1
     {
-        private bool mLastFME = false;
+        private bool mLastHQ = false;
 
         //-------------------------------------------------------------------------
         // タイマー
@@ -20,7 +22,7 @@ namespace NicoLive
             Properties.Settings.Default.last_lv = this.mLiveID.Text;
 
             // フォントを設定しておく
-            if (this.mCommentList.Font.Size != Properties.Settings.Default.font_size)
+            if (!this.mCommentList.Font.Equals(Properties.Settings.Default.font))
             {
                 Utils.SetCommentFont(ref mCommentList);
             }
@@ -37,6 +39,11 @@ namespace NicoLive
                 mCommentList.RowsDefaultCellStyle.ForeColor = Properties.Settings.Default.text_color;
             }
 
+            // 配信方法更新
+            mUseHQBtn.Text = Properties.Settings.Default.use_hq ? "外部配信" : "通常配信";
+            updateBroadcastType();
+
+
             // ログイン状態更新
             UpdateLogin();
 
@@ -45,6 +52,17 @@ namespace NicoLive
 
             // アクティブ数更新
             UpdateActive();
+
+            // 枠数・枠待ち
+            TimeSpan ts = DateTime.Now - this.mLastWakusuTime;
+            if (ts.Minutes >= 1)
+            {
+                System.Diagnostics.Debug.WriteLine("update wakumachi()");
+                UpdateWakumachi();
+                mLastWakusuTime = DateTime.Now;
+
+
+            }
 
             // 外部コメントウィンド
             this.Invoke((Action)delegate()
@@ -88,30 +106,75 @@ namespace NicoLive
                 mCommentForm.CpuInfo = mCpuInfo.Text;
             });
 
-            // FMEステータス更新
-            bool nowFME = FMLE.hasFME();
+            // 外部配信ステータス更新
+            bool nowHQ =HQ.hasHQ();
+            
 
-            if (mLastFME != nowFME)
+            if (mLastHQ != nowHQ)
             {
-                if (!nowFME)
+                if (!nowHQ)
                 {
                     using (Bouyomi bm = new Bouyomi())
                     {
-                        bm.Talk("えふえむいー停止を確認");
+                        if (Properties.Settings.Default.use_nle)
+                        {
+                            bm.Talk("えぬえるいー、停止を確認");
+                        } else 
+                        if (Properties.Settings.Default.use_xsplit)
+                        {
+                            bm.Talk("エックスプリット、停止を確認");
+                        }
+                        else
+                        {
+                            bm.Talk("えふえむいー停止を確認");
+                        }
                     }
                 }
             }
-            mLastFME = nowFME;            
+            mLastHQ = nowHQ;            
 
             // コメントサーバーとの接続キープ用
             if (mNico != null && mNico.IsLogin && !mDisconnect && !mNico.WakutoriMode)
             {
-                TimeSpan ts = DateTime.Now - this.mLastChatTime;
-                if (ts.Minutes > KEEP_ALIVE_TIME)
+                // /keepaliveを送る
+                if (Properties.Settings.Default.send_keepalive)
                 {
-                    SendComment("/keepalive", true);
-                    mLastChatTime = DateTime.Now;
+                    ts = DateTime.Now - this.mLastChatTime;
+                    if (ts.Minutes >= KEEP_ALIVE_TIME)
+                    {
+                        SendComment("/keepalive", true);
+                        mLastChatTime = DateTime.Now;
+                    }
                 }
+
+                // コネクションチェック
+                ts = DateTime.Now - this.mLastConnectionCheckTime;
+                if (ts.Seconds >= 30)
+                {
+                    System.Net.Sockets.TcpClient tc = mNico.getTcpCliant();
+                    if (tc != null)
+                    {
+                        mNico.SendNULLComment();
+                        mLastConnectionCheckTime = DateTime.Now;
+                        if(!tc.Connected){
+                            mNico.setIsLogin(false);
+                        }
+                        Debug.WriteLine("ConnectionCheck:" + tc.Connected.ToString());
+                    }
+                }
+
+                // 過去コメ吐き出し
+                if (mPastChat)
+                {
+                    ts = DateTime.Now - this.mLastChatTime;
+                    if (ts.Seconds >= 1)
+                    {
+                        mPastChat = false;
+                        //mPastChatList.Reverse();
+                        this.mCommentList.Rows.AddRange(mPastChatList.ToArray());
+                    }
+                }
+
 
                 // FME 配信設定告知
                 if (FMLE.FMEsettingExist && FMLE.hasFME())
@@ -146,6 +209,19 @@ namespace NicoLive
                     }
                     mLastCompctTime = DateTime.Now;
                     mCompactForcast = false;
+                }
+
+
+                //自動現在地なんたら
+                GENZAICHI_TIME = Properties.Settings.Default.imakoko_genzaichi_auto_comment_int;
+                ts = DateTime.Now - this.mLastGenzaichiCommentTime;
+                if (ts.Minutes >= GENZAICHI_TIME)
+                {
+                    if (Properties.Settings.Default.imakoko_genzaichi_auto_comment)
+                    {
+                        SendCurrentPosition();
+                    }
+                    mLastGenzaichiCommentTime = DateTime.Now;
                 }
 
             }

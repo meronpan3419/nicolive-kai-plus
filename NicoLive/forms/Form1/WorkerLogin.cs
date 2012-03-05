@@ -27,11 +27,13 @@ namespace NicoLive
 
             string live_id = LiveID;
             int try_cnt = 0;
+            int try_new_connect = 0;
 
-GET_LIVE_ID:
+        GET_LIVE_ID:
             // LVが入ってないときは自動で取ってくる
             if (live_id.Length <= 2)
             {
+
                 live_id = GetCurrentLive();
                 if (live_id.Length > 2)
                 {
@@ -47,13 +49,26 @@ GET_LIVE_ID:
                 try_cnt++;
                 if (try_cnt < 10)
                 {
+                    //this.Invoke((Action)delegate()
+                    //{
+                    //    this.mLoginLabel.Text = "LV番号取得中(" + try_cnt + ")";
+                    //    this.mLoginLabel.ForeColor = System.Drawing.Color.Black;
+                    //});
                     Thread.Sleep(500);
                     goto GET_LIVE_ID;
                 }
             }
 
             if (live_id.Length <= 2)
+            {
+                //this.Invoke((Action)delegate()
+                //{
+                //    this.mLoginLabel.Text = "LV番号取得エラー";
+                //    this.mLoginLabel.ForeColor = System.Drawing.Color.Black;
+                //});
+
                 goto END;
+            }
 
             try_cnt = 0;
 
@@ -61,18 +76,25 @@ GET_LIVE_ID:
 
             // ログイン
             if (mSkipLogin) mNico.IsLogin = true;
-            bool login = (mSkipLogin)?true:mNico.Login(user_id, passwd);
+            bool login = (mSkipLogin) ? true : mNico.Login(user_id, passwd);
             if (login)
             {
-GET_COMMENT:
-                if( !mNico.IsLogin )
+            GET_COMMENT:
+                if (!mNico.IsLogin)
                     mNico.Login(user_id, passwd);
 
                 //最終コメントレス番号リセット
                 mLastChatNo = 0;
+                mLastChatNo2 = 0;
+
+                // 過去コメ読み込みスタート
+                mPastChat = true;
+
+
 
                 // コメントサーバーに接続
-                NicoErr err = mNico.ConnectToCommentServer(live_id, 50);
+                NicoErr err = mNico.ConnectToCommentServer(live_id, Properties.Settings.Default.comment_max);
+
 
                 switch (err)
                 {
@@ -90,6 +112,14 @@ GET_COMMENT:
                         MessageBox.Show("コメントサーバーが満員でログインできません。", "NicoLive");
                         break;
                     case NicoErr.ERR_NOT_LIVE:
+                        try_new_connect++;
+
+                        if (try_new_connect < 30)
+                        {
+                            Thread.Sleep(500);
+                            live_id = "";
+                            goto GET_LIVE_ID;
+                        }
                         MessageBox.Show("指定した放送は終了しています。", "NicoLive");
                         break;
                     case NicoErr.ERR_COMMUNITY_ONLY:
@@ -99,23 +129,44 @@ GET_COMMENT:
 
                 if (err == NicoErr.ERR_NO_ERR)
                 {
+
+                    mPastChatList.Clear();
+                    // 過去コメ読み込みスタート
+                    mPastChat = true;
+
+
                     this.Invoke((Action)delegate()
                     {
+
+                        // 簡易ビュアー自動起動
+                        if (Properties.Settings.Default.viewer_auto_boot)
+                        {
+
+                            if (mViewer == null || mViewer.IsDisposed)
+                            {
+                                mViewer = new Viewer(LiveID);
+                            }
+                            mViewer.Show();
+                            mViewer.Activate();
+                        }
+
                         mNico.WakutoriMode = false;
-                   
+
+                        mCommentList.Rows.Clear();
+
                         // プレイヤーロード
                         GetPlayer();
+
+                        // 情報を取得
+                        mLiveInfo.GetInfo(live_id);
 
                         // 開演待ちスキップするか？
                         if (Properties.Settings.Default.skip5min)
                         {
-                            // 情報を取得
-                            mLiveInfo.GetInfo(live_id);
-
                             // 開演5分待ちスキップ
                             mNico.LiveStart(live_id, mLiveInfo.Token);
                         }
-                       
+
                         // ロガー起動
                         if (Properties.Settings.Default.save_log)
                         {
@@ -137,6 +188,7 @@ GET_COMMENT:
                 }
                 else
                 {
+                    mPastChat = false;
                     mNico.Close();
                 }
             }
@@ -144,14 +196,14 @@ GET_COMMENT:
             {
                 MessageBox.Show("ログインできませんでした。", "NicoLive");
             }
-END:
+        END:
             this.Invoke((Action)delegate()
             {
                 this.mConnectBtn.Enabled = true;
                 this.mLastChatTime = DateTime.Now;
                 this.mLastCompctTime = DateTime.Now;
                 this.mCompactForcast = false;
-                this.mStartFME = false;
+                this.mStartHQ = false;
                 this.mDisconnect = false;
             });
         }

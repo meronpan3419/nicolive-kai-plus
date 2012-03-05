@@ -58,6 +58,7 @@ namespace NicoLive
                 }
                 else
                 {
+                    Debug.WriteLine("Gather ng");
                     mGatherUserID.Add(user_id);
                     Thread.Sleep(wait*10);
                 }

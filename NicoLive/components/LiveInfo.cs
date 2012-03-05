@@ -138,6 +138,7 @@ namespace NicoLive
 			mActiveHash.Clear();
 			mEndTime = 0;
             UnixTime = Utils.GetUnixTime(DateTime.Now);
+            mStartTime = 0;
 			mTime = 0;
             mToken = "";
             mTitle = "";

@@ -109,7 +109,7 @@ namespace NicoLive
 
 		// コメント送信用パラメータ
         private static string mTicket = "";
-        private static string mLastRes = "";
+        private static string mLastRes = "0";
 
         private UInt32 mBaseTime = 0;
         private string mUserID = "";
@@ -281,9 +281,9 @@ namespace NicoLive
                             }
                         }
                     }
-                    catch (CookieGetterException ex)
+                    catch (Exception)
                     {
-                        System.Windows.Forms.MessageBox.Show(ex.Message);
+                        //System.Windows.Forms.MessageBox.Show(ex.Message);
                     }
                 }
 
@@ -338,7 +338,8 @@ namespace NicoLive
 		//-------------------------------------------------------------------------
         public bool IsLogin
 		{
- 			get { return mIsLogin; }
+ 			get { return mIsLogin; 
+            }
  			set { mIsLogin = value; }
 		}
 
@@ -602,33 +603,61 @@ namespace NicoLive
         //-------------------------------------------------------------------------
         public bool SendOwnerComment(string iLiveID, string iComment,string iName, string iToken)
         {
-			if( !IsLogin )
-				return false;
+			return SendOwnerComment( iLiveID,  iComment, "",  iName,  iToken);
+        }
 
-            string uri = "http://watch.live.nicovideo.jp/api/broadcast/"+iLiveID;
+
+        //-------------------------------------------------------------------------
+        // 主コメント送信
+        //-------------------------------------------------------------------------
+        public bool SendOwnerComment(string iLiveID, string iComment, string iMail, string iName, string iToken)
+        {
+            if (!IsLogin)
+                return false;
+
+            string uri = "http://watch.live.nicovideo.jp/api/broadcast/" + iLiveID;
 
             Dictionary<string, string> post_arg = new Dictionary<string, string>();
 
-            post_arg["mail"]  = "";
+            post_arg["mail"] = Uri.EscapeUriString(iMail);
             post_arg["is184"] = "true";
-			post_arg["token"] = iToken;
-            post_arg["body"]  = Uri.EscapeUriString(iComment);
-            if( iName.Length > 0 )
+            post_arg["token"] = iToken;
+            post_arg["body"] = Uri.EscapeUriString(iComment);
+            if (iName.Length > 0)
                 post_arg["name"] = Uri.EscapeUriString(iName);
 
-			Debug.WriteLine("OWNER:"+iComment );
+            Debug.WriteLine("OWNER:" + iComment);
 
             // send POST request
             string ret = HttpPost(uri, post_arg, ref this.mCookieLogin);
             Debug.WriteLine(ret);
-			post_arg = null;
+            post_arg = null;
+            return true;
+        }
+
+        //-------------------------------------------------------------------------
+        // NULLコメント送信
+        //-------------------------------------------------------------------------
+        public bool SendNULLComment()
+        {
+            // 送信
+            try
+            {
+                if (mTcp.Client.Connected)
+                {
+                    this.Send(mTcp.Client, "\0");
+                }
+            }catch(Exception){
+                Debug.WriteLine("a");
+            }
+
             return true;
         }
 
         //-------------------------------------------------------------------------
         // コメント送信
         //-------------------------------------------------------------------------
-        public bool SendComment(string iLiveID,string iComment )
+        public bool SendComment(string iLiveID,string iComment, bool i184)
         {
             Int32 block_no=0;
 
@@ -646,8 +675,8 @@ namespace NicoLive
             // MovieInfo取得
             if (mThread.Length <= 0 || mUserID.Length <= 0 || mBaseTime == 0)
             {
-                //Dictionary<string,string> h = GetPlayerStatus(iLiveID);
-                Dictionary<string,string> h = GetPublishStatus(iLiveID);
+                Dictionary<string,string> h = GetPlayerStatus(iLiveID);
+                //Dictionary<string,string> h = GetPublishStatus(iLiveID);
 
                 if (h == null)
                 {
@@ -687,9 +716,11 @@ namespace NicoLive
             UInt32 ret = (UInt32)time(IntPtr.Zero);
             UInt32 vpos = (ret - mBaseTime)*100;
 
+            string mail = i184 ? "184" : "";
+
             // コメント送信リクエスト作成
             string req = String.Format(
-                    "<chat thread=\"{0}\" ticket=\"{2}\" postkey=\"{4}\" vpos=\"{1}\" mail=\" 184\" user_id=\"{3}\" premium=\"{5}\">{6}</chat>\0",
+                    "<chat thread=\"{0}\" ticket=\"{2}\" postkey=\"{4}\" vpos=\"{1}\" mail=\" " + mail + "\" user_id=\"{3}\" premium=\"{5}\">{6}</chat>\0",
                     mThread,
                     vpos,
                     mTicket,
@@ -864,21 +895,42 @@ namespace NicoLive
             if (so.Socket.Available == 0 )
             {
                 string str = System.Text.Encoding.UTF8.GetString( mTmpBuffer, 0, mTmpBuffer.Length);
+
+                if (str.Contains("<thread"))
+                {
+                    string thread;
+                    //<thread resultcode="0" thread="1143681983" ticket="0xd15f360" revision="1" server_time="1325401550"/>
+                    Match match = Regex.Match(str, "thread=\"(.*?)\"");
+                    if (match.Success)
+                    {
+                        thread = match.Groups[1].Value;
+
+                    }
+                    match = Regex.Match(str, "Last_res=\"(.*?)\"");
+                    if (match.Success)
+                    {
+                        mLastRes = match.Groups[1].Value;
+
+                    }
+                    else {
+
+                        mLastRes = "0";
+                    }
+                    match = Regex.Match(str, "ticket=\"(.*?)\"");
+                    if (match.Success)
+                    {
+                        mTicket = match.Groups[1].Value;
+
+                    }
+
+
+                }
+
                 if( str.EndsWith("</chat>\0") ) {
                     Array.Resize<byte>(ref mTmpBuffer, 0);
                     mComment += str;
                     
-                    if (str.Contains("<thread"))
-                    {
-                        string thread;
-                        Match match = Regex.Match(mComment, "<thread last_res=\"(.+)\" resultcode=\"0\" revision=\"1\" server_time=\"(.+)\" thread=\"(.+)\" ticket=\"(.+)\"/>");
-                        if (match.Success)
-                        {
-                            mLastRes = match.Groups[1].Value;
-                            thread = match.Groups[3].Value;
-                            mTicket = match.Groups[4].Value;
-                        }
-                    }
+
                 }
                 if (str.Contains("<chat_result"))
                 {
@@ -976,6 +1028,24 @@ namespace NicoLive
 
             return ( xml.Contains("status=\"ok\"") );
 		}
+
+        //-------------------------------------------------------------------------
+        // 過去の放送情報の取得
+        //-------------------------------------------------------------------------
+        public string GetAlreadtLive()
+        {
+            string url = "http://live.nicovideo.jp/my";
+            string res = HttpGet(url, ref mCookieLogin);
+            string lv = "";
+
+            if (res == null) return lv;
+
+            Match match = Regex.Match(res, "<a href=\"http://live.nicovideo.jp/watch/(lv[0-9]+)\" title=\"生放送ページへ戻る\"");
+           
+            if (match.Success)
+                lv = match.Groups[1].Value;
+            return lv;
+        }
 
         //-------------------------------------------------------------------------
         // 過去の放送情報の取得
@@ -1366,9 +1436,9 @@ namespace NicoLive
             req.KeepAlive = true;
             req.Accept = "application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5";
             req.UserAgent = "Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US) AppleWebKit/533.4 (KHTML, like Gecko) Chrome/5.0.375.99 Safari/533.4";
-            req.Headers["Accept-Encoding"] = "gzip,deflate,sdch";
+            //req.Headers["Accept-Encoding"] = "gzip,deflate,sdch";
             req.Headers["Accept-Language"] = "ja,en-US;q=0.8,en;q=0.6";
-            req.Headers["Accept-Charset"] = "Shift_JIS,utf-8;q=0.7,*;q=0.3";
+            req.Headers["Accept-Charset"] = "utf-8,Shift_JIS;q=0.7,*;q=0.3";
             req.Headers["Origin"] = "http://live.nicovideo.jp";
             req.Headers["Cache-Control"] = "max-age=0";
 
@@ -1648,6 +1718,16 @@ namespace NicoLive
                 return false;
 
             return true;
+        }
+
+        public TcpClient getTcpCliant()
+        {
+            return mTcp;
+        }
+
+        public void setIsLogin(bool isLogin)
+        {
+            mIsLogin = isLogin;
         }
 
     }

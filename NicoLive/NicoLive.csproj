@@ -69,9 +69,13 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CookieGetterSharp, Version=2.0.0.9, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="AxInterop.ShockwaveFlashObjects, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>.\CookieGetterSharp.dll</HintPath>
+      <HintPath>.\AxInterop.ShockwaveFlashObjects.dll</HintPath>
+    </Reference>
+    <Reference Include="CookieGetterSharp, Version=2.0.0.11, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\デスクトップ\nicolive-kaiplus5\CookieGetterSharp.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="System" />
@@ -96,6 +100,7 @@
     <Compile Include="components\AutoExtend.cs" />
     <Compile Include="components\Comment.cs" />
     <Compile Include="components\FMEGUI.cs" />
+    <Compile Include="components\XSplit.cs" />
     <Compile Include="forms\ChangeProp\ChangePropDlg.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -120,9 +125,7 @@
     <Compile Include="forms\Form1\EventHandler.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="forms\Form1\FME.cs">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Include="components\HQ.cs" />
     <Compile Include="forms\Form1\MenuHandler.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -155,6 +158,12 @@
     </Compile>
     <Compile Include="forms\Form1\WorkerUpdateInfo.cs">
       <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="forms\NGUser.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="forms\NGUser.Designer.cs">
+      <DependentUpon>NGUser.cs</DependentUpon>
     </Compile>
     <Compile Include="forms\Viewer\Viewer.cs">
       <SubType>Form</SubType>
@@ -193,7 +202,17 @@
     <Compile Include="lib\ImakokoNow\ImaDoko.cs" />
     <Compile Include="lib\ImakokoNow\ImakokoNow.cs" />
     <Compile Include="lib\Nico\Nico.cs" />
+    <Compile Include="lib\Twitter\oAuth.cs" />
+    <Compile Include="lib\Twitter\oAuthTwitter.cs" />
+    <Compile Include="lib\Twitter\TwitterUtils.cs" />
     <Compile Include="lib\Windows\OSVersion.cs" />
+    <Compile Include="forms\oAuthDialog\oAuthDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="forms\oAuthDialog\oAuthDialog.Designer.cs">
+      <DependentUpon>oAuthDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="components\NLE.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="forms\ChangeProp\ChangePropDlg.resx">
@@ -213,6 +232,12 @@
     <EmbeddedResource Include="forms\Imakoko\Imakoko.resx">
       <DependentUpon>Imakoko.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="forms\NGUser.resx">
+      <DependentUpon>NGUser.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="forms\oAuthDialog\oAuthDialog.resx">
+      <DependentUpon>oAuthDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="forms\Viewer\Viewer.resx">
       <DependentUpon>Viewer.cs</DependentUpon>
@@ -244,9 +269,6 @@
       <DependentUpon>Wakutori.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="forms\xAuthDialog\xAuthDialog.resx">
-      <DependentUpon>xAuthDialog.cs</DependentUpon>
-    </EmbeddedResource>
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
@@ -268,8 +290,6 @@
     <Compile Include="forms\SettingDialog\SettingDialog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="lib\Twitter\oAuth.cs" />
-    <Compile Include="lib\Twitter\oAuthTwitter.cs" />
     <Compile Include="lib\Twitter\Twitter.cs" />
     <Compile Include="components\UIStatus.cs" />
     <Compile Include="components\UserID.cs" />
@@ -299,38 +319,6 @@
     <Compile Include="forms\Form1\WorkerAutoExtend.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="forms\xAuthDialog\xAuthDialog.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="forms\xAuthDialog\xAuthDialog.Designer.cs">
-      <DependentUpon>xAuthDialog.cs</DependentUpon>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <COMReference Include="AxShockwaveFlashObjects">
-      <Guid>{D27CDB6B-AE6D-11CF-96B8-444553540000}</Guid>
-      <VersionMajor>1</VersionMajor>
-      <VersionMinor>0</VersionMinor>
-      <Lcid>0</Lcid>
-      <WrapperTool>aximp</WrapperTool>
-      <Isolated>False</Isolated>
-    </COMReference>
-    <COMReference Include="MSHTML">
-      <Guid>{3050F1C5-98B5-11CF-BB82-00AA00BDCE0B}</Guid>
-      <VersionMajor>4</VersionMajor>
-      <VersionMinor>0</VersionMinor>
-      <Lcid>0</Lcid>
-      <WrapperTool>primary</WrapperTool>
-      <Isolated>False</Isolated>
-    </COMReference>
-    <COMReference Include="ShockwaveFlashObjects">
-      <Guid>{D27CDB6B-AE6D-11CF-96B8-444553540000}</Guid>
-      <VersionMajor>1</VersionMajor>
-      <VersionMinor>0</VersionMinor>
-      <Lcid>0</Lcid>
-      <WrapperTool>tlbimp</WrapperTool>
-      <Isolated>False</Isolated>
-    </COMReference>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
@@ -371,11 +359,20 @@
     <Content Include="app.ico" />
     <None Include="Resources\err.bmp" />
     <None Include="Resources\bro_ok2.bmp" />
-    <Content Include="CookieGetterSharp.dll" />
+    <Content Include="CookieGetterSharp.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Resources\extend_fail.bmp" />
     <None Include="Resources\FMEng.bmp" />
     <None Include="Resources\FMEstart.bmp" />
     <None Include="Resources\FMEstop.bmp" />
+    <None Include="Resources\nico.bmp" />
+    <None Include="Resources\haishin.bmp" />
+    <None Include="Resources\Image1.bmp" />
+    <None Include="Resources\NLEkihon2.bmp" />
+    <None Include="Resources\NLEkihon.bmp" />
+    <None Include="Resources\NLEstart.bmp" />
+    <None Include="Resources\NLEstop.bmp" />
     <Content Include="Resources\stop_fme.bmp" />
     <None Include="Resources\fme.bmp" />
     <None Include="Resources\start_fme.bmp" />
@@ -404,6 +401,27 @@
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="MSHTML">
+      <Guid>{3050F1C5-98B5-11CF-BB82-00AA00BDCE0B}</Guid>
+      <VersionMajor>4</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <Private>True</Private>
+    </COMReference>
+    <COMReference Include="ShockwaveFlashObjects">
+      <Guid>{D27CDB6B-AE6D-11CF-96B8-444553540000}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

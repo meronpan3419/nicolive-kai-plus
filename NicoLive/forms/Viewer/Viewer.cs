@@ -20,7 +20,10 @@ namespace NicoLive
         {
             mLv = iLv;
 
+
+
             InitializeComponent();
+
         }
 
         //-------------------------------------------------------------------------
@@ -37,10 +40,11 @@ namespace NicoLive
             }
 
             //string url = "http://live.nicovideo.jp/liveplayer.swf?110519134121&allowscale=FALSE&v=" + mLiveID.Text + "&watchVideoID" + mLiveID.Text;
-            string url = "http://live.nicovideo.jp/liveplayer.swf?allowscale=FALSE&v=" + mLiveID.Text + "&watchVideoID" + mLiveID.Text;
+            string url = "http://live.nicovideo.jp/liveplayer.swf?v=" + mLiveID.Text + "&watchVideoID" + mLiveID.Text;
 
-            mFlash.Size = new System.Drawing.Size(950, 520);
+            //mFlash.Size = new System.Drawing.Size(950, 520);
             mFlash.LoadMovie(0, url);
+
         }
 
         //-------------------------------------------------------------------------
@@ -48,16 +52,12 @@ namespace NicoLive
         //-------------------------------------------------------------------------
         private void Viewer_Load(object sender, System.EventArgs e)
         {
-            SetLiveID( mLv);
+            updateUI();
+            SetLiveID(mLv);
+            this.Location = Properties.Settings.Default.viewer_pos;
         }
 
-        //-------------------------------------------------------------------------
-        //　SWFロード
-        //-------------------------------------------------------------------------
-        private void mUITimer_Tick(object sender, System.EventArgs e)
-        {
 
-        }
 
         //-------------------------------------------------------------------------
         //　視聴する放送ＩＤ設定
@@ -97,6 +97,88 @@ namespace NicoLive
                 LoadMovie();
             }
         }
+
+
+
+        private void mSmallBtn_Click(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.viewer_big = false;
+            updateUI();
+        }
+
+        private void mBigBtn_Click(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.viewer_big = true;
+            updateUI();
+        }
+
+        private void mTop_Click(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.viewer_top = !Properties.Settings.Default.viewer_top;
+            updateUI();
+        }
+
+        private void updateUI()
+        {
+            if (!Properties.Settings.Default.viewer_top)
+            {
+                this.TopMost = true;
+                mTop.BackColor = System.Drawing.Color.Orange;
+
+            }
+            else
+            {
+                this.TopMost = false;
+                mTop.BackColor = System.Drawing.SystemColors.Control;
+            }
+
+            if (Properties.Settings.Default.viewer_big)
+            {
+                mBigBtn.BackColor = System.Drawing.Color.Orange;
+                mSmallBtn.BackColor = System.Drawing.SystemColors.Control;
+                this.Size = new System.Drawing.Size(560, 537);
+                mFlash.Size = new System.Drawing.Size(960, 520);
+                mTop.Text = "最前面";
+                mAutoBoot.Text = "自動起動";
+            }
+            else
+            {
+                mBigBtn.BackColor = System.Drawing.SystemColors.Control;
+                mSmallBtn.BackColor = System.Drawing.Color.Orange;
+                this.Size = new System.Drawing.Size(284, 293);
+                mFlash.Size = new System.Drawing.Size(480, 260);
+                mTop.Text = "最";
+                mAutoBoot.Text = "自";
+            }
+
+            if (Properties.Settings.Default.viewer_auto_boot)
+            {
+                mAutoBoot.BackColor = System.Drawing.Color.Orange;
+            }
+            else
+            {
+
+                mAutoBoot.BackColor = System.Drawing.SystemColors.Control;
+            }
+        }
+
+        private void Viewer_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            Properties.Settings.Default.viewer_pos = this.Location;
+        }
+
+        private void mAutoBoot_Click(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.viewer_auto_boot = !Properties.Settings.Default.viewer_auto_boot;
+            updateUI();
+        }
+
+        private void toolStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+
+        }
+
+
     }
 }
 //-------------------------------------------------------------------------

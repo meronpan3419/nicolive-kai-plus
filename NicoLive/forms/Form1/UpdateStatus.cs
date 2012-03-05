@@ -8,6 +8,10 @@ using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
+using System.Net;
+using System.IO;
+using System.Text.RegularExpressions;
+using System.Threading;
 
 namespace NicoLive
 {
@@ -43,7 +47,7 @@ namespace NicoLive
                     {
                         this.Invoke((Action)delegate()
                         {
-                            this.Text = "豆ライブ(NicoLive)" + "　[GC:" + GC.GetTotalMemory(false) + "]";
+                            this.Text = "豆ライブ(NicoLive)" + "　【" + mLiveInfo.Title + "】" + "　[GC:" + GC.GetTotalMemory(false) + "]";
                         });
                     }
                     catch (Exception )
@@ -82,6 +86,10 @@ namespace NicoLive
                         Console.WriteLine(ex.Message);
                     }
 
+
+
+
+
                     // 経過時間取得
                     if (Properties.Settings.Default.talk_3min)
                     {
@@ -103,13 +111,30 @@ namespace NicoLive
                             // 残り3分通事
                             if (!mIsExtend)
                             {
+
                                 int rest_time = Properties.Settings.Default.rest_time;
                                 string msg = String.Format(mMsg.GetMessage("のこり{0}ふんくらいです"), rest_time);
                                 if (!this.mTalkLimit && sub > (lim - rest_time * 60))
                                 {
                                     this.mBouyomi.Talk(msg);
+
                                     this.mTalkLimit = true;
+
+                                    // 連続枠取り通知
+                                    if (Properties.Settings.Default.cont_waku_notice)
+                                    {
+                                        if (mContWaku.Checked)
+                                        {
+                                            msg = "連続枠取が設定されています";
+                                        }
+                                        else
+                                        {
+                                            msg = "連続枠取が設定されていません";
+                                        }
+                                    }
+                                    this.mBouyomi.Talk(msg);
                                 }
+
                             }
                             if (sub < 1 * 60)
                             {
@@ -129,7 +154,10 @@ namespace NicoLive
                     // Twitterポスト
                     if (mTwPost == false &&
                         mOwnLive &&
-                        Properties.Settings.Default.tw_start_enable)
+                        Properties.Settings.Default.tw_start_enable
+                        //Properties.Settings.Default.tw_token.Length == 0
+                        
+                        )
                     {
                         TwitterPoster(true);
                     }
@@ -151,7 +179,7 @@ namespace NicoLive
         private void UpdateLogin()
         {
             // ステータスを接続中に
-            if (!this.mConnectBtn.Enabled)
+            if (!this.mConnectBtn.Enabled && !mLoginWorker.IsBusy)
             {
                 this.mLoginLabel.Text = "接続中";
                 this.mLoginLabel.ForeColor = Color.Black;
@@ -160,8 +188,11 @@ namespace NicoLive
 
             if (mNico != null)
             {
-                this.mLoginLabel.Text = (mNico.IsLogin) ? "ログイン済" : "未ログイン";
-                this.mLoginLabel.ForeColor = (mNico.IsLogin) ? Color.Red : Color.Black;
+                if (!mLoginWorker.IsBusy)
+                {
+                    this.mLoginLabel.Text = (mNico.IsLogin) ? "ログイン済" : "未ログイン";
+                    this.mLoginLabel.ForeColor = (mNico.IsLogin) ? Color.Red : Color.Black;
+                }
 
                 // 再接続処理中？
                 if (mAutoReconnectOnGoing)
@@ -176,6 +207,7 @@ namespace NicoLive
                             this.mBouyomi.Talk(msg);
                         }
                         mAutoReconnectOnGoing = false;
+                        mConnectCount = 0;
                     }
                     else
                     {
@@ -192,6 +224,9 @@ namespace NicoLive
                             this.mConnectBtn.Enabled = false;
                             this.Connect(false);
                         });
+                        mConnectCount++;
+                        this.mLoginLabel.Text = "接続中(" + mConnectCount + ")";
+                        this.mLoginLabel.ForeColor = Color.Black;
                        return;
                     }
                 }
@@ -209,7 +244,7 @@ namespace NicoLive
                     if (Properties.Settings.Default.auto_reconnect)
                     {
                         // 再接続スタート
-                        string msg = "ログアウトしました。再接続を開始します";
+                        string msg = "切断されました。再接続を開始します";
 
                         if (this.mBouyomiBtn.Checked)
                         {
@@ -225,7 +260,7 @@ namespace NicoLive
                     }
                     else
                     {
-                        string msg = "ログアウトしました";
+                        string msg = "切断されました";
 
                         if (this.mBouyomiBtn.Checked)
                         {
@@ -280,6 +315,72 @@ namespace NicoLive
             if (!mDisconnect)
                 mUIStatus.UpdateActive(ref mActiveCnt);
         }
+
+        //-------------------------------------------------------------------------
+        // 枠待ち数更新
+        //-------------------------------------------------------------------------
+        private void UpdateWakumachi()
+        {
+            Thread th = new Thread(delegate()
+            {
+                string url = "http://nicolive-wakusu.b72.in/getwakusu.php?ver=nicolivekaip20120123";
+                HttpWebRequest req = (HttpWebRequest)WebRequest.Create(url);
+                string result = "";
+                try
+                {
+                    WebResponse res = req.GetResponse();
+
+                    // read response
+                    Stream resStream = res.GetResponseStream();
+                    using (StreamReader sr = new StreamReader(resStream, System.Text.Encoding.UTF8))
+                    {
+                        result = sr.ReadToEnd();
+                        sr.Close();
+                        resStream.Close();
+                    }
+                }
+                catch (Exception e)
+                {
+                    Debug.WriteLine("UpdateWakumachi:" + e.Message);
+                }
+
+                Match match;
+                match = Regex.Match(result, "<wakusu>(.*?)</wakusu>");
+                if (match.Success)
+                {
+                    _Wakusu = match.Groups[1].Value;
+
+                }
+                else
+                {
+                    _Wakusu = "?";
+                }
+                match = Regex.Match(result, "<wakumachi>(.*?)</wakumachi>");
+                if (match.Success)
+                {
+                    _Wakumachi = match.Groups[1].Value;
+                }
+                else
+                {
+                    _Wakumachi = "?";
+                }
+
+                try
+                {
+                    this.Invoke((Action)delegate()
+                    {
+                        this.mWakumachi.Text = "枠数：" + _Wakusu + "/" + _Wakumachi;
+                    });
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+            });
+            th.Start();
+
+        }
+
     }
 }
 //-------------------------------------------------------------------------

@@ -179,10 +179,10 @@
     <value>MS UI Gothic, 12pt, style=Bold</value>
   </data>
   <data name="mUpLink.Size" type="System.Drawing.Size, System.Drawing">
-    <value>202, 22</value>
+    <value>96, 22</value>
   </data>
   <data name="mUpLink.Text" xml:space="preserve">
-    <value>上り： 0 bps / 最大: 0 bps</value>
+    <value>上り： 0 bps</value>
   </data>
   <data name="mStatus.Location" type="System.Drawing.Point, System.Drawing">
     <value>0, 435</value>

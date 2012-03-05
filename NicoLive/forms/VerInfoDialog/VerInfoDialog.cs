@@ -32,6 +32,8 @@ namespace NicoLive
         private Label label6;
         private LinkLabel mLinkKaze;
         private Label label7;
+        private Label label8;
+        private LinkLabel linkLabel1;
 		/// <summary>
 		/// 必要なデザイナ変数です。
 		/// </summary>
@@ -83,6 +85,8 @@ namespace NicoLive
             this.label6 = new System.Windows.Forms.Label();
             this.mLinkKaze = new System.Windows.Forms.LinkLabel();
             this.label7 = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
+            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -120,7 +124,7 @@ namespace NicoLive
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(345, 186);
+            this.button1.Location = new System.Drawing.Point(355, 223);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 4;
@@ -194,11 +198,33 @@ namespace NicoLive
             this.label7.TabIndex = 11;
             this.label7.Text = "改造版：";
             // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(105, 198);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(44, 12);
+            this.label8.TabIndex = 13;
+            this.label8.Text = "改plus：";
+            // 
+            // linkLabel1
+            // 
+            this.linkLabel1.AutoSize = true;
+            this.linkLabel1.Location = new System.Drawing.Point(151, 198);
+            this.linkLabel1.Name = "linkLabel1";
+            this.linkLabel1.Size = new System.Drawing.Size(246, 12);
+            this.linkLabel1.TabIndex = 12;
+            this.linkLabel1.TabStop = true;
+            this.linkLabel1.Text = "http://nicolive_wakusu.b72.in/nicolive_kai_plus/";
+            this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
+            // 
             // VerInfoDialog
             // 
             this.AcceptButton = this.button1;
             this.AutoScaleBaseSize = new System.Drawing.Size(5, 12);
-            this.ClientSize = new System.Drawing.Size(442, 221);
+            this.ClientSize = new System.Drawing.Size(442, 254);
+            this.Controls.Add(this.label8);
+            this.Controls.Add(this.linkLabel1);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.mLinkKaze);
             this.Controls.Add(this.label6);
@@ -283,7 +309,7 @@ namespace NicoLive
 			pictureBox1.Image = appIcon.ToBitmap(); 
 			Text = appProductName + " のバージョン情報";
 			label1.Text = appProductName;
-			label2.Text = "Version " + appVersion + " 改27";
+			label2.Text = "Version " + appVersion + " 改p9a";
 			label3.Text = appCopyright;
 			label4.Text = appDescription;
 
@@ -335,6 +361,12 @@ namespace NicoLive
         private void ProjLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             System.Diagnostics.Process.Start("http://sourceforge.jp/projects/nicolive");
+        }
+
+        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+
+            System.Diagnostics.Process.Start("http://nicolive_wakusu.b72.in/nicolive_kai_plus/");
         }
 	}
 }

@@ -17,11 +17,22 @@ namespace NicoLive
         //-------------------------------------------------------------------------
         private void CmtCxtMenu_Opening(object sender, CancelEventArgs e)
         {
+            System.Diagnostics.Debug.WriteLine("CmtCxtMenu_Opening: ");
             this.mCopyComment.Enabled = (this.mCommentList.SelectedRows.Count > 0);
             this.mCopyID.Enabled = (this.mCommentList.SelectedRows.Count > 0);
             this.mRename.Enabled = (this.mCommentList.SelectedRows.Count > 0);
-            //this.mNgID.Enabled = (this.mCommentList.SelectedRows.Count > 0);
-            this.mNgID.Enabled = false;
+            this.mNgID.Enabled = (this.mCommentList.SelectedRows.Count > 0);
+            if (this.mNgID.Enabled)
+            {
+                string id = this.mCommentList.SelectedRows[0].Cells[(int)CommentColumn.COLUMN_ID].Value.ToString();
+                System.Diagnostics.Debug.WriteLine("CmtCxtMenu_Opening: id:" + id);
+                if (this.mUid.IsNGUser(id))
+                {
+                    this.mNgID.Text = "このユーザーをNG解除";
+                } else {
+                    this.mNgID.Text = "このユーザーをNG登録";
+                }
+            }
 
             int r;
             if (this.mCommentList.SelectedRows.Count > 0 &&
@@ -100,28 +111,67 @@ namespace NicoLive
             }
         }
         //-------------------------------------------------------------------------
-        // NG ID に加える
+        // NG ID　登録・解除
         //-------------------------------------------------------------------------
         private void mNgID_Click(object sender, EventArgs e)
         {
             if (this.mCommentList.SelectedRows.Count > 0)
             {
                 string id = this.mCommentList.SelectedRows[0].Cells[(int)CommentColumn.COLUMN_ID].Value.ToString();
-                addNgID(id);
+                if (this.mUid.IsNGUser(id))
+                {
+                    delNgID(id);
+                }
+                else
+                {
+                    addNgID(id);
+                }
             }
         }
 
         //-------------------------------------------------------------------------
-        // NG ID に加える実際の処理
+        // NG ID 登録の実際の処理
         //-------------------------------------------------------------------------
         public void addNgID(string id)
         {
-            if (MessageBox.Show(id + "\nをNG指定します", "NicoLive", MessageBoxButtons.OKCancel, MessageBoxIcon.Exclamation) == DialogResult.OK)
+            if (MessageBox.Show(id + "\nをNG登録します", "NicoLive", MessageBoxButtons.OKCancel, MessageBoxIcon.Exclamation) == DialogResult.OK)
             {
-                if (mNico != null && mNico.IsLogin && !mDisconnect)
+                // 旧NG処理 
+                //if (mNico != null && mNico.IsLogin && !mDisconnect)
+                //{
+                //    SendComment("/ngadd ID \"" + id + "\" 0 0", true);
+                //}
+
+                // NGユーザなんたら
+                if (mNico != null /*&& mNico.IsLogin && !mDisconnect*/)
                 {
-                    SendComment("/ngadd ID \"" + id + "\" 0 0", true);
+                    this.mUid.AddNGUser(id);
                 }
+
+
+            }
+        }
+
+        //-------------------------------------------------------------------------
+        // NG ID 解除の実際の処理
+        //-------------------------------------------------------------------------
+        public void delNgID(string id)
+        {
+            if (MessageBox.Show(id + "\nをNG解除します", "NicoLive", MessageBoxButtons.OKCancel, MessageBoxIcon.Exclamation) == DialogResult.OK)
+            {
+                // 旧NG処理 
+                //if (mNico != null && mNico.IsLogin && !mDisconnect)
+                //{
+                //    SendComment("/ngadd ID \"" + id + "\" 0 0", true);
+                //}
+
+                // NGユーザなんたら
+                if (mNico != null /*&& mNico.IsLogin && !mDisconnect*/)
+                {
+                    this.mUid.delNGUser(id);
+                }
+
+
             }
         }
     }

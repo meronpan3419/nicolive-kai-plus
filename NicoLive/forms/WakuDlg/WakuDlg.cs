@@ -95,6 +95,18 @@ namespace NicoLive
                     return;
                 }
             }
+
+            //SetLabelFromThread("放送枠があるか確認中", Color.Black, false);
+
+            //string aLv = mNico.GetAlreadtLive();
+            //if (!aLv.Equals(""))
+            //{
+            //    //枠あった
+            //    mLv = aLv;
+            //    mState = WakuResult.NO_ERR;
+            //    //return;
+            //}
+
       
             SetLabelFromThread("放送履歴取得中", Color.Black, false);
 
@@ -188,6 +200,19 @@ GET_OLD_INFO:
             // 枠取り開始
 			SetLabelFromThread( "枠取り中",Color.Black,false);
 
+
+            // taglockのロック内容が無いものを削除
+            Dictionary<string, string> new_taglock = new Dictionary<string, string>();
+            foreach (string key in taglock.Keys)
+            {
+                if (taglock[key].Length > 0)
+                {
+                    new_taglock.Add(key, taglock[key]);
+                }
+            }
+            taglock = new_taglock;
+
+
             // タグ追加
             foreach (string key in tag.Keys)
             {
@@ -199,6 +224,8 @@ GET_OLD_INFO:
             }
 
             try_cnt = 0;
+		 bool base64_encoded = false;
+
 RETRY:
             if (mAbort) return;
 
@@ -217,7 +244,11 @@ RETRY:
             {
                 SetLabelFromThread("枠取り中（規約確認中）", Color.Black, false);
                 arr["kiyaku"] = "true";
-                arr["description"] = Utils.ToBase64(arr["description"]);
+                if (!base64_encoded)
+                {
+                    arr["description"] = Utils.ToBase64(arr["description"]);
+                    base64_encoded = true;
+                }
                 goto RETRY;
             }
             else if (err == WakuErr.ERR_LOGIN)

@@ -10,60 +10,56 @@ using System.Web.UI.HtmlControls;
 using System.Net;
 using System.IO;
 using System.Collections.Specialized;
+using System.Text;
 
-namespace oAuthExample
+namespace OAuth
 {
     public class oAuthTwitter : OAuthBase
     {
         public enum Method { GET, POST };
-        public readonly string REQUEST_TOKEN = "http://twitter.com/oauth/request_token";
-        public readonly string AUTHORIZE = "http://twitter.com/oauth/authorize";
-        public readonly string ACCESS_TOKEN = "http://twitter.com/oauth/access_token";
-        public readonly string XAUTH_ACCESS_TOKEN = "https://api.twitter.com/oauth/access_token";
-
-		private readonly string CONSUMERKEY = "";
-		private readonly string CONSUMERSECRET = "";
+        public const string REQUEST_TOKEN = "http://twitter.com/oauth/request_token";
+        public const string AUTHORIZE = "http://twitter.com/oauth/authorize";
+        public const string ACCESS_TOKEN = "http://twitter.com/oauth/access_token";
 
         private string _consumerKey = "";
         private string _consumerSecret = "";
         private string _token = "";
         private string _tokenSecret = "";
-        private string _verifier = "";
-        private string _xAuthUsername = "";
-        private string _xAuthPassword = "";
+        private string _pin = "";// JDevlin
 
-#region Properties
-        public string ConsumerKey 
+        #region Properties
+        public string ConsumerKey
         {
             get
             {
                 if (_consumerKey.Length == 0)
                 {
-                    _consumerKey = CONSUMERKEY;
+                    _consumerKey = "";// ConfigurationManager.AppSettings["consumerKey"];
                 }
-                return _consumerKey; 
-            } 
-            set { _consumerKey = value; } 
+                return _consumerKey;
+            }
+            set { _consumerKey = value; }
         }
-        
-        public string ConsumerSecret { 
-            get {
+
+        public string ConsumerSecret
+        {
+            get
+            {
                 if (_consumerSecret.Length == 0)
                 {
-                    _consumerSecret = CONSUMERSECRET;
+                    _consumerSecret = "";// ConfigurationManager.AppSettings["consumerSecret"];
                 }
-                return _consumerSecret; 
-            } 
-            set { _tokenSecret = value; } 
+                return _consumerSecret;
+            }
+            set { _consumerSecret = value; }
         }
 
+        public string OAuthToken { get; set; }
         public string Token { get { return _token; } set { _token = value; } }
         public string TokenSecret { get { return _tokenSecret; } set { _tokenSecret = value; } }
-        public string Verifier { get { return _verifier; } set { _verifier = value; } }
-        public string xAuthUsername { get { return _xAuthUsername; } set { _xAuthUsername = value; } }
-        public string xAuthPassword { get { return _xAuthPassword; } set { _xAuthPassword = value; } }
+        public string PIN { get { return _pin; } set { _pin = value; } }// JDevlin
 
-#endregion
+        #endregion
 
         /// <summary>
         /// Get the link to Twitter's authorization page for this application.
@@ -80,6 +76,7 @@ namespace oAuthExample
                 NameValueCollection qs = HttpUtility.ParseQueryString(response);
                 if (qs["oauth_token"] != null)
                 {
+                    OAuthToken = qs["oauth_token"]; // tuck this away for later
                     ret = AUTHORIZE + "?oauth_token=" + qs["oauth_token"];
                 }
             }
@@ -90,10 +87,9 @@ namespace oAuthExample
         /// Exchange the request token for an access token.
         /// </summary>
         /// <param name="authToken">The oauth_token is supplied by Twitter's authorization page following the callback.</param>
-        public void AccessTokenGet(string authToken, string verifier)
+        public void AccessTokenGet(string authToken)
         {
             this.Token = authToken;
-            this.Verifier = verifier;
 
             string response = oAuthWebRequest(Method.GET, ACCESS_TOKEN, String.Empty);
 
@@ -111,18 +107,16 @@ namespace oAuthExample
                 }
             }
         }
-
         /// <summary>
-        /// Exchange the username and password for an access token.
+        /// Exchange the request token for an access token.
         /// </summary>
-        /// <param name="username">Twitter Username.</param>
-        /// <param name="username">Twitter Password.</param>
-        public void xAuthAccessTokenGet(string username, string password)
+        /// <param name="authToken">The oauth_token is supplied by Twitter's authorization page following the callback.</param>
+        public void AccessTokenGetWithPIN(string PIN, string OAuthToken)
         {
-            this.xAuthUsername = username;
-            this.xAuthPassword = password;
+            this.PIN = PIN;
+            this.Token = OAuthToken;
 
-            string response = oAuthWebRequest(Method.GET, XAUTH_ACCESS_TOKEN, String.Empty);
+            string response = oAuthWebRequest2(Method.GET, ACCESS_TOKEN, String.Empty);
 
             if (response.Length > 0)
             {
@@ -140,7 +134,6 @@ namespace oAuthExample
         }
 
 
-        
         /// <summary>
         /// Submit a web request using oAuth.
         /// </summary>
@@ -149,6 +142,90 @@ namespace oAuthExample
         /// <param name="postData">Data to post (querystring format)</param>
         /// <returns>The web server response.</returns>
         public string oAuthWebRequest(Method method, string url, string postData)
+        {
+            string outUrl = "";
+            string querystring = "";
+            string ret = "";
+
+
+            //Setup postData for signing.
+            //Add the postData to the querystring.
+            if (method == Method.POST)
+            {
+                if (postData.Length > 0)
+                {
+                    //Decode the parameters and re-encode using the oAuth UrlEncode method.
+                    NameValueCollection qs = HttpUtility.ParseQueryString(postData);
+                    postData = "";
+                    foreach (string key in qs.AllKeys)
+                    {
+                        if (postData.Length > 0)
+                        {
+                            postData += "&";
+                        }
+                        qs[key] = HttpUtility.UrlDecode(qs[key]);
+                        //qs[key] = this.UrlEncode(qs[key]);
+                        qs[key] = this.UrlEncode(qs[key], Encoding.UTF8);
+                        postData += key + "=" + qs[key];
+
+                    }
+                    if (url.IndexOf("?") > 0)
+                    {
+                        url += "&";
+                    }
+                    else
+                    {
+                        url += "?";
+                    }
+                    url += postData;
+                }
+            }
+
+            Uri uri = new Uri(url);
+
+            string nonce = this.GenerateNonce();
+            string timeStamp = this.GenerateTimeStamp();
+
+            //Generate Signature
+            string sig = this.GenerateSignature(uri,
+                this.ConsumerKey,
+                this.ConsumerSecret,
+                this.Token,
+                this.TokenSecret,
+                method.ToString(),
+                timeStamp,
+                nonce,
+                out outUrl,
+                out querystring);
+
+            //querystring += "&oauth_signature=" + HttpUtility.UrlEncode(sig);
+            querystring += "&oauth_signature=" + HttpUtility.UrlEncode(sig);
+
+            //Convert the querystring to postData
+            if (method == Method.POST)
+            {
+                postData = querystring;
+                querystring = "";
+            }
+
+            if (querystring.Length > 0)
+            {
+                outUrl += "?";
+            }
+
+            ret = WebRequest(method, outUrl + querystring, postData);
+
+            return ret;
+        }
+
+        /// <summary>
+        /// Submit a web request using oAuth.
+        /// </summary>
+        /// <param name="method">GET or POST</param>
+        /// <param name="url">The full url, including the querystring.</param>
+        /// <param name="postData">Data to post (querystring format)</param>
+        /// <returns>The web server response.</returns>
+        public string oAuthWebRequest2(Method method, string url, string postData)
         {
             string outUrl = "";
             string querystring = "";
@@ -186,9 +263,13 @@ namespace oAuthExample
                     url += postData;
                 }
             }
+            else if (method == Method.GET && !String.IsNullOrEmpty(postData))
+            {
+                url += "?" + postData;
+            }
 
             Uri uri = new Uri(url);
-            
+
             string nonce = this.GenerateNonce();
             string timeStamp = this.GenerateTimeStamp();
 
@@ -198,12 +279,10 @@ namespace oAuthExample
                 this.ConsumerSecret,
                 this.Token,
                 this.TokenSecret,
-                this.Verifier,
-                this.xAuthUsername,
-                this.xAuthPassword,
                 method.ToString(),
                 timeStamp,
                 nonce,
+                this.PIN,
                 out outUrl,
                 out querystring);
 
@@ -221,10 +300,11 @@ namespace oAuthExample
                 outUrl += "?";
             }
 
-            ret = WebRequest(method, outUrl +  querystring, postData);
+            ret = WebRequest(method, outUrl + querystring, postData);
 
             return ret;
         }
+
 
         /// <summary>
         /// Web Request Wrapper
@@ -266,14 +346,8 @@ namespace oAuthExample
                 }
             }
 
-            try
-            {
-                responseData = WebResponseGet(webRequest);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("WebRequest: {0}", e.Message);
-            }
+            responseData = WebResponseGet(webRequest);
+
             webRequest = null;
 
             return responseData;

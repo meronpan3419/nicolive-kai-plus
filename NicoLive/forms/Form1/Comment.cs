@@ -42,25 +42,52 @@ namespace NicoLive
                     if (m.Success)
                     {
                         mLastChatNo = int.Parse(m.Groups[1].Value);
+                        if (Properties.Settings.Default.comment_max > mLastChatNo)
+                        {
+                            mLastChatNo2 = mLastChatNo - 50;
+                        }
+                        else
+                        {
+                            mLastChatNo2 = mLastChatNo;
+                        }
+                    }
+                    continue;
+                }
+
+                //コメント処理
+                if (s.StartsWith("<chat "))
+                {
+                    Comment cmt = new Comment(s);
+                    if (!cmt.Date.Equals("-1"))
+                    {
+                        while (mLiveInfo.StartTime == 0)
+                        {
+                            // LiveInfo.GetInfo待ちで、ちょっとウェイト
+                            Thread.Sleep(100);
+                            Debug.WriteLine("ParseComment: mLiveInfo.StartTime wait");
+                        }
+                        cmt.ElapsedTime = (int.Parse(cmt.Date) - mLiveInfo.StartTime).ToString();
+
+                    }
+                    else
+                    {
+                        cmt.ElapsedTime = null;
+                    }
+                    if (cmt.Valid)
+                    {
+                        WriteLog(cmt.Xml);
+                        RecvComment(cmt);
                     }
                 }
-
-                Comment cmt = new Comment(s);
-
-                if (cmt.Valid)
-                {
-                    WriteLog(cmt.Xml);
-                    RecvComment(cmt);
-                }
             }
-			words = null;
+            words = null;
         }
 
         //-------------------------------------------------------------------------
-		// ログ書き出し
+        // ログ書き出し
         //-------------------------------------------------------------------------
-		private void WriteLog(string iStr)
-		{
+        private void WriteLog(string iStr)
+        {
             if (!Properties.Settings.Default.save_log) return;
 
             try
@@ -79,31 +106,14 @@ namespace NicoLive
         //-------------------------------------------------------------------------
         private void RecvComment(Comment iCmt)
         {
+
             // 最終コメント受信時間設定
             mLastChatTime = DateTime.Now;
 
-            // 投票チェック
-            if (iCmt.IsVote) iCmt.ToVote();
-
             // 切断
-            if (CheckDisconnect(iCmt))
-                return;
-
-            // 184付きのコメントを無視
-            if (Properties.Settings.Default.need184 && !iCmt.IsOwner)
-            {
-                int id;
-                if (!int.TryParse(iCmt.Uid, out id)) return;
-            }
-
-            // プレミア以外のコメントを無視
-            if (Properties.Settings.Default.need_premium && !iCmt.IsOwner)
-            {
-                if (!iCmt.IsPermium) return;
-            }
-
-            // コテハン記憶
-            SaveHandle(iCmt);
+            //if (CheckDisconnect(iCmt))
+            //    return;
+            CheckDisconnect(iCmt);
 
             // アクティブ数設定
             mLiveInfo.ActivateUser(iCmt.Uid, iCmt.Date);
@@ -123,88 +133,246 @@ namespace NicoLive
                 GetUsername(iCmt.Uid);
             }
 
+            // コテハン登録
+            SaveHandle(iCmt);
+
+
+
+
+
+
+            // NGコメント表示
+            //if (int.Parse(iCmt.No) < mLastChatNo - Properties.Settings.Default.comment_max + 1)
+            if (int.Parse(iCmt.No) < mLastChatNo - Properties.Settings.Default.comment_max + 1)
+            {
+                ShowNGCommentNotice(int.Parse(iCmt.No));
+            }
+
+
+
             // コメントをリストに追加
             this.Invoke((Action)delegate()
             {
                 this.AddComment(iCmt);
             });
 
-            // 棒読みちゃん読み上げリストにコメントを追加
-            if (!iCmt.IsIgnore && !iCmt.IsNG && (mLastChatNo < int.Parse(iCmt.No)))   // "/"で始まってるコメントはスルー
+            //過去コメントじゃない時だけ
+            if (mLastChatNo < int.Parse(iCmt.No))
             {
-                lock (mSpeakLock)
+
+                // 投票チェック
+                if (iCmt.IsVote) iCmt.ToVote();
+
+                // NGユーザーを無視
+                if (this.mUid.IsNGUser(iCmt.Uid))
                 {
-                    if (iCmt.Text.StartsWith("/chukei "))
+                    SetLastChatNo(int.Parse(iCmt.No));
+                    return;
+
+                }
+
+                // 棒読みちゃん読み上げリストにコメントを追加
+                if (!IsIgnoreComment(iCmt))
+                {
+                    lock (mSpeakLock)
                     {
-                        Regex deleteCommand = new Regex("^/chukei [0-9a-f]{5}(.*)$");
-                        Match m = deleteCommand.Match(iCmt.Text);
-                        if (m.Success)
+                        if (iCmt.Text.StartsWith("/chukei "))
                         {
-                            this.mSpeakList.Add(m.Groups[1].Value);
+                            Regex deleteCommand = new Regex("^/chukei [0-9a-f]{5}(.*)$");
+                            Match m = deleteCommand.Match(iCmt.Text);
+                            if (m.Success)
+                            {
+                                this.mSpeakList.Add(m.Groups[1].Value);
+                            }
+                            else
+                            {
+                                this.mSpeakList.Add(iCmt.Text);
+                            }
                         }
-                        else
+                        else if (iCmt.Text.StartsWith("/press "))
                         {
-                            this.mSpeakList.Add(iCmt.Text);
+                            Regex deleteCommand = new Regex("^/press show (?:white |niconicowhite |red |pink |orange |green |cyan |blue |purple |black )?(.*)$");
+                            Match m = deleteCommand.Match(iCmt.Text);
+                            if (m.Success)
+                            {
+                                this.mSpeakList.Add(m.Groups[1].Value);
+                            }
+                            else
+                            {
+                                this.mSpeakList.Add(iCmt.Text);
+                            }
+                        }
+                        else if (iCmt.Text.StartsWith("/telop "))
+                        {
+                            Regex deleteCommand = new Regex("^/telop (?:show|show0|perm) (.*)$");
+                            Match m = deleteCommand.Match(iCmt.Text);
+                            if (m.Success)
+                            {
+                                this.mSpeakList.Add(m.Groups[1].Value);
+                            }
+                            else
+                            {
+                                this.mSpeakList.Add(iCmt.Text);
+                            }
+                        }
+                        else if (iCmt.Text.StartsWith("/info "))
+                        {
+                            Regex deleteCommand = new Regex("^/info [0-9]{1} \\\"(.*)\\\"?$");
+                            Match m = deleteCommand.Match(iCmt.Text);
+                            if (m.Success)
+                            {
+                                this.mSpeakList.Add(m.Groups[1].Value);
+                            }
+                            else
+                            {
+                                this.mSpeakList.Add(iCmt.Text);
+                            }
+                        }
+                        else //通常読み上げ
+                        {
+                            //コテハン読み上げるかどうか
+                            if (Properties.Settings.Default.speak_nick)
+                            {
+                                this.mSpeakList.Add(iCmt.Text + " " + nick);
+                            }
+                            else
+                            {
+                                this.mSpeakList.Add(iCmt.Text);
+                            }
+
                         }
                     }
-                    else if (iCmt.Text.StartsWith("/press "))
-                    {
-                        Regex deleteCommand = new Regex("^/press show (?:white |niconicowhite |red |pink |orange |green |cyan |blue |purple |black )?(.*)$");
-                        Match m = deleteCommand.Match(iCmt.Text);
-                        if (m.Success)
-                        {
-                            this.mSpeakList.Add(m.Groups[1].Value);
-                        }
-                        else
-                        {
-                            this.mSpeakList.Add(iCmt.Text);
-                        }
-                    }
-                    else if (iCmt.Text.StartsWith("/telop "))
-                    {
-                        Regex deleteCommand = new Regex("^/telop (?:show|show0|perm) (.*)$");
-                        Match m = deleteCommand.Match(iCmt.Text);
-                        if (m.Success)
-                        {
-                            this.mSpeakList.Add(m.Groups[1].Value);
-                        }
-                        else
-                        {
-                            this.mSpeakList.Add(iCmt.Text);
-                        }
-                    }
-                    else if (iCmt.Text.StartsWith("/info "))
-                    {
-                        Regex deleteCommand = new Regex("^/info [0-9]{1} \\\"(.*)\\\"?$");
-                        Match m = deleteCommand.Match(iCmt.Text);
-                        if (m.Success)
-                        {
-                            this.mSpeakList.Add(m.Groups[1].Value);
-                        }
-                        else
-                        {
-                            this.mSpeakList.Add(iCmt.Text);
-                        }
-                    }
-                    else
-                    {
-                        this.mSpeakList.Add(iCmt.Text);
-                    }
+                }
+
+
+
+
+                if (mLastChatNo < int.Parse(iCmt.No))
+                {
+                    // XSplitメッセージ
+                    if (Properties.Settings.Default.enable_xsplit_scene_change) XSplitSceneControl(iCmt);
+
+                    // 現在地・速度応答
+                    SendCurrentPosition(iCmt);
+                    SendCurrentSpeed(iCmt);
+                }
+
+                // 返信メッセージ
+                AutoResponse(iCmt);
+
+                // NGコメント通知
+                SendNGCommentNotice(int.Parse(iCmt.No));
+            }
+
+            // 最終コメントNo設定
+            SetLastChatNo(int.Parse(iCmt.No));
+
+            iCmt = null;
+        }
+
+        //-------------------------------------------------------------------------
+        // NGコメント表示
+        //-------------------------------------------------------------------------
+        public bool IsIgnoreComment(Comment iCmt)
+        {
+            // 運営系スラコメはスルー
+            if (iCmt.Text.StartsWith("/telop ") ||
+                iCmt.Text.StartsWith("/press ") ||
+                iCmt.Text.StartsWith("/info ") ||
+                iCmt.Text.StartsWith("/chukei ")) return false;
+
+            // 184付きのコメントを無視
+            if (Properties.Settings.Default.need184 && !iCmt.IsOwner)
+            {
+                int id;
+                if (!int.TryParse(iCmt.Uid, out id))
+                {
+                    return true;
                 }
             }
 
-            // 最終コメントNO設定
-            if (mLastChatNo < int.Parse(iCmt.No))
+            // プレミア以外のコメントを無視
+            if (Properties.Settings.Default.need_premium && !iCmt.IsOwner)
             {
-                mLastChatNo = int.Parse(iCmt.No);
-                SendCurrentPosition(iCmt);
-                SendCurrentSpeed(iCmt);
+                if (!iCmt.IsPermium)
+                {
+                    return true;
+                }
             }
 
-            // 返信メッセージ
-            AutoResponse(iCmt);
+            // 主コメントを読み上げるかどうか
+            if (!Properties.Settings.Default.owner_comment && iCmt.IsOwner)
+            {
+                return true;
+            }
 
-            iCmt = null;
+            // スラコメを読み上げるか
+            if (!Properties.Settings.Default.slash_comment && iCmt.Text.StartsWith("/"))
+            {
+                return true;
+            }
+
+            // #コメを読み上げるか
+            if (!Properties.Settings.Default.hashamark_comment && iCmt.Text.StartsWith("#"))
+            {
+                return true;
+            }
+
+            //　FME設定読みあげない
+            return iCmt.Text.StartsWith("■映像：");
+        }
+
+        //-------------------------------------------------------------------------
+        // NGコメント表示
+        //-------------------------------------------------------------------------
+        private void ShowNGCommentNotice(int no)
+        {
+            if (no - mLastChatNo2 > 1)
+            {
+                for (int i = mLastChatNo2 + 1; i < no; i++)
+                {
+                    // コメントをリストに追加
+                    this.Invoke((Action)delegate()
+                    {
+                        string s = "<chat anonymity=\"1\" date=\"-1\" mail=\"184\" no=\"" + i + "\" thread=\"\" user_id=\"-\" vpos=\"0\">※NGコメント</chat>";
+                        Comment cmt = new Comment(s);
+
+                        this.AddComment(cmt);
+                    });
+                }
+            }
+        }
+
+        //-------------------------------------------------------------------------
+        // NGコメント通知
+        //-------------------------------------------------------------------------
+        private void SendNGCommentNotice(int no)
+        {
+            if (!Properties.Settings.Default.ng_notice) return;
+
+            if (no - mLastChatNo > 1)
+            {
+                for (int i = mLastChatNo + 1; i < no; i++)
+                {
+                    SendComment(">>" + i + " NGコメントです", true);
+                }
+            }
+        }
+
+        //-------------------------------------------------------------------------
+        // 最終コメントNo設定
+        //-------------------------------------------------------------------------
+        private void SetLastChatNo(int no)
+        {
+
+            if (mLastChatNo < no)
+            {
+                mLastChatNo = no;
+            }
+            if (mLastChatNo2 < no)
+            {
+                mLastChatNo2 = no;
+            }
         }
 
         //-------------------------------------------------------------------------
@@ -212,7 +380,7 @@ namespace NicoLive
         //-------------------------------------------------------------------------
         private void SendCurrentPosition(Comment iCmt)
         {
-            if (iCmt.IsOwner) return;
+            //if (iCmt.IsOwner) return;
             if (mNico == null) return;
             if (!mNico.IsLogin) return;
 
@@ -232,7 +400,39 @@ namespace NicoLive
             Thread th = new Thread(delegate()
             {
                 ImaDoko.UpdateSpeedAndPlace();
-                SendComment("現在地は「" + ImaDoko.Place + "」です", true);
+                string msg = Properties.Settings.Default.address_template;
+                msg = msg.Replace("@ADDRESS", ImaDoko.Place);
+                string mail = Properties.Settings.Default.imakoko_genzaichi_hidden ? "hidden" : "";
+                SendComment(msg, mail, true, true);
+            });
+            th.Start();
+        }
+
+        //-------------------------------------------------------------------------
+        // 現在位置を送信する（現在位置を調べる)
+        //-------------------------------------------------------------------------
+        private void SendCurrentPosition()
+        {
+            if (mNico == null) return;
+            if (!mNico.IsLogin) return;
+
+
+            // 現在地機能が使用可能な状態か？
+            if (Properties.Settings.Default.imakoko_user == "")
+            {
+                return;
+            }
+
+            ImaDoko.setSendCommentDelegate(SendComment);
+
+            // 現在地を調べる機能を駆動
+            Thread th = new Thread(delegate()
+            {
+                ImaDoko.UpdateSpeedAndPlace();
+                string msg = Properties.Settings.Default.address_template2;
+                msg = msg.Replace("@ADDRESS", ImaDoko.Place);
+                string mail = Properties.Settings.Default.imakoko_genzaichi_hidden ? "hidden" : "";
+                SendComment(msg, mail, true, true);
             });
             th.Start();
         }
@@ -264,11 +464,15 @@ namespace NicoLive
                 ImaDoko.UpdateSpeedAndPlace();
                 if (ImaDoko.Speed >= 0)
                 {
-                    SendComment("時速" + ((int)ImaDoko.Speed).ToString() + "kmです", true);
+                    string msg = Properties.Settings.Default.speed_template;
+                    msg = msg.Replace("@SPEED", ((int)ImaDoko.Speed).ToString());
+                    string mail = Properties.Settings.Default.imakoko_genzaichi_hidden ? "hidden" : "";
+                    SendComment(msg, mail, true, true);
                 }
                 else
                 {
-                    SendComment("速度は不明です", true);
+                    string mail = Properties.Settings.Default.imakoko_genzaichi_hidden ? "hidden" : "";
+                    SendComment("速度は不明です", mail, true, true);
                 }
             });
             th.Start();
@@ -289,6 +493,24 @@ namespace NicoLive
                 {
                     this.SendComment(res, true);
                 });
+            }
+        }
+
+        //-------------------------------------------------------------------------
+        // XSplit シーン切り替え
+        //-------------------------------------------------------------------------
+        private void XSplitSceneControl(Comment iCmt)
+        {
+            if (!Properties.Settings.Default.enable_xsplit_scene_change) return;
+
+            if (iCmt.IsOwner) return;
+
+            Regex regex = new System.Text.RegularExpressions.Regex(@"^S(\d+)");
+            // 演奏する曲を選ぶ
+            if (regex.IsMatch(iCmt.Text))
+            {
+                Match m = regex.Match(iCmt.Text);
+                XSplit.CONTROL_numPad(int.Parse(m.Groups[1].Captures[0].Value));
             }
         }
 
@@ -338,7 +560,7 @@ namespace NicoLive
         //-------------------------------------------------------------------------
         private bool CheckDisconnect(Comment iCmt)
         {
-            if (!mDisconnect )
+            if (!mDisconnect)
             {
                 if (iCmt.IsDisconnect)
                 {
@@ -352,7 +574,7 @@ namespace NicoLive
                         this.mBouyomi.Talk(mMsg.GetMessage("配信が終了しました"));
 
                         FMLE.Stop();
-                        mStartFME = false;
+                        mStartHQ = false;
                     }
 
                     // ログクローズ
@@ -367,7 +589,11 @@ namespace NicoLive
                     // 枠取り画面へ 
                     if (mOwnLive && mContWaku.Checked)
                     {
-						Thread.Sleep(500);
+                        Thread.Sleep(500);
+
+                        // 棒読みちゃんで自動枠取り通知
+                        this.mBouyomi.Talk(mMsg.GetMessage("枠取りを開始します"));
+
                         this.Invoke((Action)delegate()
                         {
                             GetNextWaku();
@@ -387,15 +613,15 @@ namespace NicoLive
 
             //MakeWakutori(true);
 
-            WakuDlg dlg = new WakuDlg(LiveID,false);
+            WakuDlg dlg = new WakuDlg(LiveID, false);
             dlg.ShowDialog();
 
             if (dlg.mState == WakuResult.NO_ERR)
             {
-				using (Bouyomi bm = new Bouyomi())
-				{
-					bm.Talk(mMsg.GetMessage("枠が取れたよ"));
-				}
+                using (Bouyomi bm = new Bouyomi())
+                {
+                    bm.Talk(mMsg.GetMessage("枠が取れたよ"));
+                }
 
                 this.LiveID = dlg.mLv;
                 Connect(true);
@@ -412,7 +638,26 @@ namespace NicoLive
         //-------------------------------------------------------------------------
         private void AddComment(Comment iCmt)
         {
-            Utils.AddComment(ref mCommentList, iCmt);
+
+           
+            if (mPastChat)
+            {   
+                // 過去コメ
+                System.Drawing.Color color = this.mUid.getUserColor(iCmt.Uid);
+                Utils.AddComment(ref mCommentList, iCmt, color, ref mPastChatList);
+            }
+            else
+            {
+
+                //mCommentListLock.AcquireWriterLock(Timeout.Infinite);
+                System.Drawing.Color color = this.mUid.getUserColor(iCmt.Uid);
+                Utils.AddComment(ref mCommentList, iCmt, color);
+                //Utils.AddComment(ref mCommentList, iCmt);
+
+            }
+
+
+
 
             mCommentForm.AddComment(iCmt);
         }
@@ -454,7 +699,7 @@ namespace NicoLive
                 if (mSkipBouyomi)
                 {
                     mSkipBouyomi = false;
-                    if( cnt == 1 )
+                    if (cnt == 1)
                         mBouyomi.Talk(str);
                     return;
                 }
@@ -473,13 +718,48 @@ namespace NicoLive
             Thread th = new Thread(delegate()
             {
                 if (!iAdmin)
-                    mNico.SendComment(LiveID, iComment);
+                    mNico.SendComment(LiveID, iComment, true);
                 else
                     mNico.SendOwnerComment(LiveID, iComment, mLiveInfo.Nickname, mLiveInfo.Token);
             });
             th.Start();
         }
 
+        //-------------------------------------------------------------------------
+        // コメント送信
+        //-------------------------------------------------------------------------
+        private void SendComment(string iComment, bool iAdmin, bool i184)
+        {
+            if (mNico == null) return;
+            if (!mNico.IsLogin) return;
+
+            Thread th = new Thread(delegate()
+            {
+                if (!iAdmin)
+                    mNico.SendComment(LiveID, iComment, i184);
+                else
+                    mNico.SendOwnerComment(LiveID, iComment, mLiveInfo.Nickname, mLiveInfo.Token);
+            });
+            th.Start();
+        }
+
+        //-------------------------------------------------------------------------
+        // コメント送信
+        //-------------------------------------------------------------------------
+        private void SendComment(string iComment, string iMail, bool iAdmin, bool i184)
+        {
+            if (mNico == null) return;
+            if (!mNico.IsLogin) return;
+
+            Thread th = new Thread(delegate()
+            {
+                if (!iAdmin)
+                    mNico.SendComment(LiveID, iComment, i184);
+                else
+                    mNico.SendOwnerComment(LiveID, iComment, iMail, mLiveInfo.Nickname, mLiveInfo.Token);
+            });
+            th.Start();
+        }
     }
 }
 //-------------------------------------------------------------------------

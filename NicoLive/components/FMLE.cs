@@ -13,6 +13,7 @@ using System.IO;
 using System.Xml;
 using System.Runtime.InteropServices;
 
+
 namespace NicoLive
 {
     class FMLE
@@ -48,8 +49,13 @@ namespace NicoLive
         //-------------------------------------------------------------------------
         // 開始
         //-------------------------------------------------------------------------
-        public static void Start(Dictionary<string, string> iParams)
+        public static void Start(Dictionary<string, string> iParams, string profile_path)
         {
+
+
+
+            
+
             DeleteSessionfile();
             if (Properties.Settings.Default.fme_gui)
             {
@@ -66,10 +72,11 @@ namespace NicoLive
                 // FMLECmdのパス
                 string APP_PATH = Properties.Settings.Default.fmle_path;
                 // プロファイルのパス
-                string profile_path = Path.GetTempPath() + "nicovideo_fme.xml";
+                //string profile_path = Path.GetTempPath() + "nicovideo_fme.xml";
 
                 Thread th = new Thread(delegate()
                 {
+
                     // プロファイル作成
                     if (!MakeProfile(profile_path, iParams))
                     {
@@ -82,7 +89,17 @@ namespace NicoLive
 
                     if (Properties.Settings.Default.fme_dos)
                     {
-                        Process.Start(APP_PATH, args);
+
+                        ProcessStartInfo psInfo = new ProcessStartInfo();
+                        psInfo.FileName = APP_PATH;
+                        psInfo.CreateNoWindow = false;
+                        psInfo.UseShellExecute = true;
+                        if (Properties.Settings.Default.fme_dos_min)
+                        {
+                            psInfo.WindowStyle = ProcessWindowStyle.Minimized;
+                        }
+                        psInfo.Arguments = args;
+                        Process.Start(psInfo);
                     }
                     else
                     {
@@ -109,6 +126,20 @@ namespace NicoLive
 		public static bool hasFME() 
 		{
             Process[] ps;
+
+            //// NLE
+            //if (Properties.Settings.Default.use_nle)
+            //{
+            //    return NLE.IsBroadCast;
+
+            //}
+
+            //// XSplit
+            //if (Properties.Settings.Default.use_xsplit)
+            //{
+            //    return XSplit.IsBroadCast;
+            //}
+
             if (Properties.Settings.Default.fme_gui)
             {
                 return FMEGUI.hasFME();
@@ -150,6 +181,21 @@ namespace NicoLive
         //-------------------------------------------------------------------------
         public static void Stop()
         {
+
+            //// NLE
+            //if (Properties.Settings.Default.use_nle)
+            //{
+            //    NLE.Stop();
+            //    return;
+            //}
+
+            //// XSplit
+            //if (Properties.Settings.Default.use_xsplit)
+            //{
+            //    XSplit.Stop();
+            //    return;
+            //}
+
             if (Properties.Settings.Default.fme_gui)
             {
                 FMEGUI.Kill();
@@ -173,7 +219,7 @@ namespace NicoLive
                 // すべてのFMEがいなくなったことを確認する
                 do
                 {
-                    System.Threading.Thread.Sleep(1000);
+                    System.Threading.Thread.Sleep(500);
                     ps = Process.GetProcessesByName("FlashMediaLiveEncoder");
                 } while (ps.Length > 0);
             }
@@ -190,7 +236,7 @@ namespace NicoLive
             XmlDocument doc = new XmlDocument();
             try
             {
-                string path = System.Windows.Forms.Application.StartupPath + "\\nicovideo_fme.xml";
+                string path = iPath;
 
                 doc.Load(path);
 

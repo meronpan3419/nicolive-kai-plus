@@ -10,6 +10,8 @@ using System.IO;
 using System.Windows.Forms;
 using System.Diagnostics;
 
+
+
 //-------------------------------------------------------------------------
 // クラス実装
 //-------------------------------------------------------------------------
@@ -21,8 +23,12 @@ namespace NicoLive
         /// アプリケーションのメイン エントリ ポイントです。
         /// </summary>
         [STAThread]
+
+
+
         static void Main()
         {
+
             // 多重起動回避 ----------------------------------
             if (Process.GetProcessesByName(
                  Process.GetCurrentProcess().ProcessName).Length > 1)
@@ -43,20 +49,20 @@ namespace NicoLive
             
             //------------------------------------------------
 			// Twitterの認証をxAuthに移行
-            if (Properties.Settings.Default.tw_passwd.Length != 0 &&
-                Properties.Settings.Default.tw_user.Length != 0)
-            {
-                Twitter tw = new Twitter();
-                tw.xAuth(Properties.Settings.Default.tw_user,Properties.Settings.Default.tw_passwd);
-            }
+            //if (Properties.Settings.Default.tw_passwd.Length != 0 &&
+            //    Properties.Settings.Default.tw_user.Length != 0)
+            //{
+            //    Twitter tw = new Twitter();
+            //    tw.xAuth(Properties.Settings.Default.tw_user,Properties.Settings.Default.tw_passwd);
+            //}
 
             //------------------------------------------------
             // Updater更新
-            if (File.Exists("Updater-new.exe"))
-            {
-                File.Delete("Updater.exe");
-                File.Move("Updater-new.exe", "Updater.exe");
-            }
+            //if (File.Exists("Updater-new.exe"))
+            //{
+            //    File.Delete("Updater.exe");
+            //    File.Move("Updater-new.exe", "Updater.exe");
+            //}
 
             //------------------------------------------------
             // 画面色数チェック

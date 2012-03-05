@@ -105,8 +105,9 @@ namespace NicoLive
             lock (thisLock)
             {
                 // 現在地機能が使用可能な状態か？
-                if ((!Properties.Settings.Default.imakoko_genzaichi && !Properties.Settings.Default.imakoko_speed) ||
-                    Properties.Settings.Default.imakoko_user == "")
+                if (!(Properties.Settings.Default.imakoko_genzaichi || Properties.Settings.Default.imakoko_speed || Properties.Settings.Default.imakoko_genzaichi_auto_comment) ||
+                    Properties.Settings.Default.imakoko_user.Equals("") 
+                    )
                 {
                     return;
                 }
@@ -180,6 +181,8 @@ namespace NicoLive
                     //dSendComment("時速" + ((int)mNowSpeed).ToString() + "kmです", true);
                 }
 
+                mNowPlace = "不明";
+
                 if (Reg_Lon_Lat.IsMatch(result) && Properties.Settings.Default.imakoko_genzaichi)
                 {
                     MatchCollection matchCol = Reg_Lon_Lat.Matches(result);
@@ -188,7 +191,7 @@ namespace NicoLive
 
                     result = ReverseGeocode(lat, lon);
                     mLastPlace = mNowPlace;
-                    mNowPlace = "不明";
+                    
                     if (result != "")
                     {
                         mLastPlace = mNowPlace;

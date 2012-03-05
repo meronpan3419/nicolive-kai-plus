@@ -69,14 +69,14 @@ namespace NicoLive
                         int sub = Utils.CalcTime();
                         int min = sub / 60;
 
-                       //--------------------- 無料延長開始 -----------------------
-                        if (mAutoExtendBtn.Checked && min <= 4 &&  !NEED_FREE_EXTEND_0)  // 25分
+                        //--------------------- 無料延長開始 -----------------------
+                        if (mAutoExtendBtn.Checked && min <= 4 && !NEED_FREE_EXTEND_0)  // 25分
                         {
-                            NEED_FREE_EXTEND_0=true;
-                            NEED_FREE_EXTEND_1=true;
+                            NEED_FREE_EXTEND_0 = true;
+                            NEED_FREE_EXTEND_1 = true;
                         }
 
-                        string id="";
+                        string id = "";
                         try
                         {
                             this.Invoke((Action)delegate()
@@ -89,7 +89,7 @@ namespace NicoLive
 
                         }
                         //--------------------- 無料延長処理 -----------------------
-                        if (id.Length>0 && !mIsExtend)
+                        if (id.Length > 0 && !mIsExtend)
                         {
                             if (mOwnLive && NEED_FREE_EXTEND_1)
                             {
@@ -103,8 +103,8 @@ namespace NicoLive
                                     if (sale.mItem != null && sale.mItem.Equals("freeextend"))
                                     {
                                         mFreeExtendItem = sale;
-                                        mPushExtend        = true;
-                                        push_extend        = true;
+                                        mPushExtend = true;
+                                        push_extend = true;
                                         NEED_FREE_EXTEND_2 = true;
                                         NEED_FREE_EXTEND_1 = false;
                                     }
@@ -117,7 +117,7 @@ namespace NicoLive
                                 {
                                     if (mNico.Purchase(id, mLiveInfo.Token, mFreeExtendItem))
                                     {
-                                        NEED_FREE_EXTEND_2=false;
+                                        NEED_FREE_EXTEND_2 = false;
 
                                         //this.SendComment(mMsg.GetMessage("延長完了"), true);
                                         mPushExtend = false;
@@ -130,27 +130,32 @@ namespace NicoLive
 
                             if (sub > 29 * 60)
                             {
-                                mIsExtend=false;
-                                NEED_FREE_EXTEND_0=false;
+                                mIsExtend = false;
+                                NEED_FREE_EXTEND_0 = false;
                             }
                         }
                     }
 
-                    if (Properties.Settings.Default.use_fme)
+                    if (Properties.Settings.Default.use_hq)
                     {
-                        if (!mStartFME && mNico.IsLogin)
+                        // 自動配信開始
+                        if (Properties.Settings.Default.auto_connect)
                         {
-                            int r = ax.AutoFME(this.Bounds, this.Location.X, this.Location.Y);
-                            if (r == 1)
+                            if (!mStartHQ && mNico.IsLogin)
                             {
-                                FMLE_Exec();
-                                mStartFME = true;
+                                int r = ax.AutoFME(this.Bounds, this.Location.X, this.Location.Y);
+                                if (r == 1)
+                                {
+                                    HQ.Exec(LiveID);
+                                    mStartHQ = true;
 
-                                // Compact 予告時刻設定
-                                mLastCompctTime = DateTime.Now;
-                                mCompactForcast = false;
+                                    // Compact 予告時刻設定
+                                    mLastCompctTime = DateTime.Now;
+                                    mCompactForcast = false;
+                                }
                             }
                         }
+
                     }
                     else
                     {
@@ -174,6 +179,11 @@ namespace NicoLive
                                         this.mLastChatTime = DateTime.Now;
                                         this.mLastCompctTime = DateTime.Now;
                                         this.mCompactForcast = false;
+                                        if (HQ.hasHQ())
+                                        {
+                                            HQ.Stop();
+                                        }
+                                        mStartHQ = false;
                                         break;
                                 }
 

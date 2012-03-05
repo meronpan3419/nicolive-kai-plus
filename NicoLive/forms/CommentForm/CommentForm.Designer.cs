@@ -278,7 +278,6 @@
             this.Controls.Add(this.mStatus);
             this.Name = "CommentForm";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.OnClosing);
-            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.CommentForm_FormClosed);
             this.Load += new System.EventHandler(this.CommentForm_Load);
             this.VisibleChanged += new System.EventHandler(this.CommentForm_VisibleChanged);
             this.mStatus.ResumeLayout(false);

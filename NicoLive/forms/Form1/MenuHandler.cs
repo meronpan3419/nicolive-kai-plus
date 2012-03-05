@@ -30,7 +30,7 @@ namespace NicoLive
         }
 
         //-------------------------------------------------------------------------
-        // 初期設定メニュー選択時
+        // 簡易ビュアーメニュー選択時
         //-------------------------------------------------------------------------
         private void ViewerMenuItem_Click(object sender, EventArgs e)
         {
@@ -47,8 +47,11 @@ namespace NicoLive
         //-------------------------------------------------------------------------
         private void FMEMenuItem_Click(object sender, EventArgs e)
         {
-            FMEStatus fm = new FMEStatus(this);
-            fm.Show();
+            if (mFMEStatus == null || mFMEStatus.IsDisposed)
+            {
+                this.mFMEStatus = new FMEStatus(this);
+            }
+            this.mFMEStatus.Show();
         }
     }
 }

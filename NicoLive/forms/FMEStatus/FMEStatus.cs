@@ -19,6 +19,7 @@ namespace NicoLive
     public partial class FMEStatus : Form
     {
         private Form1 mOwner = null;
+        private bool _boot = true;
 
         public FMEStatus(Form1 iOwner)
         {
@@ -31,75 +32,106 @@ namespace NicoLive
             int btm = mOwner.Bottom;
             int right = mOwner.Right;
 
-            Top = btm - 93;
-            Left = right - 268;
-        }
+            Top = btm - 115;
+            Left = right - 265;
 
-        private void Exec()
-        {
-            string path = System.Windows.Forms.Application.StartupPath + "\\nicovideo_fme.xml";
-            if (!File.Exists(path))
+            string path = Properties.Settings.Default.fmle_profile_path;
+            if (Directory.Exists(path))
             {
-                MessageBox.Show("nicovideo_fme.xmlが見つかりません", "NicoLive");
-                return;
+                string[] xmls = System.IO.Directory.GetFiles(path);
+                mFMLEProfileList.Items.Clear();
+                foreach (string xml in xmls)
+                {
+                    mFMLEProfileList.Items.Add(System.IO.Path.GetFileName(xml));
+                }
+                mFMLEProfileList.SelectedItem = Properties.Settings.Default.fmle_default_profile;
+                _boot = false;
             }
 
-            Thread th = new Thread(delegate()
-            {
-                Nico nico = Nico.Instance;
-                string lv = "";
-                this.Invoke((MethodInvoker)delegate()
-                {
-                    lv = mOwner.LiveID;
-                });
 
-                if (lv.Length > 2)
-                {
-                    Dictionary<string, string> arr = nico.GetFMEProfile(lv);
-                    if (arr["status"].Equals("ok"))
-                    {
-                        FMLE.Start(arr);
-                    }
-                    else
-                    {
-                        MessageBox.Show("番組情報の取得に失敗しました", "NicoLive");
-                    }
-                }
-                else
-                {
-                    MessageBox.Show("放送ＩＤが設定されていません", "NicoLive");
-                }
-            });
-            th.Start();
+
         }
+
+
 
         private void Start_Click(object sender, EventArgs e)
         {
-            if( !FMLE.hasFME() )
-                Exec();
+            if (!FMLE.hasFME() || !NLE.IsBroadCast || !XSplit.IsBroadCast)
+                HQ.Exec(mOwner.LiveID);
+
         }
 
         private void Restart_Click(object sender, EventArgs e)
         {
-            FMLE.Stop();
-            // wait for FMLE stop (2011.1.11) by Kazenif
-            while (FMLE.hasFME()) System.Threading.Thread.Sleep(500);
-            Exec();
+            HQ.Restart(mOwner.LiveID);
         }
+
+
 
         private void Stop_Click(object sender, EventArgs e)
         {
-            FMLE.Stop();
+            HQ.Stop();
         }
 
         private void mUITimer_Tick(object sender, EventArgs e)
         {
-            Start.Enabled = !FMLE.hasFME();
-            Restart.Enabled = FMLE.hasFME();
-            Stop.Enabled = FMLE.hasFME();
+            if (Properties.Settings.Default.use_nle)
+            {// NLE 関連設定
 
-            mLabel.Text = (FMLE.hasFME()) ? "FMLEが作動中です" : "FMLEは停止中です";
-            mLabel.ForeColor = (FMLE.hasFME()) ? Color.Red : Color.Black;
+                Start.Enabled = NLE.IsAlive && !NLE.IsBroadCast;
+                Restart.Enabled = NLE.IsBroadCast;
+                Stop.Enabled = NLE.IsBroadCast;
+                if (NLE.IsAlive)
+                {
+                    mLabel.Text = (NLE.IsBroadCast) ? "NLEが放送中です" : "NLEは停止中です";
+                }
+                else
+                {
+                    mLabel.Text = "NLEは未起動です";
+                }
+            }            
+            else  if (Properties.Settings.Default.use_xsplit)
+            {// XSplit 関連設定
+
+                Start.Enabled = XSplit.IsAlive && !XSplit.IsBroadCast;
+                Restart.Enabled = XSplit.IsBroadCast;
+                Stop.Enabled = XSplit.IsBroadCast;
+
+
+                if (XSplit.IsAlive)
+                {
+                    mLabel.Text = (XSplit.IsBroadCast) ? "XSplitが放送中です" : "XSplitは停止中です";
+                }
+                else
+                {
+                    mLabel.Text = "XSplitは未起動です";
+                }
+
+                mLabel.ForeColor = (XSplit.IsBroadCast) ? Color.Red : Color.Black;
+            }
+
+
+            else
+            {// FME 関連設定
+                Start.Enabled = !FMLE.hasFME();
+                Restart.Enabled = FMLE.hasFME();
+                Stop.Enabled = FMLE.hasFME();
+
+                mLabel.Text = (FMLE.hasFME()) ? "FMLEが作動中です" : "FMLEは停止中です";
+                mLabel.ForeColor = (FMLE.hasFME()) ? Color.Red : Color.Black;
+            }
+        }
+
+        private void mFMLEProfileList_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (!_boot)
+            {
+                Properties.Settings.Default.fmle_default_profile = mFMLEProfileList.SelectedItem.ToString();
+                if (FMLE.hasFME() && Properties.Settings.Default.use_fme)
+                {
+                    HQ.Restart(mOwner.LiveID);
+                }
+            }
         }
 
     }

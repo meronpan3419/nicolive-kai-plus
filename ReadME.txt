@@ -1,56 +1,72 @@
-NicoLive-1.0.46-no-iTunes-��27�g����
+﻿nicolive kai plus 
+
+作者：　　　　meronpan
+ツイッター：　@meronpan3419 
+コミュ：　　　co274186
+配布元：　　　http://nicolive_wakusu.b72.in/nicolive_kai_plus/
+
+ベース：
+　豆ライブ　　http://nicolive.sourceforge.jp/
+　豆ライブ改　http://www43.atwiki.jp/kazenif/pages/13.html
 
 
-(1). Flash Player �̍ŐV�ł��C���X�g�[�����ĉ������B
-(2). NicoLive�����C���X�g�[���������f�B���N�g���̉��ɁA���̃A�[�J�C�u����
-�@�@ *.exe ����� *.dll �t�@�C�������ׂăR�s�[���܂��B������NicoLive�ɏ㏑��
-�@�@���Ă����܂��܂���B
-(3). �����ݒ�̓��e��ݒ肵�Ȃ����Ă�������
-�@�@�i�����N���A����Ă���͂��Ȃ̂Łj�B
-(4). prop_history.xml �̓I���W�i���̓����C�u�ƃt�H�[�}�b�g���ς����
-�@�@���邽�߁A�����Ă������ق����ǂ��ł��傤�B
-
-�EFME�X�e�[�^�X�ł́A�u�ċN���v�̊m�����̌���
-�EFME�z�M���ɁA����I(11������)�ɐȑւ����s���@�\
-�E���O�A�E�g�����ۂɁA�����Đڑ�����@�\��ǉ�(kai2)
-�E184��t���Ă��Ȃ��l�̃R�e�n���������擾����@�\����(kai3)
-�E�J���҂��̃X�L�b�v���΂��@�\�����܂���(kai5)
-�E����Ґ��̍X�V�A�R�e�n���擾�̃o�O�C��(kai6)
-�E���R�R�Ō��ݒn���s�i���Ă���ꍇ�A�u���ݒn�́H�v�Ō��ݒn��
-�@�����܂��B(kai8)
-�E�u�O�g�̑����v�@�\�ŁA�^�O�������p���悤�ɂ���(kai9)
-�EFME��GUI���[�h�œ������@�\��t�^����(kai10)
-�E�u���x�́H�v�ƕ����ƁA���x�𓚂���悤�ɂ���(kai10)
-�E�u�O�g�̑����v��2.0.2����o�b�N�|�[�g(kai12)
-�E���O�΍�̐ȑւ��@�\���AFME�����łȂ��ʏ�z�M�ł��s���悤�ɂ���(kai14)
-�E�ʃE�C���h�E�̃R�����g�̃R�e�n���̕s����C��(kai15)
-�E�X�e�[�^�X�o�[�̕\�����ڂ�ݒ肷��(kai16)
-�EFME�̋N���Ɏ��s��������C��(kai16b)
-�EFME�̐ݒ�̕\����on/off�ł���悤�ɂ���(kai17)
-�EFME GUI�̋N�������܂������Ȃ����ƁA�ȈՃr���A�̖�������(kai18)
-�E���O�΍��ȑւ����烊���[�h�ɕύX(kai19)
-�E�ȈՃr���[�A��SWF�̃v���C���[�����Ƃɖ߂���(kai20)
-�E�Đڑ����̃R�����g���d�����ĉ����o�͂���̂𒼂���(kai20)
-�E�u���E�U�̃L���b�V�����Q�Ƃ��āA�Z�b�V��������p���Đڑ��\�ɂ���(kai21)
-�E�O�̃^�C�g����
-�@�@���̂P�A����(1)�A �قɂ���(1)�A��1�A�ȂǂŏI�����Ă���ꍇ�A
-�@�O�g�̑�����A�A���g���ŁA�ԍ��������C���N�������g����܂��B(kai22)
-�EF4(�t�@���N�V�����L�[�S�j�������ƌ����R�����g�E�C���h�E�̃X�e�[�^�X
-�@�o�[�̈�ԍ����ɁA�����̌o�ߎ��Ԃ�\������悤�ɂ���(kai23)
-�E�A���g��蓙��on�ƂȂ��Ă���ꍇ�̕\�������₷������(kai24)
-�E�ȈՃr���[�A�̃T�C�Y���኱�ύX(kai25)
-�EFME�z�M��fmesessons.dat�������d�l��t�������BFME�^�u��fmesessions.dat(kai25)
-�@�̐ݒ��Windows7�ȊO�̐l�͕ύX���邱�ƁB(kai25)
-�E�u���ݒn�́H�v�u���x�́H�v�̓ǂݏグ�̃��W�b�N���C��(kai25)
-�E�������������@�\��fix(kai26)
-�E�O�g�̑����ŁA�N���[�Y�ݒ��ǉ�(kai26)
-�E�O�g�̑����ŁA�N���[�Y�ݒ肪���܂��ǂ߂Ȃ�����fix(kai27)
-
-�ڍׂ́A
-http://www43.atwiki.jp/kazenif/pages/13.html
-���䗗���������B
 
 
-�Q�D�g�p�������C�u����
-�ɂ�񂳂񁕂��낳���CookieGetterSharpDistribution
-http://com.nicovideo.jp/community/co235502
+■追加機能
+○全般
+- ステータスバーに「枠数/枠待」項目
+- 配信コンソール部にコメント欄
+
+○コメビュ
+- コメントサーバーとのコネクションチェック強化＋再接続
+- 再接続時のコメント読み込み・コメビュ表示高速化
+- コメビュの「NGコメントです」表示と「>> NGです」コメント
+- コメビュ表示項目「時間」「情報（運営コメ　公式コメ　BPS　携帯　プレミアム）」欄
+- コメビュ色付け
+- フォント選べる
+- NGユーザー登録
+- コメントを選んでrキーを押すとアンカー！
+- コメントを選んでctrl+wでコメントパクる！
+- コメントを選んでctrl+eでアンカーつけてパクる！
+- ショートカットでコメビュ移動(ctrl+jでコメビュ下に、ctrl+kでコメビュ上に、ctrl+nで一番新しいコメントに移動)
+
+○今ココなう！
+- 現在地定期コメント
+
+○ツイッター
+- 配信開始ツイートで@TITLE出ないように。
+- ハッシュダグを指定出来るように。
+
+○外部配信
+- FMEプロファイル選択
+- NLE対応
+- XSplitショートカットキー(とりあえずctrl+alt+A)で配信開始・停止
+
+○読み上げ
+- コテハン、主コメ、/コメ、#コメ ON/OFF
+
+○簡易ビューアー
+- 小さく出来るように。
+- 最前面表示できるように。
+- 画面位置を覚えておくように。
+- 放送接続時に自動起動
+
+■更新履歴
+#2012/03/05 nicolive kai p10 再接続時の過去コメント表示高速化。簡易ビュアー自動起動、位置記憶。外部配信周り調整。fmlecmd最小化起動。NGバグfix。XSplitショートカットキー(とりあえずctrl+alt+A)で配信開始・停止。たぶん、XSplitとNLEはうまくマウスクリックできないときに豆ライブ固まるかもしれないバグある。
+#2012/02/12 nicolive kai p9 枠取った後にNLEが自動的に配信ならなかったかもしれないバグfix。簡易ビュアー小さいモード、最全面表示追加。
+#2012/02/11 nicolive kai p9 急にNLEが来たので対応。FMEステータすで再起動押すとXsplit配信で固まって死ぬ問題fix。コメントパクる機能追加。
+#2012/02/05 nicolive kai p8 通常配信、外部配信切り替えボタン実装。　外部配信に設定してるときに自動配信開始ON・OFFに関わらずFME開始してしまわないようにした。　残り3分の通知の時についでに連続枠取りも言うように。　コメビュのフォントを変更できるように。　コメント欄でエンター押してもビープ音ならないように。　再接続後配信開始ツイートが繰り返されて（ツイート自体は重複でエラー）いたので直した。
+#2012/02/03 nicolive kai p7b NGコメント来たらコメビュ固まるバグ治ってなかった(´ﾟ'ωﾟ`) コメビュの変な処理加えてて、接続時の過去コメント読み込み重かったの直した。
+#2012/02/01 nicolive kai p7a NGコメント来たらコメビュ固まるバグあった(co370934さんありがとうございます！)
+#2012/02/01 nicolive kai p7 コメビュ色fix。コメビュ情報・時間欄追加。マウスクリックfix。運営コメントツイート非同期に修正。 /resetボタン実装。/コメ、#コメ読み上げ設定追加。　コメントNoでのソート追加。
+#2012/01/28 nicolive kai p6a plus6でrでアンカ打ててなかったの修正。
+#2012/01/28 nicolive kai plus6 ステータスバーに枠数/枠待表示追加。コメビュに色を付けれるようにした。NGユーザー設定ファイルのバグ修正。コメビュでrキー押すとアンカー打てるようにした。
+#2012/01/20 nicolive kai plus5 NGユーザー追加機能追加、FMEプロファイル選択機能追加、コメント欄追加（カオスTL生成システム搭載）、plus4の設定画面で外部エンコーダーのチェックボックがどっかいってたの修正、うつろ
+さん（co235502）のところのCookieGetterSharp.dll更新
+#2012/01/16 nicolive kai plus4 kai30srcマージ（xsplitのとこも）、再接続時のコメビュ表示高速化、NGワード表示・通知機能追加、定期的に現在地を運営コメントに表示する機能追加(xsplit連動をテストしてない超人柱版）
+#2012/01/03 nicolive kai plus3 kai30srcマージ（xsplit除く）、コテハン読み上げ追加（人柱版）
+#2012/01/01 nicolive kai plus2 コメントサーバーとの接続切れ検出強化　（人柱版）
+#2012/01/01 nicolive kai plus1 適当な所に解凍して、豆ライブ実行してね♡　twitter oauth対応版
+#2012/01/01 nicolive kai27+ 適当な所に解凍して、豆ライブ実行してね♡ ツイッター認証設定してなかったので認証する時エラー出て出来ないみたい。
+
+

@@ -6,7 +6,7 @@
 //-------------------------------------------------------------------------
 using System;
 using System.Diagnostics;
-using oAuthExample;
+using iPentec.TwitterUtils;
 
 //-------------------------------------------------------------------------
 // クラス実装
@@ -15,6 +15,19 @@ namespace NicoLive
 {
     class Twitter :IDisposable
     {
+
+
+        string ConsumerKey = "";
+        string ConsumerSecret = "";
+        string Token = "";
+        string TokenSecret = "";
+        TwitterUtils tu;
+
+        public Twitter()
+        {
+            tu = new TwitterUtils();
+        }
+
         //-------------------------------------------------------------------------
         // 解放
         //-------------------------------------------------------------------------
@@ -23,31 +36,51 @@ namespace NicoLive
         }
 
         //-------------------------------------------------------------------------
-        // xAuth認証
+        // oAuth認証
         //-------------------------------------------------------------------------
-		public bool xAuth( string iUserID, string iPasswd )
+		public string GetOAuthToken()
 		{
-            oAuthTwitter oAuth = new oAuthTwitter();
-            oAuth.xAuthAccessTokenGet(iUserID, iPasswd);
-            
-            if (oAuth.TokenSecret.Length > 0)
+    
+            string url = tu.GetOAuthToken(ConsumerKey, ConsumerSecret);
+
+            return url;
+
+        }
+
+
+        public bool oAuth(string pin)
+        {
+
+            try
             {
-                // TokenとTokenSecretを待避
-				Debug.WriteLine(oAuth.Token);
-				Debug.WriteLine(oAuth.TokenSecret);
+
+
+                tu.GetOAuthAccessTokenWithPIN(
+                      pin,
+                      ConsumerKey, ConsumerSecret,
+                      out Token, out TokenSecret);
+
+                Debug.WriteLine(Token);
+                Debug.WriteLine(TokenSecret);
 
                 Properties.Settings.Default.tw_passwd = "";
                 Properties.Settings.Default.tw_user = "";
 
-                Properties.Settings.Default.tw_token = oAuth.Token;
-                Properties.Settings.Default.tw_token_secret = oAuth.TokenSecret;
-				return true;
+                Properties.Settings.Default.tw_token = Token;
+                Properties.Settings.Default.tw_token_secret = TokenSecret;
+
             }
+            catch (Exception e)
+            {
+                throw e;
+            }
+            
+
             return false;
 		}
 
         //-------------------------------------------------------------------------
-        // ポスト(xAuth版)
+        // ポスト(oAuth版)
         //-------------------------------------------------------------------------
         public bool Post(string iMessage,string iTopic)
         {
@@ -55,15 +88,25 @@ namespace NicoLive
                 Properties.Settings.Default.tw_token_secret.Length == 0)
                 return false;
 
+
             if (iTopic.Length > 0)
                 iMessage += " " + iTopic;
 
-            oAuthTwitter oAuth = new oAuthTwitter();
-            oAuth.Token = Properties.Settings.Default.tw_token;
-            oAuth.TokenSecret = Properties.Settings.Default.tw_token_secret;
-            string url = "http://twitter.com/statuses/update.xml";
-            string xml = oAuth.oAuthWebRequest(oAuthTwitter.Method.POST, url, "status=" + oAuth.UrlEncode(iMessage));
-			oAuth = null;
+            TwitterUtils tu = new TwitterUtils();
+            try
+            {
+                tu.UpdateStatusOAuth(
+                    iMessage,
+                      ConsumerKey, ConsumerSecret,
+                      Properties.Settings.Default.tw_token, Properties.Settings.Default.tw_token_secret);
+            }
+            catch (Exception)
+            {
+               // throw e;
+               // System.Diagnostics.Debug.WriteLine("twitter post :" + e.StackTrace.ToString());
+
+
+            }
             return true;
 		}
     }

@@ -564,7 +564,9 @@ namespace NicoLive
                 // プロセスをスタートさせる
 
                 // プロファイルのパス
-                string profile_path = Path.GetTempPath() + "nicovideo_fme.xml";
+                //string profile_path = Path.GetTempPath() + "nicovideo_fme.xml";
+                string profile_path = Properties.Settings.Default.fmle_profile_path + "\\" + Properties.Settings.Default.fmle_default_profile;
+            
 
                 // FlashMediaEncoderのパス
                 string path = Properties.Settings.Default.fmle_path.Replace("FMLECmd", "FlashMediaLiveEncoder");

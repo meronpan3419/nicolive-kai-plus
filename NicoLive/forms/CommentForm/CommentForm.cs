@@ -120,7 +120,7 @@ namespace NicoLive
         public void AddComment( Comment iCmt)
         {
             // フォントを設定しておく
-            if (this.mCommentList.Font.Size != Properties.Settings.Default.font_size)
+            if (!this.mCommentList.Font.Equals(Properties.Settings.Default.font))
                 ResetCommentFont();
 
             Utils.AddComment(ref mCommentList, iCmt);
@@ -144,13 +144,11 @@ namespace NicoLive
         //-------------------------------------------------------------------------
         private void OnClosing(object sender, FormClosingEventArgs e)
         {
-            if (e.CloseReason == CloseReason.UserClosing)
+            if (e.CloseReason == CloseReason.UserClosing||
+                e.CloseReason == CloseReason.FormOwnerClosing)
             {
                 e.Cancel = true;
-                Properties.Settings.Default.column_width_ext_0 = this.mCommentList.Columns[0].Width;
-                Properties.Settings.Default.column_width_ext_1 = this.mCommentList.Columns[1].Width;
-                Properties.Settings.Default.column_width_ext_2 = this.mCommentList.Columns[2].Width;
-                Properties.Settings.Default.column_width_ext_3 = this.mCommentList.Columns[3].Width;
+                SaveProp();
                 Hide();
             }
         }
@@ -285,6 +283,7 @@ namespace NicoLive
             }
         }
 
+
         //-------------------------------------------------------------------------
         // ステータス表示設定
         //-------------------------------------------------------------------------
@@ -308,14 +307,19 @@ namespace NicoLive
             this.WindowState = Properties.Settings.Default.cw_state;
         }
 
-        private void CommentForm_FormClosed(object sender, FormClosedEventArgs e)
+        private void SaveProp()
         {
+            Properties.Settings.Default.column_width_ext_0 = this.mCommentList.Columns[0].Width;
+            Properties.Settings.Default.column_width_ext_1 = this.mCommentList.Columns[1].Width;
+            Properties.Settings.Default.column_width_ext_2 = this.mCommentList.Columns[2].Width;
+            Properties.Settings.Default.column_width_ext_3 = this.mCommentList.Columns[3].Width;
+  
             // ウィンドステート保存
             if (this.WindowState == FormWindowState.Normal)
             {
                 Size size = new Size(this.Width, this.Height);
                 Properties.Settings.Default.cw_size = size;
-                Point pos = new Point(this.Top, this.Left);
+                Point pos = new Point(this.Left, this.Top);
                 Properties.Settings.Default.cw_pos = pos;
             }
             Properties.Settings.Default.mw_state = this.WindowState;
@@ -331,7 +335,6 @@ namespace NicoLive
                 this.UpdateStatusVisibility();
             }
         }
-
     }
 }
 //-------------------------------------------------------------------------
