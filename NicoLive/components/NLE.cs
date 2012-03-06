@@ -13,25 +13,17 @@ namespace NicoLive
     class NLE
     {
         //
+        // 配信をスタートする時には、
+        //      NLE.Start()
         //
-        // (1). Formを作成時に、インスタンスを作成
-        //      NLE mNLE = new NLE();
+        // 配信を停止するときには、
+        //      NLE.Stop();
         //
-        // (2). Timerを用いて、上記インスタンスから、
-        //      HandlingStatus() を定期的に呼び出す。
-        //      mNLE.HandlingStatus();
+        // NLEが放送中かチェック
+        //      NLE.IsBroadCast でチェック可能。
         //
-        // (3). 配信をスタートする時には、
-        //      mNLE.Start()
-        //
-        // (4). 配信を停止するときには、
-        //      mNLE.Stop();
-        //
-        // (5). NLEが放送中かチェック
-        //      mNLE.IsBroadCast でチェック可能。
-        //
-        // (6). NLEプロセスが存在するかチェック
-        //      mNLE.IsAlive でチェック可能
+        // NLEプロセスが存在するかチェック
+        //      NLE.IsAlive でチェック可能
         //
         //
 

@@ -12,13 +12,7 @@ namespace NicoLive
         //-------------------------------------------------------------------------
         public static void Exec(string LiveID)
         {
-            string path = Properties.Settings.Default.fmle_profile_path + "\\" + Properties.Settings.Default.fmle_default_profile; ;
 
-            if (!File.Exists(path) && !Properties.Settings.Default.use_xsplit && !Properties.Settings.Default.use_nle)
-            {
-                MessageBox.Show(path + "が見つかりません", "NicoLive");
-                return;
-            }
 
             Thread th = new Thread(delegate()
             {
@@ -48,20 +42,34 @@ namespace NicoLive
 
 
                 // FME
-                Nico nico = Nico.Instance;
-                string fmle_profile_path = Properties.Settings.Default.fmle_profile_path + "\\" + Properties.Settings.Default.fmle_default_profile;
-
-                string lv = LiveID;
-                if (lv.Length > 2)
+                if (Properties.Settings.Default.use_fme)
                 {
-                    Dictionary<string, string> arr = nico.GetFMEProfile(lv);
-                    if (arr["status"].Equals("ok"))
+                    string path = Properties.Settings.Default.fmle_profile_path + "\\" + Properties.Settings.Default.fmle_default_profile; ;
+
+                    if (!File.Exists(path) && !Properties.Settings.Default.use_xsplit && !Properties.Settings.Default.use_nle)
                     {
-                        FMLE.Start(arr, fmle_profile_path);
+                           using (Bouyomi bm = new Bouyomi())
+                        {
+                            bm.Talk("えふえむいープロファイルが見つかりませんでした");
+                        }
+                           return;
+                    }
+                    Nico nico = Nico.Instance;
+                    string fmle_profile_path = Properties.Settings.Default.fmle_profile_path + "\\" + Properties.Settings.Default.fmle_default_profile;
+
+                    string lv = LiveID;
+                    if (lv.Length > 2)
+                    {
+                        Dictionary<string, string> arr = nico.GetFMEProfile(lv);
+                        if (arr["status"].Equals("ok"))
+                        {
+                            FMLE.Start(arr, fmle_profile_path);
+                        }
                     }
                 }
             });
             th.Start();
+
         }
 
         public static void Stop()
