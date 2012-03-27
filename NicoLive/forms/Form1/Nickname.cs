@@ -22,6 +22,7 @@ namespace NicoLive
 
             int id;
             if (!int.TryParse(iUserID, out id)) return;
+            if (id == 900000000 || id == 394) return;    // クルーズはユーザーページ見れない
 
             if (!mGatherUserID.Contains(iUserID))
             {
