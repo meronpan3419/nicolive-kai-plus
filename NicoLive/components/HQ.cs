@@ -68,6 +68,7 @@ namespace NicoLive
                     }
                 }
             });
+            th.Name = "NivoLive.HQ.Exec(): FME";
             th.Start();
 
         }
@@ -82,6 +83,7 @@ namespace NicoLive
                 XSplit.Stop();
 
             });
+            th.Name = "NivoLive.HQ.Stop()";
             th.Start();
         }
 
@@ -99,6 +101,7 @@ namespace NicoLive
                 }
                 Exec(LiveID);
             });
+            th.Name = "NivoLive.HQ.Restart()";
             th.Start();
         }
 

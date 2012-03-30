@@ -1318,5 +1318,17 @@ namespace NicoLive.Properties {
                 this["cont_waku_notice"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool use_launcher {
+            get {
+                return ((bool)(this["use_launcher"]));
+            }
+            set {
+                this["use_launcher"] = value;
+            }
+        }
     }
 }

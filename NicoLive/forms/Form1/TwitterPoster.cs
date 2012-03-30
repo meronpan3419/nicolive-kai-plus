@@ -108,6 +108,7 @@ namespace NicoLive
                     }
                 }
             });
+            th.Name = "NivoLive.Form1.TwitterPoster()";
             th.Start();
         }
     }

@@ -184,6 +184,12 @@ namespace NicoLive
                         {
                             mViewer.SetLiveID(LiveID);
                         }
+
+                        // らんちゃー
+                        if (Properties.Settings.Default.use_launcher)
+                        {
+                            mLauncher.Exec(this.LiveID);
+                        }
                     });
                 }
                 else

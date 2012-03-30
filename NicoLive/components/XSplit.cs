@@ -589,6 +589,7 @@ namespace NicoLive
                     //    SetWindowPos(hXSplitWnd, hAfterWnd, 0, 0, 0, 0, SetWindowPosFlags.SWP_NOMOVE | SetWindowPosFlags.SWP_NOSIZE | SetWindowPosFlags.SWP_NOACTIVATE);
                     //}
                 });
+                th.Name = "NivoLive.Xsplit.StartNicoLive()";
                 th.Start();
             }
         }

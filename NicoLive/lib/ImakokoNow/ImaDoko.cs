@@ -20,9 +20,11 @@ namespace NicoLive
 
         private static double mNowSpeed;
         private static string mNowPlace;
+        private static double mNowAltitude;
 
         private static double mLastSpeed;
         private static string mLastPlace;
+        private static double mLastAltitude;
 
         public static double Speed
         {
@@ -34,10 +36,18 @@ namespace NicoLive
             get { return mNowPlace; }
         }
 
+        public static double Altitude
+        {
+            get { return mNowAltitude; }
+        }
+
+
+
         const string AddressURI2 = "http://geocode.didit.jp/reverse/";
         const string GetPosURI = "http://imakoko-gps.appspot.com/api/latest";
         static Regex Reg_Lon_Lat = new Regex("\"lon\":\"(\\d+\\.\\d+)\".*?\"lat\":\"(\\d+\\.\\d+)\"");
         static Regex Reg_Speed = new Regex("\"velocity\":\"(\\d+\\.\\d+)\"");
+        static Regex Reg_Altitude = new Regex("\"altitude\":\"(\\d+\\.\\d+)\"");
 
         public static bool IsCheckOnGoing = false;
 
@@ -179,6 +189,15 @@ namespace NicoLive
                     MatchCollection matchCol = Reg_Speed.Matches(result);
                     mNowSpeed = double.Parse(matchCol[0].Groups[1].Value);
                     //dSendComment("時速" + ((int)mNowSpeed).ToString() + "kmです", true);
+                }
+
+                mLastAltitude = mNowAltitude;
+                mNowAltitude = 0;
+                                
+                if (Reg_Altitude.IsMatch(result))
+                {
+                    MatchCollection matchCol = Reg_Altitude.Matches(result);
+                    mNowAltitude = double.Parse(matchCol[0].Groups[1].Value);
                 }
 
                 mNowPlace = "不明";

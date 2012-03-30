@@ -33,6 +33,7 @@ namespace NicoLive
             {
                 TalkByTCP(FormatText(iStr), iSpeed, iTone, iVolume, iVoice);
             });
+            th.Name = "bouyomi talk";
             th.Start();
         }
         //-------------------------------------------------------------------------
@@ -114,6 +115,7 @@ namespace NicoLive
                     System.Windows.Forms.MessageBox.Show("棒読みちゃん！の起動に\n失敗しました", "NicoLive");
                 }
             });
+            th.Name = "bouyomi launch";
             th.Start();
         }
         

@@ -16,17 +16,18 @@ namespace NicoLive
         //-------------------------------------------------------------------------
         private void CheckVersion()
         {
-			Thread th = new Thread(delegate()
-			{
-				VersionCheck checker = new VersionCheck();
+            Thread th = new Thread(delegate()
+            {
+                VersionCheck checker = new VersionCheck();
 
-				if (!checker.Check(Application.ProductVersion))
-				{
-					NewVersion dlg = new NewVersion();
-					dlg.ShowDialog();
-					dlg.Dispose();
-				}
-			});
+                if (!checker.Check(Application.ProductVersion))
+                {
+                    NewVersion dlg = new NewVersion();
+                    dlg.ShowDialog();
+                    dlg.Dispose();
+                }
+            });
+            th.Name = "CheckVersion";
 			th.Start();
         }
     }

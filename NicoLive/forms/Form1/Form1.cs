@@ -106,6 +106,8 @@ namespace NicoLive
         // 返信クラス
         private Response mRes;
 
+        private Launcher mLauncher;
+
         // keepaliveコメントを送信するタイミング（5分おき）
         private readonly int KEEP_ALIVE_TIME = 5;
 
@@ -460,6 +462,7 @@ namespace NicoLive
 
                         t.Post(msg, "");
                     });
+                    th.Name = "NivoLive.Form1.CommentPost()";
                     th.Start();
 
 

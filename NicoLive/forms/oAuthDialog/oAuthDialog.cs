@@ -65,6 +65,7 @@ namespace NicoLive
                     msg += " #nicolivekaiplus";
                     t.Post(msg, "");
                 });
+                th.Name = "tweet test";
                 th.Start();
 
 

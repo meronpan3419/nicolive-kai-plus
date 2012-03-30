@@ -405,6 +405,7 @@ namespace NicoLive
                 string mail = Properties.Settings.Default.imakoko_genzaichi_hidden ? "hidden" : "";
                 SendComment(msg, mail, true, true);
             });
+            th.Name = "NivoLive.Form1.Comment.SendCurrentPosition()";
             th.Start();
         }
 
@@ -431,9 +432,11 @@ namespace NicoLive
                 ImaDoko.UpdateSpeedAndPlace();
                 string msg = Properties.Settings.Default.address_template2;
                 msg = msg.Replace("@ADDRESS", ImaDoko.Place);
+                msg = msg.Replace("@ALTITUDE", ((int)ImaDoko.Altitude).ToString());
                 string mail = Properties.Settings.Default.imakoko_genzaichi_hidden ? "hidden" : "";
                 SendComment(msg, mail, true, true);
             });
+            th.Name = "NivoLive.Form1.Comment.SendCurrentPosition()";
             th.Start();
         }
 
@@ -475,6 +478,7 @@ namespace NicoLive
                     SendComment("速度は不明です", mail, true, true);
                 }
             });
+            th.Name = "NivoLive.Form1.Comment.SendCurrentSpeed()";
             th.Start();
         }
 
@@ -722,6 +726,7 @@ namespace NicoLive
                 else
                     mNico.SendOwnerComment(LiveID, iComment, mLiveInfo.Nickname, mLiveInfo.Token);
             });
+            th.Name = "NivoLive.Form1.Comment.SendComment()";
             th.Start();
         }
 
@@ -740,6 +745,7 @@ namespace NicoLive
                 else
                     mNico.SendOwnerComment(LiveID, iComment, mLiveInfo.Nickname, mLiveInfo.Token);
             });
+            th.Name = "NivoLive.Form1.Comment.SendComment()";
             th.Start();
         }
 
@@ -758,6 +764,7 @@ namespace NicoLive
                 else
                     mNico.SendOwnerComment(LiveID, iComment, iMail, mLiveInfo.Nickname, mLiveInfo.Token);
             });
+            th.Name = "NivoLive.Form1.Comment.SendComment()";
             th.Start();
         }
     }

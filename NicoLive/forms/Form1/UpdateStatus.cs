@@ -377,6 +377,7 @@ namespace NicoLive
                     Console.WriteLine(ex.Message);
                 }
             });
+            th.Name = "NivoLive.Form1.UpdateStatus.UpdateWakumachi()";
             th.Start();
 
         }

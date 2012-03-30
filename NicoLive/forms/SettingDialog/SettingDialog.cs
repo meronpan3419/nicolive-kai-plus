@@ -165,12 +165,8 @@ namespace NicoLive
         private Label label21;
         private CheckBox checkBox1;
         private GroupBox groupBox13;
-        private DataGridView dataGridView2;
-        private DataGridViewTextBoxColumn mLaunchEnable;
-        private DataGridViewTextBoxColumn mLaunchName;
-        private DataGridViewTextBoxColumn mLunchPath;
-        private DataGridViewTextBoxColumn mLaunchArg;
-        private CheckBox checkBox2;
+        private DataGridView mLauncherList;
+        private CheckBox cbLauncher;
         private TextBox textBox2;
         private Label label22;
         private TextBox mAddressTemplate2;
@@ -186,6 +182,10 @@ namespace NicoLive
         private Label label23;
         private CheckBox mViewerAutoBoot;
         private CheckBox mContWakuNotice;
+        private DataGridViewCheckBoxColumn mLaunchEnable;
+        private DataGridViewTextBoxColumn mLaunchName;
+        private DataGridViewTextBoxColumn mLunchPath;
+        private DataGridViewTextBoxColumn mLaunchArg;
 
 
         private IContainer components;
@@ -236,6 +236,8 @@ namespace NicoLive
             this.mPassLabel = new System.Windows.Forms.Label();
             this.mPasswdBox = new System.Windows.Forms.TextBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.mContWakuNotice = new System.Windows.Forms.CheckBox();
+            this.mViewerAutoBoot = new System.Windows.Forms.CheckBox();
             this.mAutoUsername = new System.Windows.Forms.CheckBox();
             this.mKeepalive = new System.Windows.Forms.CheckBox();
             this.mNGNotice = new System.Windows.Forms.CheckBox();
@@ -310,6 +312,8 @@ namespace NicoLive
             this.mImakokoUser = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.mTabTwitter = new System.Windows.Forms.TabPage();
+            this.mTwHash = new System.Windows.Forms.TextBox();
+            this.label23 = new System.Windows.Forms.Label();
             this.mTwEndEnable = new System.Windows.Forms.CheckBox();
             this.mTwStartEnable = new System.Windows.Forms.CheckBox();
             this.mWakuTweet = new System.Windows.Forms.CheckBox();
@@ -371,22 +375,18 @@ namespace NicoLive
             this.label21 = new System.Windows.Forms.Label();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.groupBox13 = new System.Windows.Forms.GroupBox();
-            this.dataGridView2 = new System.Windows.Forms.DataGridView();
-            this.mLaunchEnable = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.mLauncherList = new System.Windows.Forms.DataGridView();
+            this.mLaunchEnable = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.mLaunchName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.mLunchPath = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.mLaunchArg = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.checkBox2 = new System.Windows.Forms.CheckBox();
+            this.cbLauncher = new System.Windows.Forms.CheckBox();
             this.mSaveBtn = new System.Windows.Forms.Button();
             this.mColorDialog = new System.Windows.Forms.ColorDialog();
             this.mUITimer = new System.Windows.Forms.Timer(this.components);
             this.mOpenFileDlg = new System.Windows.Forms.OpenFileDialog();
             this.mSessionFileDlg = new System.Windows.Forms.OpenFileDialog();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.label23 = new System.Windows.Forms.Label();
-            this.mTwHash = new System.Windows.Forms.TextBox();
-            this.mViewerAutoBoot = new System.Windows.Forms.CheckBox();
-            this.mContWakuNotice = new System.Windows.Forms.CheckBox();
             this.mTabPage8.SuspendLayout();
             this.mTabGeneral.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -421,7 +421,7 @@ namespace NicoLive
             this.mTabEtc.SuspendLayout();
             this.groupBox14.SuspendLayout();
             this.groupBox13.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.mLauncherList)).BeginInit();
             this.SuspendLayout();
             // 
             // mCancelBtn
@@ -558,6 +558,27 @@ namespace NicoLive
             this.groupBox2.TabIndex = 5;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "その他";
+            // 
+            // mContWakuNotice
+            // 
+            this.mContWakuNotice.AutoSize = true;
+            this.mContWakuNotice.Location = new System.Drawing.Point(20, 84);
+            this.mContWakuNotice.Name = "mContWakuNotice";
+            this.mContWakuNotice.Size = new System.Drawing.Size(343, 16);
+            this.mContWakuNotice.TabIndex = 31;
+            this.mContWakuNotice.Text = "放送時間残り通知時に連続枠取を設定しているかどうかも通知する";
+            this.mContWakuNotice.UseVisualStyleBackColor = true;
+            // 
+            // mViewerAutoBoot
+            // 
+            this.mViewerAutoBoot.AutoSize = true;
+            this.mViewerAutoBoot.Location = new System.Drawing.Point(20, 280);
+            this.mViewerAutoBoot.Name = "mViewerAutoBoot";
+            this.mViewerAutoBoot.Size = new System.Drawing.Size(228, 16);
+            this.mViewerAutoBoot.TabIndex = 30;
+            this.mViewerAutoBoot.Text = "配信接続時に簡易ビュアーを自動起動する";
+            this.toolTip1.SetToolTip(this.mViewerAutoBoot, ">>n番さんNGです！的な");
+            this.mViewerAutoBoot.UseVisualStyleBackColor = true;
             // 
             // mAutoUsername
             // 
@@ -1390,6 +1411,22 @@ namespace NicoLive
             this.mTabTwitter.Text = "Twitter";
             this.mTabTwitter.UseVisualStyleBackColor = true;
             // 
+            // mTwHash
+            // 
+            this.mTwHash.Location = new System.Drawing.Point(152, 345);
+            this.mTwHash.Name = "mTwHash";
+            this.mTwHash.Size = new System.Drawing.Size(279, 19);
+            this.mTwHash.TabIndex = 11;
+            // 
+            // label23
+            // 
+            this.label23.AutoSize = true;
+            this.label23.Location = new System.Drawing.Point(35, 352);
+            this.label23.Name = "label23";
+            this.label23.Size = new System.Drawing.Size(64, 12);
+            this.label23.TabIndex = 10;
+            this.label23.Text = "ハッシュダグ：";
+            // 
             // mTwEndEnable
             // 
             this.mTwEndEnable.AutoSize = true;
@@ -1853,6 +1890,7 @@ namespace NicoLive
             this.mResList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.mResList.Size = new System.Drawing.Size(436, 265);
             this.mResList.TabIndex = 1;
+            this.mResList.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.mResList_CellContentClick);
             // 
             // Column1
             // 
@@ -2021,8 +2059,8 @@ namespace NicoLive
             // 
             // groupBox13
             // 
-            this.groupBox13.Controls.Add(this.dataGridView2);
-            this.groupBox13.Controls.Add(this.checkBox2);
+            this.groupBox13.Controls.Add(this.mLauncherList);
+            this.groupBox13.Controls.Add(this.cbLauncher);
             this.groupBox13.Location = new System.Drawing.Point(3, 3);
             this.groupBox13.Name = "groupBox13";
             this.groupBox13.Size = new System.Drawing.Size(467, 186);
@@ -2030,26 +2068,28 @@ namespace NicoLive
             this.groupBox13.TabStop = false;
             this.groupBox13.Text = "ランチャー";
             // 
-            // dataGridView2
+            // mLauncherList
             // 
-            this.dataGridView2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView2.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.mLauncherList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.mLauncherList.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.mLaunchEnable,
             this.mLaunchName,
             this.mLunchPath,
             this.mLaunchArg});
-            this.dataGridView2.Enabled = false;
-            this.dataGridView2.Location = new System.Drawing.Point(4, 40);
-            this.dataGridView2.Name = "dataGridView2";
-            this.dataGridView2.RowHeadersVisible = false;
-            this.dataGridView2.RowTemplate.Height = 21;
-            this.dataGridView2.Size = new System.Drawing.Size(446, 140);
-            this.dataGridView2.TabIndex = 2;
+            this.mLauncherList.Location = new System.Drawing.Point(4, 40);
+            this.mLauncherList.Name = "mLauncherList";
+            this.mLauncherList.RowHeadersVisible = false;
+            this.mLauncherList.RowTemplate.Height = 21;
+            this.mLauncherList.Size = new System.Drawing.Size(446, 140);
+            this.mLauncherList.TabIndex = 2;
+            this.mLauncherList.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.mLauncherList_CellContentClick);
             // 
             // mLaunchEnable
             // 
             this.mLaunchEnable.HeaderText = "有効";
             this.mLaunchEnable.Name = "mLaunchEnable";
+            this.mLaunchEnable.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.mLaunchEnable.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
             this.mLaunchEnable.Width = 80;
             // 
             // mLaunchName
@@ -2068,16 +2108,15 @@ namespace NicoLive
             this.mLaunchArg.HeaderText = "コマンドラインオプション";
             this.mLaunchArg.Name = "mLaunchArg";
             // 
-            // checkBox2
+            // cbLauncher
             // 
-            this.checkBox2.AutoSize = true;
-            this.checkBox2.Enabled = false;
-            this.checkBox2.Location = new System.Drawing.Point(4, 18);
-            this.checkBox2.Name = "checkBox2";
-            this.checkBox2.Size = new System.Drawing.Size(118, 16);
-            this.checkBox2.TabIndex = 1;
-            this.checkBox2.Text = "放接続時になんたら";
-            this.checkBox2.UseVisualStyleBackColor = true;
+            this.cbLauncher.AutoSize = true;
+            this.cbLauncher.Location = new System.Drawing.Point(4, 18);
+            this.cbLauncher.Name = "cbLauncher";
+            this.cbLauncher.Size = new System.Drawing.Size(132, 16);
+            this.cbLauncher.TabIndex = 1;
+            this.cbLauncher.Text = "放接続時に起動させる";
+            this.cbLauncher.UseVisualStyleBackColor = true;
             // 
             // mSaveBtn
             // 
@@ -2109,43 +2148,6 @@ namespace NicoLive
             this.mSessionFileDlg.FileName = "fmesessions.dat";
             this.mSessionFileDlg.Filter = "fmesessions.dat|*.dat";
             this.mSessionFileDlg.Title = "fmesessions.dat";
-            // 
-            // label23
-            // 
-            this.label23.AutoSize = true;
-            this.label23.Location = new System.Drawing.Point(35, 352);
-            this.label23.Name = "label23";
-            this.label23.Size = new System.Drawing.Size(64, 12);
-            this.label23.TabIndex = 10;
-            this.label23.Text = "ハッシュダグ：";
-            // 
-            // mTwHash
-            // 
-            this.mTwHash.Location = new System.Drawing.Point(152, 345);
-            this.mTwHash.Name = "mTwHash";
-            this.mTwHash.Size = new System.Drawing.Size(279, 19);
-            this.mTwHash.TabIndex = 11;
-            // 
-            // mViewerAutoBoot
-            // 
-            this.mViewerAutoBoot.AutoSize = true;
-            this.mViewerAutoBoot.Location = new System.Drawing.Point(20, 280);
-            this.mViewerAutoBoot.Name = "mViewerAutoBoot";
-            this.mViewerAutoBoot.Size = new System.Drawing.Size(228, 16);
-            this.mViewerAutoBoot.TabIndex = 30;
-            this.mViewerAutoBoot.Text = "配信接続時に簡易ビュアーを自動起動する";
-            this.toolTip1.SetToolTip(this.mViewerAutoBoot, ">>n番さんNGです！的な");
-            this.mViewerAutoBoot.UseVisualStyleBackColor = true;
-            // 
-            // mContWakuNotice
-            // 
-            this.mContWakuNotice.AutoSize = true;
-            this.mContWakuNotice.Location = new System.Drawing.Point(20, 84);
-            this.mContWakuNotice.Name = "mContWakuNotice";
-            this.mContWakuNotice.Size = new System.Drawing.Size(343, 16);
-            this.mContWakuNotice.TabIndex = 31;
-            this.mContWakuNotice.Text = "放送時間残り通知時に連続枠取を設定しているかどうかも通知する";
-            this.mContWakuNotice.UseVisualStyleBackColor = true;
             // 
             // SettingDialog
             // 
@@ -2212,7 +2214,7 @@ namespace NicoLive
             this.groupBox14.PerformLayout();
             this.groupBox13.ResumeLayout(false);
             this.groupBox13.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.mLauncherList)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -2413,7 +2415,10 @@ namespace NicoLive
             // 開演待ちスキップ
             mSkip5min.Checked = Properties.Settings.Default.skip5min;
 
+            cbLauncher.Checked = Properties.Settings.Default.use_launcher;
+
             LoadResponse();
+            LoadLauncher();
         }
 
         //-------------------------------------------------------------------------
@@ -2539,9 +2544,15 @@ namespace NicoLive
             // 開演待ちスキップ
             Properties.Settings.Default.skip5min = mSkip5min.Checked;
 
+            Properties.Settings.Default.use_launcher = cbLauncher.Checked;
+
             Response res = Response.Instance;
             SaveResponse();
             res.Reload();
+
+            Launcher launcher = Launcher.Instance;
+            SaveLauncher();
+            launcher.Reload();
 
             Properties.Settings.Default.Save();
         }
@@ -2694,6 +2705,106 @@ namespace NicoLive
                         writer.WriteAttributeString("type", "0");
                         writer.WriteAttributeString("enabled", row.Cells[0].Value.ToString());
                         writer.WriteString(row.Cells[2].Value.ToString());
+                        writer.WriteEndElement();
+                    }
+                }
+
+                writer.WriteEndElement();
+                writer.WriteEndDocument();
+
+                writer.Flush();
+                writer.Close();
+            }
+        }
+
+        private void LoadLauncher()
+        {
+            const string file = "Launcher.xml";
+
+            using (XmlTextReader xml = new XmlTextReader(file))
+            {
+                if (xml == null)
+                {
+                    Debug.WriteLine(file + "が見つかりません");
+                    return;
+                }
+
+
+                 bool enabled = false;
+                string name = "";
+                string path = "";
+                string args = "";
+
+                try
+                {
+                    while (xml.Read())
+                    {
+                        if (xml.NodeType == XmlNodeType.Element)
+                        {
+                            if (xml.LocalName.Equals("command"))
+                            {
+                                for (int i = 0; i < xml.AttributeCount; i++)
+                                {
+                                    xml.MoveToAttribute(i);
+                                    if (xml.Name == "enabled")
+                                    {
+                                        enabled = xml.Value.ToString().Equals("True");
+                                    }
+                                    else
+                                        if (xml.Name == "name")
+                                        {
+                                            name = xml.Value;
+                                        }
+                                        else
+                                            if (xml.Name == "path")
+                                            {
+                                                path = xml.Value;
+                                            }
+                                            else
+                                                if (xml.Name == "args")
+                                                {
+                                                    args = xml.Value;
+                                                }
+                                }
+
+                                mLauncherList.Rows.Add(enabled, name, path, args);
+
+
+                            }
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    Debug.WriteLine("LoadLauncher:" + e.Message);
+                }
+            
+            }
+        }
+
+        private void SaveLauncher()
+        {
+            using (XmlTextWriter writer = new XmlTextWriter("Launcher.xml", null))
+            {
+                writer.Formatting = Formatting.Indented;
+
+                writer.WriteStartDocument();
+
+                writer.WriteStartElement("Launcher");
+
+                foreach (DataGridViewRow row in mLauncherList.Rows)
+                {
+                    if (row.Cells[0].Value != null && row.Cells[1].Value != null && row.Cells[2].Value != null)
+                    {
+                        //string key = row.Cells[1].Value.ToString();
+
+
+                        // 作成時刻書き込み
+                        writer.WriteStartElement("command");
+                        writer.WriteAttributeString("enabled", row.Cells[0].Value.ToString());
+                        writer.WriteAttributeString("name", row.Cells[1].Value.ToString());
+                        writer.WriteAttributeString("path", row.Cells[2].Value.ToString());
+                        writer.WriteAttributeString("args", row.Cells[3].Value == null ? "" : row.Cells[3].Value.ToString());
                         writer.WriteEndElement();
                     }
                 }
@@ -2887,6 +2998,16 @@ namespace NicoLive
         private void mTalk3Min_CheckedChanged(object sender, EventArgs e)
         {
             this.mContWakuNotice.Enabled = mTalk3Min.Enabled;
+        }
+
+        private void mResList_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+        private void mLauncherList_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
         }
 
 

@@ -272,12 +272,12 @@ namespace NicoLive
                     MouseClick(iX + outPos.X + 12, iY + outPos.Y + 8);
                     //bmp.Dispose();
                     //bmp = null;
-                    Debug.WriteLine("FME FOUND");
+                    //Debug.WriteLine("FME FOUND");
                     //return 0;
                 }
                 else
                 {
-                    Debug.WriteLine("FME NOT FOUND");
+                    //Debug.WriteLine("FME NOT FOUND");
                 }
 
 
@@ -489,7 +489,7 @@ done:
                     }
                 }
             }
-            Debug.WriteLine("NOT FOUND");
+            //Debug.WriteLine("NOT FOUND");
             return false;
         }
 

@@ -356,6 +356,7 @@ namespace NicoLive
 
 			string res = HttpGet(uri, ref this.mCookieLogin);
 
+
             if (res != null)
             {
                 Match match = Regex.Match(res, regex);
@@ -363,7 +364,16 @@ namespace NicoLive
                 {
                     name = match.Groups[1].Value;
                 }
+                else
+                {
+                    Debug.WriteLine("GetUsername ng1 : " + res);
+                }
             }
+            else
+            {
+                Debug.WriteLine("GetUsername ng2: " + res);
+            }
+
 			return name;
 		}
 

@@ -37,6 +37,7 @@ namespace NicoLive
             mUIStatus = UIStatus.Instance;
             mLiveInfo = LiveInfo.Instance;
             mRes = Response.Instance;
+            mLauncher  = Launcher.Instance;
 
 
 
@@ -54,6 +55,8 @@ namespace NicoLive
 
             // Response読み込み
             mRes.LoadResponse();
+
+            mLauncher.LoadLauncher();
 
             // IDロード
             UserID uid = UserID.Instance;
@@ -114,6 +117,11 @@ namespace NicoLive
 
             // 今ココ起動
             ImakokoNow.Launch();
+
+
+
+
+
         }
 
         //-------------------------------------------------------------------------
@@ -194,6 +202,7 @@ namespace NicoLive
                 {
                     FMLE.Stop();
                 });
+                th.Name = "NivoLive.Form1.EventHandler.mUseHQBtn_Click()";
                 th.Start();
 
 

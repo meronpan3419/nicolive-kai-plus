@@ -31,6 +31,7 @@ namespace NicoLive
                     System.Windows.Forms.MessageBox.Show("今ココなう！の起動に\n失敗しました", "NicoLive");
                 }
             });
+            th.Name = "imakokonow launch";
             th.Start();
         }
 

@@ -63,6 +63,7 @@ namespace NicoLive
                 {
                     mFMEStarted = FMEGUI.Start(iParams);
                 });
+                th.Name = "NivoLive.FMLE.Start(): gui";
                 th.Start();
             }
             else
@@ -116,6 +117,7 @@ namespace NicoLive
                     }
                     mFMEStarted = true;
                 });
+                th.Name = "NivoLive.FMLE.Start(): cui";
                 th.Start();
             }
         }
