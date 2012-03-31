@@ -151,7 +151,7 @@ namespace NicoLive
                 ts = DateTime.Now - this.mLastConnectionCheckTime;
                 if (ts.Seconds >= 30)
                 {
-                    System.Net.Sockets.TcpClient tc = mNico.getTcpCliant();
+                    System.Net.Sockets.TcpClient tc = mNico.getTcpClient();
                     if (tc != null)
                     {
                         mNico.SendNULLComment();

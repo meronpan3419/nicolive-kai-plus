@@ -1730,7 +1730,7 @@ namespace NicoLive
             return true;
         }
 
-        public TcpClient getTcpCliant()
+        public TcpClient getTcpClient()
         {
             return mTcp;
         }
