@@ -186,6 +186,7 @@ namespace NicoLive
         private DataGridViewTextBoxColumn mLaunchName;
         private DataGridViewTextBoxColumn mLunchPath;
         private DataGridViewTextBoxColumn mLaunchArg;
+        private CheckBox cbEGM96;
 
 
         private IContainer components;
@@ -295,6 +296,7 @@ namespace NicoLive
             this.yName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.yTemplate = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.mTabImakoko = new System.Windows.Forms.TabPage();
+            this.cbEGM96 = new System.Windows.Forms.CheckBox();
             this.mAddressTemplate2 = new System.Windows.Forms.TextBox();
             this.mSpeedTemplate = new System.Windows.Forms.TextBox();
             this.mAddressTemplate = new System.Windows.Forms.TextBox();
@@ -1195,6 +1197,7 @@ namespace NicoLive
             // 
             // mTabImakoko
             // 
+            this.mTabImakoko.Controls.Add(this.cbEGM96);
             this.mTabImakoko.Controls.Add(this.mAddressTemplate2);
             this.mTabImakoko.Controls.Add(this.mSpeedTemplate);
             this.mTabImakoko.Controls.Add(this.mAddressTemplate);
@@ -1213,6 +1216,17 @@ namespace NicoLive
             this.mTabImakoko.TabIndex = 2;
             this.mTabImakoko.Text = "今ココなう！";
             this.mTabImakoko.UseVisualStyleBackColor = true;
+            // 
+            // cbEGM96
+            // 
+            this.cbEGM96.AutoSize = true;
+            this.cbEGM96.Location = new System.Drawing.Point(21, 228);
+            this.cbEGM96.Name = "cbEGM96";
+            this.cbEGM96.Size = new System.Drawing.Size(281, 16);
+            this.cbEGM96.TabIndex = 21;
+            this.cbEGM96.Text = "高度のジオイド補正を利用する(@ALTITUDE_EGM96)";
+            this.toolTip1.SetToolTip(this.cbEGM96, "GPSの高度を96でジオイド補正してみます");
+            this.cbEGM96.UseVisualStyleBackColor = true;
             // 
             // mAddressTemplate2
             // 
@@ -2353,6 +2367,7 @@ namespace NicoLive
             mAddressTemplate2.Enabled = Properties.Settings.Default.imakoko_genzaichi_auto_comment;
             mSpeedTemplate.Text = Properties.Settings.Default.speed_template;
             mSpeedTemplate.Enabled = Properties.Settings.Default.imakoko_speed;
+            cbEGM96.Checked = Properties.Settings.Default.use_egm96;
 
             // Twitter
             this.mTwStart.Text = Properties.Settings.Default.tw_start;
@@ -2476,7 +2491,7 @@ namespace NicoLive
             Properties.Settings.Default.address_template = mAddressTemplate.Text;
             Properties.Settings.Default.address_template2 = mAddressTemplate2.Text;
             Properties.Settings.Default.speed_template = mSpeedTemplate.Text;
-
+            Properties.Settings.Default.use_egm96 = cbEGM96.Checked;
 
             // Twitter
             Properties.Settings.Default.tw_start = this.mTwStart.Text;

@@ -309,7 +309,7 @@ namespace NicoLive
 			pictureBox1.Image = appIcon.ToBitmap(); 
 			Text = appProductName + " ‚Ìƒo[ƒWƒ‡ƒ“î•ñ";
 			label1.Text = appProductName;
-			label2.Text = "Version " + appVersion + " ‰üp9a";
+			label2.Text = "Version " + appVersion + " " + Program.VERSION_KAI_PLUS;
 			label3.Text = appCopyright;
 			label4.Text = appDescription;
 

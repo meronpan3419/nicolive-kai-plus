@@ -475,6 +475,17 @@ namespace NicoLive
         {
             mLivetags.AllowUserToAddRows = (mLivetags.RowCount <= 10);
         }
+
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+
+            if ((int)keyData == (int)Keys.F2)
+            {
+                this.mOK.PerformClick();
+                return true;
+            }
+            return base.ProcessCmdKey(ref msg, keyData);
+        }
     }
 }
 //-------------------------------------------------------------------------

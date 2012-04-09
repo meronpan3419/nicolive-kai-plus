@@ -1330,5 +1330,17 @@ namespace NicoLive.Properties {
                 this["use_launcher"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool use_egm96 {
+            get {
+                return ((bool)(this["use_egm96"]));
+            }
+            set {
+                this["use_egm96"] = value;
+            }
+        }
     }
 }

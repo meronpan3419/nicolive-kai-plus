@@ -54,6 +54,7 @@ namespace NicoLive
                     //    this.mLoginLabel.Text = "LV番号取得中(" + try_cnt + ")";
                     //    this.mLoginLabel.ForeColor = System.Drawing.Color.Black;
                     //});
+                    Debug.WriteLine("Retry: GET_LIVE_ID " + try_cnt);
                     Thread.Sleep(500);
                     goto GET_LIVE_ID;
                 }
@@ -103,7 +104,7 @@ namespace NicoLive
                         {
                             try_cnt++;
                             Thread.Sleep(1000);
-                            Debug.WriteLine("Retry: " + try_cnt);
+                            Debug.WriteLine("Retry: ERR_COULD_NOT_CONNECT_COMMENT_SERVER" + try_cnt);
                             goto GET_COMMENT;
                         }
                         MessageBox.Show("コメントサーバーにログインできませんでした。", "NicoLive");
@@ -118,6 +119,7 @@ namespace NicoLive
                         {
                             Thread.Sleep(500);
                             live_id = "";
+                            Debug.WriteLine("Retry: ERR_NOT_LIVE" + try_cnt);
                             goto GET_LIVE_ID;
                         }
                         MessageBox.Show("指定した放送は終了しています。", "NicoLive");

@@ -323,7 +323,7 @@ namespace NicoLive
         {
             Thread th = new Thread(delegate()
             {
-                string url = "http://nicolive-wakusu.b72.in/getwakusu.php?ver=nicolivekaip20120123";
+                string url = "http://nicolive-wakusu.b72.in/getwakusu.php?ver=" + Program.VERSION_KAI_PLUS;
                 HttpWebRequest req = (HttpWebRequest)WebRequest.Create(url);
                 string result = "";
                 try

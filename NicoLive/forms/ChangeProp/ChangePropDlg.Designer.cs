@@ -35,6 +35,7 @@
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.mCruise = new System.Windows.Forms.CheckBox();
             this.mAd = new System.Windows.Forms.CheckBox();
             this.mFace = new System.Windows.Forms.CheckBox();
             this.mTotumachi = new System.Windows.Forms.CheckBox();
@@ -48,7 +49,6 @@
             this.mTag = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.mLock = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.mLiveTagLockAll = new System.Windows.Forms.CheckBox();
-            this.mCruise = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -64,7 +64,7 @@
             this.mOK.Name = "mOK";
             this.mOK.Size = new System.Drawing.Size(75, 23);
             this.mOK.TabIndex = 6;
-            this.mOK.Text = "OK";
+            this.mOK.Text = "OK(F2)";
             this.mOK.UseVisualStyleBackColor = true;
             this.mOK.Click += new System.EventHandler(this.button1_Click);
             // 
@@ -130,6 +130,16 @@
             this.groupBox3.TabIndex = 4;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "その他";
+            // 
+            // mCruise
+            // 
+            this.mCruise.AutoSize = true;
+            this.mCruise.Location = new System.Drawing.Point(143, 39);
+            this.mCruise.Name = "mCruise";
+            this.mCruise.Size = new System.Drawing.Size(83, 16);
+            this.mCruise.TabIndex = 5;
+            this.mCruise.Text = "クルーズ待ち";
+            this.mCruise.UseVisualStyleBackColor = true;
             // 
             // mAd
             // 
@@ -261,16 +271,6 @@
             this.mLiveTagLockAll.TabIndex = 0;
             this.mLiveTagLockAll.Text = "視聴者にタグ編集をさせない";
             this.mLiveTagLockAll.UseVisualStyleBackColor = true;
-            // 
-            // mCruise
-            // 
-            this.mCruise.AutoSize = true;
-            this.mCruise.Location = new System.Drawing.Point(143, 39);
-            this.mCruise.Name = "mCruise";
-            this.mCruise.Size = new System.Drawing.Size(83, 16);
-            this.mCruise.TabIndex = 5;
-            this.mCruise.Text = "クルーズ待ち";
-            this.mCruise.UseVisualStyleBackColor = true;
             // 
             // ChangeProp
             // 

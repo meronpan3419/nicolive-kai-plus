@@ -26,6 +26,8 @@ namespace NicoLive
         private static string mLastPlace;
         private static double mLastAltitude;
 
+        private static int mAltitudeEGM96;
+
         public static double Speed
         {
             get { return mNowSpeed; }
@@ -39,6 +41,10 @@ namespace NicoLive
         public static double Altitude
         {
             get { return mNowAltitude; }
+        }
+        
+        public static int AltitudeEGM96{
+            get { return mAltitudeEGM96;}
         }
 
 
@@ -198,7 +204,11 @@ namespace NicoLive
                 {
                     MatchCollection matchCol = Reg_Altitude.Matches(result);
                     mNowAltitude = double.Parse(matchCol[0].Groups[1].Value);
+
+                    
                 }
+
+                mAltitudeEGM96 = 0;
 
                 mNowPlace = "不明";
 
@@ -207,6 +217,10 @@ namespace NicoLive
                     MatchCollection matchCol = Reg_Lon_Lat.Matches(result);
                     double lon = double.Parse(matchCol[0].Groups[1].Value);
                     double lat = double.Parse(matchCol[0].Groups[2].Value);
+
+                    if(Properties.Settings.Default.use_egm96){
+                        mAltitudeEGM96 = (int)mNowAltitude - calculate_efm96_geoid(lat, lon);
+                    }
 
                     result = ReverseGeocode(lat, lon);
                     mLastPlace = mNowPlace;
@@ -227,6 +241,48 @@ namespace NicoLive
             {
                 IsCheckOnGoing = false;
             }
+        }
+
+        static public int calculate_efm96_geoid(double lat, double lon)
+        {
+            //http://earth-info.nga.mil/GandG/wgs84/gravitymod/egm96/binary/WW15MGH.DAC　持ってきておく
+
+
+            try
+            {
+                string WW15MGH = System.Windows.Forms.Application.StartupPath + "\\WW15MGH.DAC";
+
+                if (!File.Exists(WW15MGH))
+                {
+                    System.Diagnostics.Debug.WriteLine("calculate_efm96_geoid(): " + WW15MGH + "not found");
+                }
+
+                int offset = 0;
+                int lat_offset = (int)(90 * 4 - (int)(lat / 0.25)) * 1440 * 2;
+                int lon_offset = (int)(lon / 0.25) * 2;
+                offset = lat_offset + lon_offset;
+
+                FileStream fs = new FileStream(WW15MGH, FileMode.Open, FileAccess.Read);
+
+                byte[] buf = new byte[2];
+                fs.Seek(offset, SeekOrigin.Begin);
+                fs.Read(buf, 0, 2);
+
+                byte a;
+                a = buf[0];
+                buf[0] = buf[1];
+                buf[1] = a;
+
+                int alt = BitConverter.ToInt16(buf, 0) / 100;
+
+                fs.Dispose();
+                return alt;
+            }
+            catch (Exception e)
+            {
+                System.Diagnostics.Debug.WriteLine(e.StackTrace);
+            }
+            return 0;
         }
 
     }

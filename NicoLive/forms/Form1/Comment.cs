@@ -432,6 +432,7 @@ namespace NicoLive
                 ImaDoko.UpdateSpeedAndPlace();
                 string msg = Properties.Settings.Default.address_template2;
                 msg = msg.Replace("@ADDRESS", ImaDoko.Place);
+                msg = msg.Replace("@ALTITUDE_EGM96", ((int)ImaDoko.AltitudeEGM96).ToString());
                 msg = msg.Replace("@ALTITUDE", ((int)ImaDoko.Altitude).ToString());
                 string mail = Properties.Settings.Default.imakoko_genzaichi_hidden ? "hidden" : "";
                 SendComment(msg, mail, true, true);
