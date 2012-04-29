@@ -378,12 +378,13 @@ namespace NicoLive
         //-------------------------------------------------------------------------
         private void GetPlayer()
         {
-            string uri = mConsoleUri + LiveID;
-            if (uri.Equals(mFlash.Movie))
-            {
-                mFlash.LoadMovie(0, mConsoleUri);
-            }
+            string uri = mConsoleUri + LiveID + "&_ut=" + Utils.GetUnixTime(DateTime.Now);
+            //if (uri.Equals(mFlash.Movie))
+            //{
+            //    mFlash.LoadMovie(0, mConsoleUri);
+            //}
             mFlash.LoadMovie(0, uri);
+
         }
 
         //-------------------------------------------------------------------------
