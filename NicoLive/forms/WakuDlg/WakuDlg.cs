@@ -16,7 +16,8 @@ using System.Text.RegularExpressions;
 
 namespace NicoLive
 {
-    public enum WakuResult{
+    public enum WakuResult
+    {
         NO_ERR,
         JUNBAN,
         ERR
@@ -27,18 +28,18 @@ namespace NicoLive
         Nico mNico;
         public string mLv;
         public WakuResult mState;
-        private  static bool mAbort;
+        private static bool mAbort;
         private bool mChangeProp;
         private bool mPostTweet;
-		//-------------------------------------------------------------------------
-		// コンストラクタ
-		//-------------------------------------------------------------------------
-        public WakuDlg(string iLv,bool iChangeProp)
+        //-------------------------------------------------------------------------
+        // コンストラクタ
+        //-------------------------------------------------------------------------
+        public WakuDlg(string iLv, bool iChangeProp)
         {
             mNico = Nico.Instance;
             mState = WakuResult.ERR;
             mChangeProp = iChangeProp;
-         
+
             mAbort = false;
             mPostTweet = false;
             mLv = iLv;
@@ -53,7 +54,7 @@ namespace NicoLive
         //-------------------------------------------------------------------------
         private void WakuDlg_Load(object sender, EventArgs e)
         {
-            
+
         }
 
         private void WakuDlg_Shown(object sender, EventArgs e)
@@ -61,9 +62,9 @@ namespace NicoLive
             mWorker.RunWorkerAsync();
         }
 
-		//-------------------------------------------------------------------------
-		// キャンセル
-		//-------------------------------------------------------------------------
+        //-------------------------------------------------------------------------
+        // キャンセル
+        //-------------------------------------------------------------------------
         private void mCancel_Click(object sender, EventArgs e)
         {
             mAbort = true;
@@ -75,13 +76,13 @@ namespace NicoLive
             Close();
         }
 
-		//-------------------------------------------------------------------------
-		// 枠取りワーカー
-		//-------------------------------------------------------------------------
+        //-------------------------------------------------------------------------
+        // 枠取りワーカー
+        //-------------------------------------------------------------------------
         private void mWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             string lv = "";
-			int try_cnt = 0;
+            int try_cnt = 0;
 
             if (mChangeProp)
             {
@@ -107,31 +108,31 @@ namespace NicoLive
             //    //return;
             //}
 
-      
+
             SetLabelFromThread("放送履歴取得中", Color.Black, false);
 
-            if( mLv.Length <= 2)
+            if (mLv.Length <= 2)
                 mLv = mNico.GetRecentLive();
 
             SetLabelFromThread("前枠番組情報の取得中", Color.Black, false);
 
-           // Debug.WriteLine(mLv);
+            // Debug.WriteLine(mLv);
 
             Dictionary<string, string> arr = new Dictionary<string, string>();
             Dictionary<string, string> comu = new Dictionary<string, string>();
             Dictionary<string, string> tag = new Dictionary<string, string>();
             Dictionary<string, string> taglock = new Dictionary<string, string>();
-GET_OLD_INFO:            
-            if (!mNico.GetOldLive(mLv,ref arr, ref comu,ref tag,ref taglock))
+        GET_OLD_INFO:
+            if (!mNico.GetOldLive(mLv, ref arr, ref comu, ref tag, ref taglock))
             {
                 if (mAbort) return;
 
-				try_cnt++;
-				if( try_cnt < 10 )
-				{
-					Thread.Sleep(100);
-					goto GET_OLD_INFO;
-				}
+                try_cnt++;
+                if (try_cnt < 10)
+                {
+                    Thread.Sleep(100);
+                    goto GET_OLD_INFO;
+                }
 
                 SetLabelFromThread("ERR:前枠番組情報の取得に失敗", Color.Red, false);
                 return;
@@ -150,16 +151,16 @@ GET_OLD_INFO:
             {
                 ChangeProp dlg = new ChangeProp();
 
-                dlg.Title           = arr["title"];
-                dlg.Desc            = arr["description"];
-                dlg.TimeShift       = (arr["timeshift_enabled"].Equals("1")) ? true : false;
-                dlg.CommunityOnly   = (arr["public_status"].Equals("2")) ? true : false;
-                dlg.Totumachi       = (arr["tags[2]"].Length > 0) ? true : false;
-                dlg.Cruise          = (arr["tags[3]"].Length > 0) ? true : false;
-                dlg.Face            = (arr["tags[1]"].Length > 0) ? true : false;
-                dlg.Ad              = (arr["ad_enable"].Equals("0")) ? true : false;
-                if( arr.ContainsKey("livetaglockall"))
-                    dlg.LiveTagLockAll  = (arr["livetaglockall"].Length > 0) ? true : false;
+                dlg.Title = arr["title"];
+                dlg.Desc = arr["description"];
+                dlg.TimeShift = (arr["timeshift_enabled"].Equals("1")) ? true : false;
+                dlg.CommunityOnly = (arr["public_status"].Equals("2")) ? true : false;
+                dlg.Totumachi = (arr["tags[2]"].Length > 0) ? true : false;
+                dlg.Cruise = (arr["tags[3]"].Length > 0) ? true : false;
+                dlg.Face = (arr["tags[1]"].Length > 0) ? true : false;
+                dlg.Ad = (arr["ad_enable"].Equals("0")) ? true : false;
+                if (arr.ContainsKey("livetaglockall"))
+                    dlg.LiveTagLockAll = (arr["livetaglockall"].Length > 0) ? true : false;
 
                 dlg.SetCommunity(comu);
                 dlg.SetTag(tag, taglock);
@@ -176,7 +177,7 @@ GET_OLD_INFO:
                     arr["default_community"] = dlg.Community;
                     arr["ad_enable"] = dlg.Ad ? "0" : "1";
                     if (arr.ContainsKey("livetaglockall"))
-                        arr["livetaglockall"] = (dlg.LiveTagLockAll)?"ロックする":"";
+                        arr["livetaglockall"] = (dlg.LiveTagLockAll) ? "ロックする" : "";
 
                     tag = dlg.GetTag();
                     taglock = dlg.GetTaglock();
@@ -198,7 +199,7 @@ GET_OLD_INFO:
             }
 
             // 枠取り開始
-			SetLabelFromThread( "枠取り中",Color.Black,false);
+            SetLabelFromThread("枠取り中", Color.Black, false);
 
 
             // taglockのロック内容が無いものを削除
@@ -216,17 +217,17 @@ GET_OLD_INFO:
             // タグ追加
             foreach (string key in tag.Keys)
             {
-                arr.Add(key,tag[key]);
+                arr.Add(key, tag[key]);
             }
             foreach (string key in taglock.Keys)
             {
-                arr.Add(key,taglock[key]);
+                arr.Add(key, taglock[key]);
             }
 
             try_cnt = 0;
-		 bool base64_encoded = false;
+            bool base64_encoded = false;
 
-RETRY:
+        RETRY:
             if (mAbort) return;
 
             WakuErr err = mNico.GetWaku(ref arr, ref lv);
@@ -234,7 +235,7 @@ RETRY:
             {
                 mLv = lv;
                 mState = WakuResult.NO_ERR;
-                SetLabelFromThread( "枠取り完了",Color.Black,true);
+                SetLabelFromThread("枠取り完了", Color.Black, true);
             }
             else if (err == WakuErr.ERR_MAINTE)
             {
@@ -254,20 +255,20 @@ RETRY:
             else if (err == WakuErr.ERR_LOGIN)
             {
                 SetLabelFromThread("ログイン中", Color.Black, false);
-                
+
                 mNico.Login(Properties.Settings.Default.user_id,
                                            Properties.Settings.Default.password);
                 goto RETRY;
             }
             else if (err == WakuErr.ERR_TAJU)
             {
-                SetLabelFromThread( "枠取り中（多重投稿)",Color.Black,false);
+                SetLabelFromThread("枠取り中（多重投稿)", Color.Black, false);
                 arr.Remove("confirm");
                 goto RETRY;
             }
             else if (err == WakuErr.ERR_KONZATU)
             {
-                SetLabelFromThread("枠取り中（混雑中）",Color.Black,false);
+                SetLabelFromThread("枠取り中（混雑中）", Color.Black, false);
                 arr.Remove("confirm");
                 goto RETRY;
             }
@@ -280,13 +281,13 @@ RETRY:
             else if (err == WakuErr.ERR_JUNBAN)
             {
                 mState = WakuResult.NO_ERR;
-                SetLabelFromThread("順番待ち",Color.Black,false);
+                SetLabelFromThread("順番待ち", Color.Black, false);
                 if (lv.Length <= 2)
                     goto RETRY;
                 do
                 {
                     if (mAbort) return;
-                    Dictionary<string,string> waitInfo = mNico.GetJunban(lv);
+                    Dictionary<string, string> waitInfo = mNico.GetJunban(lv);
                     if (waitInfo.ContainsKey("stream_status") && waitInfo["stream_status"].Equals("3"))
                     {
                         SetLabelFromThread("ERR:別の放送が開始されています。", Color.Red, false);
@@ -308,7 +309,7 @@ RETRY:
                     else
                     {
                         Match match = Regex.Match(waitInfo["start_time"], "日(.*?)時(.*?)分");
-                        SetLabelFromThread("順番待ち: " + waitInfo["count"] + "人 （" + match.Groups[1].Value + "時" + match.Groups[2].Value+"分）", Color.Black, false);
+                        SetLabelFromThread("順番待ち: " + waitInfo["count"] + "人 （" + match.Groups[1].Value + "時" + match.Groups[2].Value + "分）", Color.Black, false);
 
                         // 100人以上順番待ちの時はTweet
                         if (cnt >= 102)
@@ -338,6 +339,11 @@ RETRY:
             {
                 if (try_cnt < 5)
                 {
+                    if (lv.Length > 2)
+                    {
+                        mLv = lv;
+                        mState = WakuResult.NO_ERR;
+                    }
                     try_cnt++;
                     Thread.Sleep(1000);
                     goto RETRY;
@@ -348,7 +354,7 @@ RETRY:
             }
             else if (err == WakuErr.ERR_MOJI)
             {
-                SetLabelFromThread("ERR:文字数制限エラー。", Color.Red,false);
+                SetLabelFromThread("ERR:文字数制限エラー。", Color.Red, false);
             }
             else if (err == WakuErr.ERR_UNKOWN)
             {
@@ -358,7 +364,7 @@ RETRY:
                     Thread.Sleep(250);
                     goto RETRY;
                 }
-                SetLabelFromThread("ERR:予期せぬエラーです。", Color.Red,false);
+                SetLabelFromThread("ERR:予期せぬエラーです。", Color.Red, false);
             }
             arr = null;
         }
@@ -366,7 +372,7 @@ RETRY:
         //-------------------------------------------------------------------------
         // ステータスラベル設定
         //-------------------------------------------------------------------------
-        void SetLabelFromThread(string iStr, Color iCol,bool iClose)
+        void SetLabelFromThread(string iStr, Color iCol, bool iClose)
         {
             try
             {
@@ -374,7 +380,7 @@ RETRY:
                 {
                     mLabel.Text = iStr;
                     mLabel.ForeColor = iCol;
-                    if( iClose)
+                    if (iClose)
                         Close();
                 });
             }

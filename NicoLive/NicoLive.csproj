@@ -98,8 +98,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="components\AutoExtend.cs" />
+    <Compile Include="components\Comet.cs" />
     <Compile Include="components\Comment.cs" />
     <Compile Include="components\FMEGUI.cs" />
+    <Compile Include="components\Launcher.cs" />
     <Compile Include="components\XSplit.cs" />
     <Compile Include="forms\ChangeProp\ChangePropDlg.cs">
       <SubType>Form</SubType>

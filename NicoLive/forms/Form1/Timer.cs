@@ -149,7 +149,7 @@ namespace NicoLive
 
                 // コネクションチェック
                 ts = DateTime.Now - this.mLastConnectionCheckTime;
-                if (ts.Seconds >= 30)
+                if (ts.Seconds >= 30 && !mLoginWorker.IsBusy && !mDisconnect)
                 {
                     System.Net.Sockets.TcpClient tc = mNico.getTcpClient();
                     if (tc != null)

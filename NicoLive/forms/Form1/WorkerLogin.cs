@@ -107,25 +107,40 @@ namespace NicoLive
                             Debug.WriteLine("Retry: ERR_COULD_NOT_CONNECT_COMMENT_SERVER" + try_cnt);
                             goto GET_COMMENT;
                         }
-                        MessageBox.Show("コメントサーバーにログインできませんでした。", "NicoLive");
+                        using (Bouyomi bm = new Bouyomi())
+                        {
+                            bm.Talk("コメントサーバーに接続できませんでした");
+                        }
+                        //MessageBox.Show("コメントサーバーにログインできませんでした。", "NicoLive");
                         break;
                     case NicoErr.ERR_COMMENT_SERVER_IS_FULL:
-                        MessageBox.Show("コメントサーバーが満員でログインできません。", "NicoLive");
+                        using (Bouyomi bm = new Bouyomi())
+                        {
+                            bm.Talk("コメントサーバーが満員で接続できません");
+                        }
+                        //MessageBox.Show("コメントサーバーが満員でログインできません。", "NicoLive");
                         break;
                     case NicoErr.ERR_NOT_LIVE:
                         try_new_connect++;
 
                         if (try_new_connect < 30)
                         {
-                            Thread.Sleep(500);
+                            Thread.Sleep(100);
                             live_id = "";
                             Debug.WriteLine("Retry: ERR_NOT_LIVE" + try_cnt);
                             goto GET_LIVE_ID;
                         }
-                        MessageBox.Show("指定した放送は終了しています。", "NicoLive");
+                        using (Bouyomi bm = new Bouyomi())
+                        {
+                            bm.Talk("放送は既に終了しています");
+                        }
+
                         break;
                     case NicoErr.ERR_COMMUNITY_ONLY:
-                        MessageBox.Show("コミュニティー限定です。", "NicoLive");
+                        using (Bouyomi bm = new Bouyomi())
+                        {
+                            bm.Talk("コミュニティ限定放送です");
+                        }
                         break;
                 }
 
@@ -202,7 +217,11 @@ namespace NicoLive
             }
             else
             {
-                MessageBox.Show("ログインできませんでした。", "NicoLive");
+                //MessageBox.Show("ログインできませんでした。", "NicoLive");
+                using (Bouyomi bm = new Bouyomi())
+                {
+                    bm.Talk("接続できませんでした");
+                }
             }
         END:
             this.Invoke((Action)delegate()

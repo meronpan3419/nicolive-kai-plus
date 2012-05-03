@@ -22,9 +22,9 @@ namespace NicoLive
         //-------------------------------------------------------------------------
         private void UpdateMovieInfo()
         {
-            if (mNico != null && mNico.IsLogin && !mNico.WakutoriMode )
+            if (mNico != null && mNico.IsLogin && !mNico.WakutoriMode)
             {
-                string id="";
+                string id = "";
                 try
                 {
                     this.Invoke((Action)delegate()
@@ -32,7 +32,7 @@ namespace NicoLive
                         id = LiveID;
                     });
                 }
-                catch (Exception )
+                catch (Exception)
                 {
 
                 }
@@ -50,7 +50,7 @@ namespace NicoLive
                             this.Text = "豆ライブ(NicoLive)" + "　【" + mLiveInfo.Title + "】" + "　[GC:" + GC.GetTotalMemory(false) + "]";
                         });
                     }
-                    catch (Exception )
+                    catch (Exception)
                     {
 
                     }
@@ -156,7 +156,7 @@ namespace NicoLive
                         mOwnLive &&
                         Properties.Settings.Default.tw_start_enable
                         //Properties.Settings.Default.tw_token.Length == 0
-                        
+
                         )
                     {
                         TwitterPoster(true);
@@ -211,23 +211,27 @@ namespace NicoLive
                     }
                     else
                     {
-                        // 再接続失敗
-//                        string msg = "再接続に失敗しました。再び再接続を行います";
-//                       if (this.mBouyomiBtn.Checked)
-//                        {
-//                            this.mBouyomi.Talk(msg);
-//                        }
+                        //if (mConnectCount > 20)
+                        //{
+                        //    //再接続失敗
+                        //    string msg = "再接続に失敗しました。再接続を中止します。";
+                        //    if (this.mBouyomiBtn.Checked)
+                        //    {
+                        //        this.mBouyomi.Talk(msg);
+                        //    }
+                        //    mAutoReconnectOnGoing = false;
+                        //}
 
                         // 再接続を試みながら、リターン
                         this.Invoke((Action)delegate()
                         {
                             this.mConnectBtn.Enabled = false;
-                            this.Connect(false);
+                            this.Connect(true); //クッキーは有効である前提で、クッキー有効確認のページ読み込み省略できるハズ
                         });
                         mConnectCount++;
                         this.mLoginLabel.Text = "接続中(" + mConnectCount + ")";
                         this.mLoginLabel.ForeColor = Color.Black;
-                       return;
+                        return;
                     }
                 }
 
@@ -244,7 +248,7 @@ namespace NicoLive
                     if (Properties.Settings.Default.auto_reconnect)
                     {
                         // 再接続スタート
-                        string msg = "切断されました。再接続を開始します";
+                        string msg = "再接続を開始します";
 
                         if (this.mBouyomiBtn.Checked)
                         {
@@ -255,7 +259,7 @@ namespace NicoLive
                         this.Invoke((Action)delegate()
                         {
                             this.mConnectBtn.Enabled = false;
-                            this.Connect(false);
+                            this.Connect(true);
                         });
                     }
                     else
@@ -267,13 +271,13 @@ namespace NicoLive
                             this.mBouyomi.Talk(msg);
                         }
                         this.mPrevLogin = mNico.IsLogin;
-                        MessageBox.Show(msg, "豆ライブ");
+                        //MessageBox.Show(msg, "豆ライブ");
                     }
                 }
             }
             else
             {
-                this.mLoginLabel.Text = "未ログイン";
+                this.mLoginLabel.Text = "未接続";
                 this.mLoginLabel.ForeColor = Color.Black;
                 this.mPrevLogin = false;
             }
