@@ -197,7 +197,7 @@ namespace NicoLive
                 // 再接続処理中？
                 if (mAutoReconnectOnGoing)
                 {
-                    if (mNico.IsLogin)
+                    if (mDisconnect /*mNico.IsLogin*/)
                     {
                         // 再接続成功
                         string msg = "再接続に成功しました";
@@ -226,7 +226,7 @@ namespace NicoLive
                         this.Invoke((Action)delegate()
                         {
                             this.mConnectBtn.Enabled = false;
-                            this.Connect(true); //クッキーは有効である前提で、クッキー有効確認のページ読み込み省略できるハズ
+                            this.Connect(false);  //falseがチェックする //クッキーは有効である前提で、クッキー有効確認のページ読み込み省略できるハズ
                         });
                         mConnectCount++;
                         this.mLoginLabel.Text = "接続中(" + mConnectCount + ")";
@@ -238,8 +238,8 @@ namespace NicoLive
                 // ログアウト通知
                 bool show_err = false;
 
-                if (this.mPrevLogin && !mNico.IsLogin)
-                    show_err = true;
+                show_err = this.mPrevLogin && !mNico.IsLogin && !mDisconnect;
+                    
 
                 this.mPrevLogin = mNico.IsLogin;
 

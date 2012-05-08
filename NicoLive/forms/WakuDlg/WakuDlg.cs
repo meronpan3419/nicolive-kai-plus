@@ -231,6 +231,7 @@ namespace NicoLive
             if (mAbort) return;
 
             WakuErr err = mNico.GetWaku(ref arr, ref lv);
+            System.Diagnostics.Debug.WriteLine("WakuErr:" + err.ToString());
             if (err == WakuErr.ERR_NO_ERR)
             {
                 mLv = lv;
@@ -348,7 +349,7 @@ namespace NicoLive
                     Thread.Sleep(1000);
                     goto RETRY;
                 }
-                mState = WakuResult.NO_ERR;
+                mState = WakuResult.ERR;
                 mLv = "";
                 SetLabelFromThread("ERR:既に放送中です。", Color.Red, true);
             }

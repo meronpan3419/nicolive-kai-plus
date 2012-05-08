@@ -31,7 +31,8 @@ namespace NicoLive
         ERR_COULD_NOT_CONNECT_COMMENT_SERVER,       // コメントサーバーにログインできない
         ERR_COMMENT_SERVER_IS_FULL,                 // コメントサーバーが満員
         ERR_NOT_LIVE,                               // 放送中じゃない
-        ERR_COMMUNITY_ONLY                          // コミュ限
+        ERR_COMMUNITY_ONLY,                         // コミュ限
+        ERR_CLOSED                              // 既に放送終了
     };
 
     public enum WakuErr
@@ -232,7 +233,7 @@ namespace NicoLive
                 }
                 else
                 {
-                    regex = new Regex("<a href=\"http://live.nicovideo.jp/watch/lv(?<videoid>[0-9]+)?ref=my_live\" title=\"生放送ページへ戻る\" class=\"nml\">");
+                    regex = new Regex("<a href=\"http://live.nicovideo.jp/watch/lv(?<videoid>[0-9]+)\\?ref=my_live\" title=\"生放送ページへ戻る\" class=\"nml\">");
                     match = regex.Matches(html);
                     if (match.Count > 0)
                     {
@@ -241,7 +242,7 @@ namespace NicoLive
                     }
                 }
             }
-            return result;
+            return　result;
         }
 
         //-------------------------------------------------------------------------
@@ -695,7 +696,7 @@ namespace NicoLive
                     this.Send(mTcp.Client, "\0");
                 }
             }
-            catch (Exception　e)
+            catch (Exception e)
             {
                 Debug.WriteLine("SendNULLComment(): " + e.StackTrace);
             }
@@ -808,7 +809,7 @@ namespace NicoLive
                 }
                 else if (minfo["code"].ToString().CompareTo("closed") == 0)
                 {
-                    return NicoErr.ERR_NOT_LIVE;
+                    return NicoErr.ERR_CLOSED;
                 }
                 else if (minfo["code"].ToString().CompareTo("require_community_member") == 0)
                 {
@@ -1297,13 +1298,28 @@ namespace NicoLive
 
             if (location != null && location.Contains("watch/"))
             {
-                match = Regex.Match(res, "watch/(.*?)");
+                match = Regex.Match(res, "watch/(lv[0-9]+)");
                 if (match.Success)
                 {
                     iLv = match.Groups[1].Value;
                 }
                 return WakuErr.ERR_NO_ERR;
             }
+            else
+            {
+
+                match = Regex.Match(res, "<a href=\"http://live.nicovideo.jp/watch/(lv[0-9]+)\" class=\"now\"");
+                if (match.Success)
+                {
+                    iLv = match.Groups[1].Value;
+
+                    return WakuErr.ERR_NO_ERR;
+                }
+
+
+            }
+
+
 
             // 改行除去
             res = res.Replace("\n", "");
@@ -1328,13 +1344,15 @@ namespace NicoLive
                 if (err.Contains("文字数制限"))
                     return WakuErr.ERR_MOJI;
                 if (err.Contains("既にこの時間に予約をしているか"))
-                    match = Regex.Match(res, "gate/lv(.*?)\"");
+                {
+                    match = Regex.Match(res, "gate/(lv[0-9]+))\"");
                     if (match.Success)
                     {
-                        iLv = "lv" + match.Groups[1].Value;
+                        iLv = match.Groups[1].Value;
                         return WakuErr.ERR_NO_ERR;
                     }
                     return WakuErr.ERR_ALREADY_LIVE;
+                }
                 if (err.Contains("混み合って"))
                     return WakuErr.ERR_KONZATU;
                 if (err.Contains("既に順番待ち"))
@@ -1384,10 +1402,10 @@ namespace NicoLive
                 return WakuErr.ERR_KIYAKU;
             }
 
-            match = Regex.Match(res, "editstream/lv(.*?)\"");
+            match = Regex.Match(res, "editstream/(lv[0-9]+)\"");
             if (match.Success)
             {
-                iLv = "lv" + match.Groups[1].Value;
+                iLv = match.Groups[1].Value;
                 return (res.Contains("<td id=\"txt_wait\"")) ? WakuErr.ERR_JUNBAN : WakuErr.ERR_NO_ERR;
             }
             /*

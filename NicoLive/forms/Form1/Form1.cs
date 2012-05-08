@@ -278,7 +278,7 @@ namespace NicoLive
             mPrevLogin = false;
             mTwPost = false;
             mOwnLive = false;
-            mDisconnect = false;
+            mDisconnect = true;
             mTalkLimit = false;
             mNextGC = 0;
             mNico.Comment = "";

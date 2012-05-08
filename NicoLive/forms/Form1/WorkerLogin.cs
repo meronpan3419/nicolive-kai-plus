@@ -29,6 +29,10 @@ namespace NicoLive
             int try_cnt = 0;
             int try_new_connect = 0;
 
+            bool disconnect = true;
+
+
+
         GET_LIVE_ID:
             // LVが入ってないときは自動で取ってくる
             if (live_id.Length <= 2)
@@ -96,7 +100,7 @@ namespace NicoLive
                 // コメントサーバーに接続
                 NicoErr err = mNico.ConnectToCommentServer(live_id, Properties.Settings.Default.comment_max);
 
-
+                System.Diagnostics.Debug.WriteLine("NicoErr:" + err.ToString());
                 switch (err)
                 {
                     case NicoErr.ERR_COULD_NOT_CONNECT_COMMENT_SERVER:
@@ -136,6 +140,15 @@ namespace NicoLive
                         }
 
                         break;
+
+                    case NicoErr.ERR_CLOSED:
+                        using (Bouyomi bm = new Bouyomi())
+                        {
+                            bm.Talk("放送は既に終了しています");
+                        }
+
+                        break;
+
                     case NicoErr.ERR_COMMUNITY_ONLY:
                         using (Bouyomi bm = new Bouyomi())
                         {
@@ -146,6 +159,8 @@ namespace NicoLive
 
                 if (err == NicoErr.ERR_NO_ERR)
                 {
+
+                    disconnect = false;
 
                     mPastChatList.Clear();
                     // 過去コメ読み込みスタート
@@ -229,9 +244,10 @@ namespace NicoLive
                 this.mConnectBtn.Enabled = true;
                 this.mLastChatTime = DateTime.Now;
                 this.mLastCompctTime = DateTime.Now;
+                this.mLastConnectionCheckTime = DateTime.Now;
                 this.mCompactForcast = false;
                 this.mStartHQ = false;
-                this.mDisconnect = false;
+                this.mDisconnect = disconnect;
             });
         }
     }
