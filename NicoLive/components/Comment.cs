@@ -9,19 +9,45 @@ using System.Text;
 using System.Xml;
 using System.IO;
 using System.Diagnostics;
+using System.Text.RegularExpressions;
 
 namespace NicoLive
 {
-    public class Comment
+    public class Vote
     {
         // アンケート用
         private string[] mVoteList;
         private string mVoteTitle;
 
-        // 
+        public string[] VoteList
+        {
+            get { return mVoteList; }
+            set { mVoteList = value; }
+        }
+
+        public string VoteTitle
+        {
+            get { return mVoteTitle; }
+            set { mVoteTitle = value; }
+        }
+
+        public Vote()
+        {
+            mVoteList = new string[4];
+            mVoteList[0] = "";
+            mVoteList[1] = "";
+            mVoteList[2] = "";
+            mVoteList[3] = "";
+            mVoteTitle = "";
+        }
+    }
+
+    public class Comment
+    {
+
         private bool mValid;
         private string mXml;
-        
+
         // プロパティー
         private string mUid;
         private string mHandle;
@@ -30,7 +56,7 @@ namespace NicoLive
         private string mPremium;
         private string mMail;
         private string mText;
-		private bool   mBackStage;
+        private bool mBackStage;
         private string mElapsedTime;
 
         // アクセッサ
@@ -109,6 +135,7 @@ namespace NicoLive
             Valid = false;
         }
 
+
         //-------------------------------------------------------------------------
         // コンストラクタ
         //-------------------------------------------------------------------------
@@ -166,7 +193,7 @@ namespace NicoLive
                                 Premium = premium;
                                 Mail = mail;
                                 Text = text;
-								BackStage = false;
+                                BackStage = false;
 
                                 //// バックステージを通常コメント化する
                                 //if (text.StartsWith("/press "))
@@ -264,7 +291,7 @@ namespace NicoLive
         //-------------------------------------------------------------------------
         public bool IsOperator
         {
-            get { return (Premium.Equals("6") ); }
+            get { return (Premium.Equals("6")); }
         }
 
         //-------------------------------------------------------------------------
@@ -294,41 +321,79 @@ namespace NicoLive
         //-------------------------------------------------------------------------
         // 投票コメントを整形
         //-------------------------------------------------------------------------
-        public void ToVote()
+        public void ToVote(ref Vote mVote)
         {
+
             string str = mText;
-            char[] deli = { ' ' };
-
-            mVoteList = new string[4];
-
             if (mText.StartsWith("/vote start "))
             {
-                string[] arr = mText.Split(deli);
+
+
+                string[] mVoteList = new string[4];
                 mVoteList[0] = mVoteList[1] = mVoteList[2] = mVoteList[3] = "";
 
-                mVoteTitle = arr[2].Replace("\"", "");
-                str = String.Format("アンケート開始【{0}】", mVoteTitle);
+                mVote.VoteList = mVoteList;
 
-                for (int i = 3; i < arr.Length; i++)
+                string pattern = " \"(.*?)\"";
+                MatchCollection matches = Regex.Matches(mText, pattern);
+
+                int i = 0;
+                foreach (Match match in matches)
                 {
-                    mVoteList[i - 3] = arr[i].Replace("\"", "");
-                    str += String.Format("\n選択肢{0}:{1} ", i - 2, mVoteList[i - 3]);
+                    if (i == 0)
+                    {
+                        mVote.VoteTitle = match.Groups[1].Value;
+                    }
+                    else
+                    {
+                        mVoteList[i - 1] = match.Groups[1].Value;
+                    }
+                    i++;
                 }
+
+
+                str = String.Format("アンケート開始【{0}】", mVote.VoteTitle);
+                for (i = 0; i < 4; i++)
+                {
+                    if (mVoteList[i].Length > 0)
+                    {
+                        str += String.Format("\n選択肢{0}:{1} ", i + 1, mVoteList[i]);
+                    }
+                }
+
+
             }
             else if (mText.StartsWith("/vote showresult per "))
             {
-                string[] arr = mText.Split(deli);
-                str = String.Format("アンケート結果【{0}】", mVoteTitle);
 
-                for (int i = 4; i < arr.Length - 1; i++)
+                // /vote showresult per  0 0 0 0 0
+
+
+
+
+                str = String.Format("アンケート結果【{0}】", mVote.VoteTitle);
+
+                string pattern = "([0-9]+)";
+                MatchCollection matches = Regex.Matches(mText, pattern);
+
+                int i = 0;
+                foreach (Match match in matches)
                 {
-                    string per = arr[i];
+
+                    string per = match.Groups[1].Value;
                     if (!per.Equals("0"))
                     {
                         per = per.Insert(per.Length - 1, ".");
                     }
-                    str += String.Format("\n{0}：{1}% ", mVoteList[i - 4], per);
+                    if (mVote.VoteList[i].Length > 0)
+                    {
+                        str += String.Format("\n{0}：{1}% ", mVote.VoteList[i], per);
+
+                    }
+                    i++;
+                    if (i >= 4) break;
                 }
+
 
             }
             else if (mText.StartsWith("/vote stop"))

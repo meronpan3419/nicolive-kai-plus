@@ -167,6 +167,9 @@ namespace NicoLive
         // コメントバッファ
         List<DataGridViewRow> mPastChatList = new List<DataGridViewRow>();
 
+        // アンケート用
+        private Vote mVote;
+
         #endregion
 
         #region 列挙列
@@ -327,6 +330,8 @@ namespace NicoLive
             mLastCompctTime = DateTime.Now;
             mLastGenzaichiCommentTime = DateTime.Now;
             mCompactForcast = false;
+
+            mVote = new Vote();
 
             GC.Collect();
 

@@ -196,7 +196,7 @@ namespace NicoLive
                     mCompactForcast = true;
                     if (Properties.Settings.Default.fme_compact)
                     {
-                        SendComment("ラグ対策のため,15秒後にリロードを実施します", true);
+                        SendComment(Properties.Settings.Default.reset_message, true);
                     }
                 }
 

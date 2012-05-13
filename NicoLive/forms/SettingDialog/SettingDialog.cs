@@ -187,6 +187,8 @@ namespace NicoLive
         private DataGridViewTextBoxColumn mLunchPath;
         private DataGridViewTextBoxColumn mLaunchArg;
         private CheckBox cbEGM96;
+        private Label label24;
+        private TextBox tbResetMessage;
 
 
         private IContainer components;
@@ -389,6 +391,8 @@ namespace NicoLive
             this.mOpenFileDlg = new System.Windows.Forms.OpenFileDialog();
             this.mSessionFileDlg = new System.Windows.Forms.OpenFileDialog();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.tbResetMessage = new System.Windows.Forms.TextBox();
+            this.label24 = new System.Windows.Forms.Label();
             this.mTabPage8.SuspendLayout();
             this.mTabGeneral.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -538,6 +542,8 @@ namespace NicoLive
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.label24);
+            this.groupBox2.Controls.Add(this.tbResetMessage);
             this.groupBox2.Controls.Add(this.mContWakuNotice);
             this.groupBox2.Controls.Add(this.mViewerAutoBoot);
             this.groupBox2.Controls.Add(this.mAutoUsername);
@@ -574,7 +580,7 @@ namespace NicoLive
             // mViewerAutoBoot
             // 
             this.mViewerAutoBoot.AutoSize = true;
-            this.mViewerAutoBoot.Location = new System.Drawing.Point(20, 280);
+            this.mViewerAutoBoot.Location = new System.Drawing.Point(19, 304);
             this.mViewerAutoBoot.Name = "mViewerAutoBoot";
             this.mViewerAutoBoot.Size = new System.Drawing.Size(228, 16);
             this.mViewerAutoBoot.TabIndex = 30;
@@ -606,7 +612,7 @@ namespace NicoLive
             // mNGNotice
             // 
             this.mNGNotice.AutoSize = true;
-            this.mNGNotice.Location = new System.Drawing.Point(19, 258);
+            this.mNGNotice.Location = new System.Drawing.Point(18, 282);
             this.mNGNotice.Name = "mNGNotice";
             this.mNGNotice.Size = new System.Drawing.Size(163, 16);
             this.mNGNotice.TabIndex = 21;
@@ -617,7 +623,7 @@ namespace NicoLive
             // mTitleInc
             // 
             this.mTitleInc.AutoSize = true;
-            this.mTitleInc.Location = new System.Drawing.Point(19, 236);
+            this.mTitleInc.Location = new System.Drawing.Point(18, 260);
             this.mTitleInc.Name = "mTitleInc";
             this.mTitleInc.Size = new System.Drawing.Size(177, 16);
             this.mTitleInc.TabIndex = 20;
@@ -2163,6 +2169,22 @@ namespace NicoLive
             this.mSessionFileDlg.Filter = "fmesessions.dat|*.dat";
             this.mSessionFileDlg.Title = "fmesessions.dat";
             // 
+            // tbResetMessage
+            // 
+            this.tbResetMessage.Location = new System.Drawing.Point(118, 235);
+            this.tbResetMessage.Name = "tbResetMessage";
+            this.tbResetMessage.Size = new System.Drawing.Size(235, 19);
+            this.tbResetMessage.TabIndex = 32;
+            // 
+            // label24
+            // 
+            this.label24.AutoSize = true;
+            this.label24.Location = new System.Drawing.Point(32, 238);
+            this.label24.Name = "label24";
+            this.label24.Size = new System.Drawing.Size(80, 12);
+            this.label24.TabIndex = 33;
+            this.label24.Text = "予告メッセージ：";
+            // 
             // SettingDialog
             // 
             this.AcceptButton = this.mCancelBtn;
@@ -2314,6 +2336,8 @@ namespace NicoLive
 
             this.mContWakuNotice.Checked = Properties.Settings.Default.cont_waku_notice; 
             this.mContWakuNotice.Enabled = Properties.Settings.Default.talk_3min;
+
+            tbResetMessage.Text = Properties.Settings.Default.reset_message;
             
 
             // クッキー
@@ -2460,6 +2484,7 @@ namespace NicoLive
             Properties.Settings.Default.send_keepalive = mKeepalive.Checked;
             Properties.Settings.Default.viewer_auto_boot = mViewerAutoBoot.Checked;
             Properties.Settings.Default.cont_waku_notice = this.mContWakuNotice.Checked;
+            Properties.Settings.Default.reset_message = tbResetMessage.Text;
             
 
             // クッキー

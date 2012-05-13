@@ -1545,7 +1545,9 @@ namespace NicoLive
                 }
                 */
 
-                //string location = res.Headers[HttpResponseHeader.Location]; //zeroでlocation headerこなくなった(´・ω・｀)
+                //string location = res.Headers[HttpResponseHeader.Location];
+                // z eroでlocation headerこなくなった(´・ω・｀)
+                // (  Д ) ﾟ ﾟ
                 string location = res.ResponseUri.ToString();
                 oLocation = location;
 

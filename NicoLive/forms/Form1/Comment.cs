@@ -150,18 +150,14 @@ namespace NicoLive
 
 
 
-            // コメントをリストに追加
-            this.Invoke((Action)delegate()
-            {
-                this.AddComment(iCmt);
-            });
+
 
             //過去コメントじゃない時だけ
             if (mLastChatNo < int.Parse(iCmt.No))
             {
 
                 // 投票チェック
-                if (iCmt.IsVote) iCmt.ToVote();
+                if (iCmt.IsVote && iCmt.IsOwner) iCmt.ToVote(ref mVote);
 
                 // NGユーザーを無視
                 if (this.mUid.IsNGUser(iCmt.Uid))
@@ -263,6 +259,12 @@ namespace NicoLive
                 // NGコメント通知
                 SendNGCommentNotice(int.Parse(iCmt.No));
             }
+
+            // コメントをリストに追加
+            this.Invoke((Action)delegate()
+            {
+                this.AddComment(iCmt);
+            });
 
             // 最終コメントNo設定
             SetLastChatNo(int.Parse(iCmt.No));

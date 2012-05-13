@@ -332,5 +332,8 @@
     <Setting Name="use_egm96" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
+    <Setting Name="reset_message" Type="System.String" Scope="User">
+      <Value Profile="(Default)">ラグ対策のため,15秒後にリロードを実施しますm</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
