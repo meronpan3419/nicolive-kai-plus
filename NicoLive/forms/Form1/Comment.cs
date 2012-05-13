@@ -578,7 +578,8 @@ namespace NicoLive
                         // 棒読みちゃんで配信終了通知
                         this.mBouyomi.Talk(mMsg.GetMessage("配信が終了しました"));
 
-                        FMLE.Stop();
+                        //FMLE.Stop();
+                        HQ.Stop();
                         mStartHQ = false;
                     }
 
@@ -616,25 +617,36 @@ namespace NicoLive
         private void GetNextWaku()
         {
 
-            //MakeWakutori(true);
-
-            WakuDlg dlg = new WakuDlg(LiveID, false);
-            dlg.ShowDialog();
-
-            if (dlg.mState == WakuResult.NO_ERR)
+            Thread th = new Thread(delegate()
             {
-                using (Bouyomi bm = new Bouyomi())
+                //MakeWakutori(true);
+
+                WakuDlg dlg = new WakuDlg(LiveID, false);
+                dlg.ShowDialog();
+
+                if (dlg.mState == WakuResult.NO_ERR)
                 {
-                    bm.Talk(mMsg.GetMessage("枠が取れたよ"));
+                    using (Bouyomi bm = new Bouyomi())
+                    {
+                        bm.Talk(mMsg.GetMessage("枠が取れたよ"));
+                    }
+
+                    this.Invoke((Action)delegate()
+                    {
+                        this.LiveID = dlg.mLv;
+                    });
+
+                    Connect(true);
+                }
+                else if (dlg.mState == WakuResult.JUNBAN)
+                {
+                    MakeWakutori(false);
                 }
 
-                this.LiveID = dlg.mLv;
-                Connect(true);
-            }
-            else if (dlg.mState == WakuResult.JUNBAN)
-            {
-                MakeWakutori(false);
-            }
+            });
+            th.Name = "NivoLive.Form1.Comment.GetNextWaku()";
+            th.Start();
+
 
         }
 

@@ -235,7 +235,9 @@ namespace NicoLive
             if (err == WakuErr.ERR_NO_ERR)
             {
                 mLv = lv;
+                System.Diagnostics.Debug.WriteLine("lv:" + mLv);
                 mState = WakuResult.NO_ERR;
+
                 SetLabelFromThread("枠取り完了", Color.Black, true);
             }
             else if (err == WakuErr.ERR_MAINTE)

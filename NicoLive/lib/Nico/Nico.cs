@@ -1305,19 +1305,6 @@ namespace NicoLive
                 }
                 return WakuErr.ERR_NO_ERR;
             }
-            else
-            {
-
-                match = Regex.Match(res, "<a href=\"http://live.nicovideo.jp/watch/(lv[0-9]+)\" class=\"now\"");
-                if (match.Success)
-                {
-                    iLv = match.Groups[1].Value;
-
-                    return WakuErr.ERR_NO_ERR;
-                }
-
-
-            }
 
 
 
@@ -1345,7 +1332,7 @@ namespace NicoLive
                     return WakuErr.ERR_MOJI;
                 if (err.Contains("既にこの時間に予約をしているか"))
                 {
-                    match = Regex.Match(res, "gate/(lv[0-9]+))\"");
+                    match = Regex.Match(res, "gate/(lv[0-9]+)\"");
                     if (match.Success)
                     {
                         iLv = match.Groups[1].Value;
@@ -1558,7 +1545,8 @@ namespace NicoLive
                 }
                 */
 
-                string location = res.Headers[HttpResponseHeader.Location];
+                //string location = res.Headers[HttpResponseHeader.Location]; //zeroでlocation headerこなくなった(´・ω・｀)
+                string location = res.ResponseUri.ToString();
                 oLocation = location;
 
                 // read response
