@@ -4,6 +4,7 @@
 ツイッター： @meronpan3419
 コミュ：   co274186
 配布元：   http://nicolive_wakusu.b72.in/nicolive_kai_plus/
+github:	https://github.com/meronpan3419/nicolive-kai-plus/
 
 ベース：
 豆ライブ  http://nicolive.sourceforge.jp/
@@ -53,6 +54,7 @@
 - 引数に＠LVで放送IDに置換
 
 ■更新履歴
+#2012/05/15 nicolive kai p11e コテハンリネーム周り改良。ユーザー名取ってくる正規表現を設定ファイルに。
 #2012/05/13 nicolive kai p11d リスナからのアンケコメで固まるバグfix。席替え予告メッセージ変更できるように。
 #2012/05/13 nicolive kai p11c 枠取り修正。多重枠取りで枠移動するように。
 #2012/05/09 nicolive kai p11b なんかいろいろバグってたの修正。車載テストしてない。

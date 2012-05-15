@@ -390,7 +390,7 @@ namespace NicoLive
 
             string name = "";
             string uri = "http://www.nicovideo.jp/user/" + iUserID;
-            const string regex = "<h2><strong>(.*?)</strong>さん</h2>";
+            string regex = Properties.Settings.Default.user_name_regex;
 
             string res = HttpGet(uri, ref this.mCookieLogin);
 

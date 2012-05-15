@@ -335,5 +335,8 @@
     <Setting Name="reset_message" Type="System.String" Scope="User">
       <Value Profile="(Default)">ラグ対策のため,15秒後にリロードを実施しますm</Value>
     </Setting>
+    <Setting Name="user_name_regex" Type="System.String" Scope="User">
+      <Value Profile="(Default)">&lt;h2&gt;&lt;strong&gt;(.*?)&lt;/strong&gt;さん&lt;/h2&gt;</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

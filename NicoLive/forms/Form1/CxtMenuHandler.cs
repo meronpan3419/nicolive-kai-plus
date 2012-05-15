@@ -56,6 +56,7 @@ namespace NicoLive
                 Rename rm = new Rename();
                 rm.MyOwner = this;
                 rm.ID = this.mCommentList.SelectedRows[0].Cells[(int)CommentColumn.COLUMN_ID].Value.ToString();
+                rm.UserName = this.mCommentList.SelectedRows[0].Cells[(int)CommentColumn.COLUMN_HANDLE].Value.ToString(); 
                 rm.Show();
             }
         }

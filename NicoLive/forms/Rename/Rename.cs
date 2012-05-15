@@ -16,6 +16,7 @@ namespace NicoLive
     {
         private Form1 mOwner = null;
         private string mID = null;
+        private string mUserName = null;
 
         public Form1 MyOwner
         {
@@ -27,6 +28,13 @@ namespace NicoLive
         {
             set { mID = value; }
             get { return mID; }
+        }
+
+
+        public string UserName
+        {
+            set { mUserName = value; }
+            get { return mUserName; }
         }
 
         //-------------------------------------------------------------------------
@@ -45,20 +53,21 @@ namespace NicoLive
             // センタリング
             this.Top = (this.mOwner.Height - this.Height) / 2;
             this.Left = (this.mOwner.Width - this.Width) / 2;
+            this.mName.Text = mUserName;
         }
         //-------------------------------------------------------------------------
         // ＯＫボタン
         //-------------------------------------------------------------------------
         private void mOK_Click(object sender, EventArgs e)
         {
-            if (mName.Text.Length > 0)
-            {
+
                 if (mOwner != null)
                 {
+
                     mOwner.SetNickname(this.mID, mName.Text);
                 }
                 Close();
-            }
+
         }
 
         //-------------------------------------------------------------------------
@@ -66,6 +75,13 @@ namespace NicoLive
         //-------------------------------------------------------------------------
         private void mCancel_Click(object sender, EventArgs e)
         {
+            Close();
+        }
+
+        private void mGetUserName_Click(object sender, EventArgs e)
+        {
+
+            mOwner.GetUsername(mID, true);
             Close();
         }
 

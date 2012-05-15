@@ -1354,5 +1354,17 @@ namespace NicoLive.Properties {
                 this["reset_message"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("<h2><strong>(.*?)</strong>さん</h2>")]
+        public string user_name_regex {
+            get {
+                return ((string)(this["user_name_regex"]));
+            }
+            set {
+                this["user_name_regex"] = value;
+            }
+        }
     }
 }

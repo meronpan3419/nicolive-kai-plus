@@ -32,6 +32,7 @@
             this.mName = new System.Windows.Forms.TextBox();
             this.mOK = new System.Windows.Forms.Button();
             this.mCancel = new System.Windows.Forms.Button();
+            this.mGetUserName = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label1
@@ -72,19 +73,30 @@
             this.mCancel.UseVisualStyleBackColor = true;
             this.mCancel.Click += new System.EventHandler(this.mCancel_Click);
             // 
+            // mGetUserName
+            // 
+            this.mGetUserName.Location = new System.Drawing.Point(25, 66);
+            this.mGetUserName.Name = "mGetUserName";
+            this.mGetUserName.Size = new System.Drawing.Size(75, 23);
+            this.mGetUserName.TabIndex = 4;
+            this.mGetUserName.Text = "自動取得";
+            this.mGetUserName.UseVisualStyleBackColor = true;
+            this.mGetUserName.Click += new System.EventHandler(this.mGetUserName_Click);
+            // 
             // Rename
             // 
             this.AcceptButton = this.mOK;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(293, 101);
+            this.Controls.Add(this.mGetUserName);
             this.Controls.Add(this.mCancel);
             this.Controls.Add(this.mOK);
             this.Controls.Add(this.mName);
             this.Controls.Add(this.label1);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "Rename";
+            this.UserName = "Rename";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.Text = "コテハン登録";
@@ -101,5 +113,6 @@
         private System.Windows.Forms.TextBox mName;
         private System.Windows.Forms.Button mOK;
         private System.Windows.Forms.Button mCancel;
+        private System.Windows.Forms.Button mGetUserName;
     }
 }

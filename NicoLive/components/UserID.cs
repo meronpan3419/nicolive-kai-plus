@@ -382,6 +382,25 @@ namespace NicoLive
         }
 
         //-------------------------------------------------------------------------
+        // コテハン削除
+        //-------------------------------------------------------------------------
+        public bool delNickname(string iID)
+        {
+            if (!mNickHash.ContainsKey(iID)) return false;
+
+            try
+            {
+                mLock.AcquireWriterLock(Timeout.Infinite);
+                mNickHash.Remove(iID);
+            }
+            finally
+            {
+                mLock.ReleaseWriterLock();
+            }
+            return true;
+        }
+
+        //-------------------------------------------------------------------------
         // NGユーザー追加
         //-------------------------------------------------------------------------
         public bool AddNGUser(string iID)
