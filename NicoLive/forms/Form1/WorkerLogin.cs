@@ -163,6 +163,7 @@ namespace NicoLive
                     disconnect = false;
 
                     mPastChatList.Clear();
+                    mWelcomeList.Clear();
                     // 過去コメ読み込みスタート
                     mPastChat = true;
 

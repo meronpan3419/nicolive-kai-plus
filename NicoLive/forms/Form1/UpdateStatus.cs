@@ -116,9 +116,9 @@ namespace NicoLive
                                 string msg = String.Format(mMsg.GetMessage("のこり{0}ふんくらいです"), rest_time);
                                 if (!this.mTalkLimit && sub > (lim - rest_time * 60))
                                 {
-                                    this.mBouyomi.Talk(msg);
-
                                     this.mTalkLimit = true;
+
+                                    this.mBouyomi.Talk(msg);                                    
 
                                     // 連続枠取り通知
                                     if (Properties.Settings.Default.cont_waku_notice)

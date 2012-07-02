@@ -18,6 +18,13 @@ namespace NicoLive
         // アンケート用
         private string[] mVoteList;
         private string mVoteTitle;
+        private int mVoteLength;
+
+        public int VoteLength
+        {
+            get { return mVoteLength; }
+            set { mVoteLength = value; }
+        }
 
         public string[] VoteList
         {
@@ -33,11 +40,11 @@ namespace NicoLive
 
         public Vote()
         {
-            mVoteList = new string[4];
-            mVoteList[0] = "";
-            mVoteList[1] = "";
-            mVoteList[2] = "";
-            mVoteList[3] = "";
+            mVoteList = new string[9];
+            for (int i = 0; i < 9; i++)
+            {
+                mVoteList[i] = "";
+            }
             mVoteTitle = "";
         }
     }
@@ -328,9 +335,11 @@ namespace NicoLive
             if (mText.StartsWith("/vote start "))
             {
 
-
-                string[] mVoteList = new string[4];
-                mVoteList[0] = mVoteList[1] = mVoteList[2] = mVoteList[3] = "";
+                string[]  mVoteList = new string[9];
+                for (int j = 0; j < 9; j++)
+                {
+                    mVoteList[j] = "";
+                }
 
                 mVote.VoteList = mVoteList;
 
@@ -346,14 +355,17 @@ namespace NicoLive
                     }
                     else
                     {
-                        mVoteList[i - 1] = match.Groups[1].Value;
+                        mVote.VoteList[i - 1] = match.Groups[1].Value;
                     }
                     i++;
+                    if (i > 9) break;
                 }
+
+                mVote.VoteLength = i - 1;
 
 
                 str = String.Format("アンケート開始【{0}】", mVote.VoteTitle);
-                for (i = 0; i < 4; i++)
+                for (i = 0; i < mVote.VoteLength; i++)
                 {
                     if (mVoteList[i].Length > 0)
                     {
@@ -391,7 +403,7 @@ namespace NicoLive
 
                     }
                     i++;
-                    if (i >= 4) break;
+                    if (i >= mVote.VoteLength) break;
                 }
 
 

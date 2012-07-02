@@ -1357,7 +1357,7 @@ namespace NicoLive.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("<h2><strong>(.*?)</strong>さん</h2>")]
+        [global::System.Configuration.DefaultSettingValueAttribute("<h2>(.*?)<small>さん</small></h2>")]
         public string user_name_regex {
             get {
                 return ((string)(this["user_name_regex"]));

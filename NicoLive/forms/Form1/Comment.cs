@@ -256,6 +256,9 @@ namespace NicoLive
                 // 返信メッセージ
                 AutoResponse(iCmt);
 
+                // ようこそ！
+                WelcomeMessage(iCmt);
+
                 // NGコメント通知
                 SendNGCommentNotice(int.Parse(iCmt.No));
             }
@@ -501,6 +504,45 @@ namespace NicoLive
                     this.SendComment(res, true);
                 });
             }
+        }
+
+        //-------------------------------------------------------------------------
+        // ようこそ！
+        //-------------------------------------------------------------------------
+        private void WelcomeMessage(Comment iCmt)
+        {
+            if (iCmt.IsOwner) return;
+
+            string uid = iCmt.Uid;
+
+            if (!mWelcomeList.Contains(uid))
+            {
+                mWelcomeList.Add(iCmt.Uid);
+
+                string msg = "さんいらっしゃい！";
+                //if (mUid.Contains(uid))
+                //{
+                    string nick = mUid.CheckNickname(iCmt.Uid);
+                    if (nick != null)
+                    {
+                        msg = nick + msg;
+                    }
+                    else
+                    {
+                        msg = ">>" + iCmt.No + msg; 
+                    }
+                    this.Invoke((Action)delegate()
+                    {
+                        this.SendComment(msg, true);
+                    });
+                //}
+            
+            
+            
+            }
+
+
+
         }
 
         //-------------------------------------------------------------------------

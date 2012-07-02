@@ -207,6 +207,7 @@
     <Compile Include="lib\Twitter\oAuth.cs" />
     <Compile Include="lib\Twitter\oAuthTwitter.cs" />
     <Compile Include="lib\Twitter\TwitterUtils.cs" />
+    <Compile Include="lib\Windows\Mouse.cs" />
     <Compile Include="lib\Windows\OSVersion.cs" />
     <Compile Include="forms\oAuthDialog\oAuthDialog.cs">
       <SubType>Form</SubType>

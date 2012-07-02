@@ -41,6 +41,8 @@ namespace NicoLive
         private List<string> mGatherUserID = null;
         private ReaderWriterLock mGatherLock = new ReaderWriterLock();
 
+       
+
         // 前のログイン状態
         private bool mPrevLogin = false;
 
@@ -166,6 +168,9 @@ namespace NicoLive
 
         // コメントバッファ
         List<DataGridViewRow> mPastChatList = new List<DataGridViewRow>();
+
+        // ようこそ
+        private List<string> mWelcomeList = new List<string>();
 
         // アンケート用
         private Vote mVote;

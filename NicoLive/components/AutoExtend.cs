@@ -7,7 +7,6 @@
 using System;
 using System.Drawing;
 using System.Drawing.Imaging;
-using System.Runtime.InteropServices;
 using System.Diagnostics;
 using System.Windows.Forms;
 
@@ -18,43 +17,7 @@ namespace NicoLive
 {   
     class AutoExtend : IDisposable
     {
-        //-------------------------------------------------------------------------
-        [DllImport("user32.dll")]
-        extern static uint SendInput(
-            uint nInputs,
-            INPUT[] pInputs,
-            int cbSize
-            );
-
-        [StructLayout(LayoutKind.Sequential)]
-        struct INPUT
-        {
-            public int type;
-            public MOUSEINPUT mi;
-        }
-
-        [StructLayout(LayoutKind.Sequential)]
-        struct MOUSEINPUT
-        {
-            public int dx;
-            public int dy;
-            public int mouseData;
-            public int dwFlags;
-            public int time;
-            public IntPtr dwExtraInfo;
-        }
-        // dwFlags
-        const int MOUSEEVENTF_MOVED      = 0x0001;
-        const int MOUSEEVENTF_LEFTDOWN   = 0x0002;  // 左ボタン Down
-        const int MOUSEEVENTF_LEFTUP     = 0x0004;  // 左ボタン Up
-        const int MOUSEEVENTF_RIGHTDOWN  = 0x0008;  // 右ボタン Down
-        const int MOUSEEVENTF_RIGHTUP    = 0x0010;  // 右ボタン Up
-        const int MOUSEEVENTF_MIDDLEDOWN = 0x0020;  // 中ボタン Down
-        const int MOUSEEVENTF_MIDDLEUP   = 0x0040;  // 中ボタン Up
-        const int MOUSEEVENTF_WHEEL      = 0x0080;
-        const int MOUSEEVENTF_XDOWN      = 0x0100;
-        const int MOUSEEVENTF_XUP        = 0x0200;
-        const int MOUSEEVENTF_ABSOLUTE   = 0x8000;
+ 
 
         //-------------------------------------------------------------------------
         private Bitmap mEndingBmp = null;			// 残り３分前画像
@@ -74,6 +37,8 @@ namespace NicoLive
         private Bitmap mFME       = null;
         private Bitmap mStartFME  = null;
         private Bitmap mStopFME   = null;
+        public IntPtr hWnd = (IntPtr)0;
+        
 
         //-------------------------------------------------------------------------
         // コンストラクタ
@@ -152,14 +117,14 @@ namespace NicoLive
 				if (ContainBitmap(mEnchoBmp, bmp, encho_offs.X - padding, encho_offs.Y - padding, encho_offs.X + padding, encho_offs.Y + padding, ref outPos, 10))　     // 時間延長タブが選択されていない
 				{
 					// 時間延長タブを選択する
-					MouseClick(iX + outPos.X + 10, iY + outPos.Y + 8);
+                    Mouse.MouseClick(iX + outPos.X + 10, iY + outPos.Y + 8);
 				}
 				else
 				{
 					if (ContainBitmap(mFreeBmp, bmp, free_offs.X - padding, free_offs.Y - padding, free_offs.X + padding, free_offs.Y + padding, ref outPos,5))          // 無料延長チェック
 					{
 						// 購入ボタンクリック
-						MouseClick(iX + 712, iY + outPos.Y + 7);
+                        Mouse.MouseClick(iX + 712, iY + outPos.Y + 7);
                         bmp.Dispose();
                         bmp = null;
 						return 1;
@@ -168,24 +133,24 @@ namespace NicoLive
 							ContainBitmap(m5002Bmp, bmp, _500_offs.X - padding, _500_offs.Y - padding, _500_offs.X + padding, _500_offs.Y + padding, ref outPos, 5))
 					{
 						// 500円延長時は更新ボタンをクリックする
-						MouseClick(iX + outPos.X + 45, iY + outPos.Y + 12);
+                        Mouse.MouseClick(iX + outPos.X + 45, iY + outPos.Y + 12);
 					}
 				}
 
 				// 延長失敗OKボタンをクリック
                 if (ContainBitmap(mErrBmp, bmp, err_offs.X - padding2, err_offs.Y - padding, err_offs.X + padding2, err_offs.Y + padding, ref outPos, 5))
                 {
-                    MouseClick(iX + outPos.X + 19, iY + outPos.Y + 41);
+                    Mouse.MouseClick(iX + outPos.X + 19, iY + outPos.Y + 41);
                 }
                 else // 延長失敗OKボタンをクリック
                 if (ContainBitmap(mExtFailBmp, bmp, fail_offs.X - padding2, fail_offs.Y - padding, fail_offs.X + padding2, fail_offs.Y + padding, ref outPos, 5))
                 {
-                    MouseClick(iX + outPos.X + 21, iY + outPos.Y + 52);
+                    Mouse.MouseClick(iX + outPos.X + 21, iY + outPos.Y + 52);
                 }
                 else // OKボタンをクリック
                 if (ContainBitmap(mOk3Bmp, bmp, ok3_offs.X - padding2, ok3_offs.Y - padding, ok3_offs.X + padding2, ok3_offs.Y + padding, ref outPos, thres))
                 {
-                    MouseClick(iX + outPos.X + 17, iY + outPos.Y + 8);
+                    Mouse.MouseClick(iX + outPos.X + 17, iY + outPos.Y + 8);
                     bmp.Dispose();
                     bmp = null;
                     return 2;
@@ -194,7 +159,7 @@ namespace NicoLive
                 // はいボタンをクリック
                 if (ContainBitmap(mYesBmp, bmp, yes_offs.X - padding2, yes_offs.Y - padding, yes_offs.X + padding2, yes_offs.Y + padding, ref outPos, thres))
                 {
-                    MouseClick(iX + outPos.X + 5, iY + outPos.Y + 8);
+                    Mouse.MouseClick(iX + outPos.X + 5, iY + outPos.Y + 8);
                 }
                 bmp.Dispose();
                 bmp = null;
@@ -217,12 +182,26 @@ namespace NicoLive
            
             using (ScreenCapture scr = new ScreenCapture())
             {
+
                 Bitmap bmp = scr.Capture(iRc);
+                //IntPtr hWnd = IntPtr.Zero;
+                //foreach (Process p in Process.GetProcessesByName("Nicolive.vshost"))
+                //{
+                //    if (p.MainWindowHandle != IntPtr.Zero)
+                //    {
+
+                //        hWnd = p.MainWindowHandle;
+                //        break;
+                //    }
+                //}
+                //Bitmap bmp = scr.Capture2(hWnd);
+
                 Point outPos = new Point();
 
                 if (ContainBitmap(mFME, bmp, fme_offs.X - padding2, fme_offs.Y - padding, fme_offs.X + padding2, fme_offs.Y + padding, ref outPos, thres))
                 {
-                    MouseClick(iX + outPos.X + 12, iY + outPos.Y + 8);
+                    Mouse.MouseClick(iX + outPos.X + 12, iY + outPos.Y + 8);
+                    //Mouse.MouseClick2( outPos.X + 12,  outPos.Y + 8);
                     bmp.Dispose();
                     bmp = null;
                     return 0;
@@ -235,7 +214,8 @@ namespace NicoLive
                 }
                 if (ContainBitmap(mStartFME, bmp, start_offs.X - padding2, start_offs.Y - padding, start_offs.X + padding2, start_offs.Y + padding, ref outPos, thres))
                 {
-                    MouseClick(iX + outPos.X + 12, iY + outPos.Y + 11);
+                    Mouse.MouseClick(iX + outPos.X + 12, iY + outPos.Y + 11);
+                    //Mouse.MouseClick(outPos.X + 12, outPos.Y + 11);
                     bmp.Dispose();
                     bmp = null;
                     return 0;
@@ -267,9 +247,14 @@ namespace NicoLive
                 Point outPos = new Point();
                 Bitmap bmp = scr.Capture(iRc);
 
+                //IntPtr hWnd = System.Diagnostics.Process.GetCurrentProcess().MainWindowHandle;
+                //Bitmap bmp = scr.Capture2(hWnd);
+
                 if (ContainBitmap(mStopFME, bmp, fme_stop_offs.X - padding2, fme_stop_offs.Y - padding, fme_stop_offs.X + padding2, fme_stop_offs.Y + padding, ref outPos, thres))
                 {
-                    MouseClick(iX + outPos.X + 12, iY + outPos.Y + 8);
+                    Mouse.MouseClick(iX + outPos.X + 12, iY + outPos.Y + 8);
+                    //Mouse.MouseClick2(outPos.X + 12, outPos.Y + 8);
+                    
                     //bmp.Dispose();
                     //bmp = null;
                     //Debug.WriteLine("FME FOUND");
@@ -283,7 +268,8 @@ namespace NicoLive
 
                 if (ContainBitmap(mPreChat, bmp, prechat_offs.X - padding2, prechat_offs.Y - padding, prechat_offs.X + padding2, prechat_offs.Y + padding, ref outPos, thres))
                 {
-                    MouseClick(iX + outPos.X + 12, iY + outPos.Y + 11);
+                    Mouse.MouseClick(iX + outPos.X + 12, iY + outPos.Y + 11);
+                    //Mouse.MouseClick2(outPos.X + 12, outPos.Y + 11);
                     bmp.Dispose();
                     bmp = null;
                     return 0;
@@ -291,28 +277,32 @@ namespace NicoLive
 
                 if (ContainBitmap(mStartBmp, bmp, start_offs.X - padding, start_offs.Y - padding, start_offs.X + padding, start_offs.Y + padding, ref outPos, thres))
                 {
-                    MouseClick(iX + outPos.X + 50, iY + outPos.Y + 30);
+                    Mouse.MouseClick(iX + outPos.X + 50, iY + outPos.Y + 30);
+                    //Mouse.MouseClick2( outPos.X + 50,  outPos.Y + 30);
                     bmp.Dispose();
                     bmp = null;
                     return 1;
                 }
                 if (ContainBitmap(mBroOkBmp, bmp, ok_offs.X - padding2, ok_offs.Y - padding, ok_offs.X + padding2, ok_offs.Y + padding, ref outPos, thres2))
                 {
-                    MouseClick(iX + outPos.X + 20, iY + outPos.Y + 40);
+                    Mouse.MouseClick(iX + outPos.X + 20, iY + outPos.Y + 40);
+                    //Mouse.MouseClick2(outPos.X + 20, outPos.Y + 40);
                     bmp.Dispose();
                     bmp = null;
                     return 2;
                 }
                 if (ContainBitmap(mBroOk2Bmp, bmp, ok_offs.X - padding2, ok_offs.Y - padding, ok_offs.X + padding2, ok_offs.Y + padding, ref outPos, thres2))
                 {
-                    MouseClick(iX + outPos.X + 20, iY + outPos.Y + 40);
+                    Mouse.MouseClick(iX + outPos.X + 20, iY + outPos.Y + 40);
+                    //Mouse.MouseClick2(outPos.X + 20, outPos.Y + 40);
                     bmp.Dispose();
                     bmp = null;
                     return 2;
                 }
                 if (ContainBitmap(mOpenChat, bmp, prechat_offs.X - padding2, prechat_offs.Y - padding, prechat_offs.X + padding2, prechat_offs.Y + padding, ref outPos, thres))
                 {
-                    MouseClick(iX + outPos.X + 12, iY + outPos.Y + 11);
+                    Mouse.MouseClick(iX + outPos.X + 12, iY + outPos.Y + 11);
+                    //Mouse.MouseClick2( outPos.X + 12,  outPos.Y + 11);
                     bmp.Dispose();
                     bmp = null;
                     return 0;
@@ -493,25 +483,7 @@ done:
             return false;
         }
 
-        //-------------------------------------------------------------------------
-        // 指定位置をマウスでクリック
-        //-------------------------------------------------------------------------
-        private void MouseClick(int iX, int iY)
-        {
-            Cursor.Position = new Point(iX,iY);
 
-            INPUT[] input = new INPUT[2];  // 計3イベントを格納
-
-            input[0].mi.dwFlags = MOUSEEVENTF_LEFTDOWN;
-            input[1].mi.dwFlags = MOUSEEVENTF_LEFTUP;
-
-            //input[2].mi.dx = 0;
-            //input[2].mi.dy = 0;
-            //input[2].mi.dwFlags = MOUSEEVENTF_MOVED | MOUSEEVENTF_ABSOLUTE;
-
-            // 操作の実行
-            SendInput(2, input, Marshal.SizeOf(input[0]));
-        }
 
     }
 }
