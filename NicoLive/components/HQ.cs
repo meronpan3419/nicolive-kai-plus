@@ -20,10 +20,20 @@ namespace NicoLive
                 // NLE
                 if (Properties.Settings.Default.use_nle)
                 {
-                    NLE.Start();
-                    using (Bouyomi bm = new Bouyomi())
+                    if (NLE.IsAlive)
                     {
-                        bm.Talk("えぬえるいー配信を開始します。");
+                        NLE.Start();
+                        using (Bouyomi bm = new Bouyomi())
+                        {
+                            bm.Talk("えぬえるいー配信を開始します。");
+                        }
+                    }
+                    else
+                    {
+                        using (Bouyomi bm = new Bouyomi())
+                        {
+                            bm.Talk("えぬえるいー配信なんてなかった。");
+                        }
                     }
                     return;
                 }

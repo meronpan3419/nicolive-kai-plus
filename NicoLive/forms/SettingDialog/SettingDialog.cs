@@ -11,6 +11,8 @@ using System.Collections.Generic;
 using System.Xml;
 using System.Diagnostics;
 using Hal.CookieGetterSharp;
+using System.Net;
+using System.Threading;
 
 //-------------------------------------------------------------------------
 // クラス実装
@@ -50,7 +52,7 @@ namespace NicoLive
         private Label label5;
         private Label mAuthResult;
         private Button mAuthBtn;
-        private Timer mUITimer;
+        private System.Windows.Forms.Timer mUITimer;
         private CheckBox mWakuTweet;
         private CheckBox mTwEndEnable;
         private CheckBox mTwStartEnable;
@@ -89,7 +91,6 @@ namespace NicoLive
         private CheckBox cbAutoGenzaichi;
         private CheckBox cbImkHidden;
         private CheckBox cbImkOwner;
-        private CheckBox mNGNotice;
         private CheckBox mUseHQ;
         private GroupBox groupBox6;
         private Button mFMEsessionBtn;
@@ -141,7 +142,6 @@ namespace NicoLive
         private DataGridView dataGridView1;
         private DataGridViewTextBoxColumn yName;
         private DataGridViewTextBoxColumn yTemplate;
-        private CheckBox mAutoUsername;
         private GroupBox groupBox12;
         private Label mOwnerColor;
         private Label label14;
@@ -189,6 +189,24 @@ namespace NicoLive
         private CheckBox cbEGM96;
         private Label label24;
         private TextBox tbResetMessage;
+        private Label label25;
+        private TextBox mUserSessionBox;
+        private Button mLoginTest;
+        private Label mLoginResult;
+        private TabPage mTabGeneral2;
+        private GroupBox groupBox16;
+        private CheckBox checkBox3;
+        private CheckBox checkBox2;
+        private GroupBox groupBox17;
+        private TextBox mUserNameRegex;
+        private Label lUserNameRegex;
+        private CheckBox mAutoUsername;
+        private CheckBox mNGNotice;
+        private CheckBox mUseWelcomeMessage;
+        private Label mUseNameTestResult;
+        private Button button2;
+        private TextBox mUserID;
+        private Label label26;
 
 
         private IContainer components;
@@ -232,6 +250,10 @@ namespace NicoLive
             this.mTabPage8 = new System.Windows.Forms.TabControl();
             this.mTabGeneral = new System.Windows.Forms.TabPage();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.mLoginResult = new System.Windows.Forms.Label();
+            this.mLoginTest = new System.Windows.Forms.Button();
+            this.label25 = new System.Windows.Forms.Label();
+            this.mUserSessionBox = new System.Windows.Forms.TextBox();
             this.mMailBox = new System.Windows.Forms.TextBox();
             this.mMailLabel = new System.Windows.Forms.Label();
             this.mBrowser = new System.Windows.Forms.ComboBox();
@@ -239,11 +261,11 @@ namespace NicoLive
             this.mPassLabel = new System.Windows.Forms.Label();
             this.mPasswdBox = new System.Windows.Forms.TextBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.label24 = new System.Windows.Forms.Label();
+            this.tbResetMessage = new System.Windows.Forms.TextBox();
             this.mContWakuNotice = new System.Windows.Forms.CheckBox();
             this.mViewerAutoBoot = new System.Windows.Forms.CheckBox();
-            this.mAutoUsername = new System.Windows.Forms.CheckBox();
             this.mKeepalive = new System.Windows.Forms.CheckBox();
-            this.mNGNotice = new System.Windows.Forms.CheckBox();
             this.mTitleInc = new System.Windows.Forms.CheckBox();
             this.mRestTime = new System.Windows.Forms.NumericUpDown();
             this.mSekigaeMinutes = new System.Windows.Forms.NumericUpDown();
@@ -391,8 +413,20 @@ namespace NicoLive
             this.mOpenFileDlg = new System.Windows.Forms.OpenFileDialog();
             this.mSessionFileDlg = new System.Windows.Forms.OpenFileDialog();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.tbResetMessage = new System.Windows.Forms.TextBox();
-            this.label24 = new System.Windows.Forms.Label();
+            this.mTabGeneral2 = new System.Windows.Forms.TabPage();
+            this.groupBox16 = new System.Windows.Forms.GroupBox();
+            this.checkBox2 = new System.Windows.Forms.CheckBox();
+            this.checkBox3 = new System.Windows.Forms.CheckBox();
+            this.groupBox17 = new System.Windows.Forms.GroupBox();
+            this.mUseWelcomeMessage = new System.Windows.Forms.CheckBox();
+            this.mAutoUsername = new System.Windows.Forms.CheckBox();
+            this.mNGNotice = new System.Windows.Forms.CheckBox();
+            this.lUserNameRegex = new System.Windows.Forms.Label();
+            this.mUserNameRegex = new System.Windows.Forms.TextBox();
+            this.button2 = new System.Windows.Forms.Button();
+            this.mUseNameTestResult = new System.Windows.Forms.Label();
+            this.mUserID = new System.Windows.Forms.TextBox();
+            this.label26 = new System.Windows.Forms.Label();
             this.mTabPage8.SuspendLayout();
             this.mTabGeneral.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -428,6 +462,9 @@ namespace NicoLive
             this.groupBox14.SuspendLayout();
             this.groupBox13.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.mLauncherList)).BeginInit();
+            this.mTabGeneral2.SuspendLayout();
+            this.groupBox16.SuspendLayout();
+            this.groupBox17.SuspendLayout();
             this.SuspendLayout();
             // 
             // mCancelBtn
@@ -443,6 +480,7 @@ namespace NicoLive
             // mTabPage8
             // 
             this.mTabPage8.Controls.Add(this.mTabGeneral);
+            this.mTabPage8.Controls.Add(this.mTabGeneral2);
             this.mTabPage8.Controls.Add(this.mTabCommentList);
             this.mTabPage8.Controls.Add(this.mTabBouyomi1);
             this.mTabPage8.Controls.Add(this.mTabBouyomi2);
@@ -469,9 +507,14 @@ namespace NicoLive
             this.mTabGeneral.TabIndex = 0;
             this.mTabGeneral.Text = "一般";
             this.mTabGeneral.UseVisualStyleBackColor = true;
+            this.mTabGeneral.Click += new System.EventHandler(this.mTabGeneral_Click);
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.mLoginResult);
+            this.groupBox1.Controls.Add(this.mLoginTest);
+            this.groupBox1.Controls.Add(this.label25);
+            this.groupBox1.Controls.Add(this.mUserSessionBox);
             this.groupBox1.Controls.Add(this.mMailBox);
             this.groupBox1.Controls.Add(this.mMailLabel);
             this.groupBox1.Controls.Add(this.mBrowser);
@@ -480,10 +523,49 @@ namespace NicoLive
             this.groupBox1.Controls.Add(this.mPasswdBox);
             this.groupBox1.Location = new System.Drawing.Point(7, 6);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(461, 95);
+            this.groupBox1.Size = new System.Drawing.Size(461, 110);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "ニコ生ログイン情報";
+            this.groupBox1.Enter += new System.EventHandler(this.groupBox1_Enter);
+            // 
+            // mLoginResult
+            // 
+            this.mLoginResult.AutoSize = true;
+            this.mLoginResult.Location = new System.Drawing.Point(335, 88);
+            this.mLoginResult.Name = "mLoginResult";
+            this.mLoginResult.Size = new System.Drawing.Size(11, 12);
+            this.mLoginResult.TabIndex = 10;
+            this.mLoginResult.Text = "-";
+            // 
+            // mLoginTest
+            // 
+            this.mLoginTest.Enabled = false;
+            this.mLoginTest.Location = new System.Drawing.Point(334, 64);
+            this.mLoginTest.Name = "mLoginTest";
+            this.mLoginTest.Size = new System.Drawing.Size(76, 19);
+            this.mLoginTest.TabIndex = 9;
+            this.mLoginTest.Text = "ログインテスト";
+            this.mLoginTest.UseVisualStyleBackColor = true;
+            this.mLoginTest.Click += new System.EventHandler(this.mLoginTest_Click);
+            // 
+            // label25
+            // 
+            this.label25.AutoSize = true;
+            this.label25.Location = new System.Drawing.Point(20, 88);
+            this.label25.Name = "label25";
+            this.label25.Size = new System.Drawing.Size(76, 12);
+            this.label25.TabIndex = 7;
+            this.label25.Text = "user_session：";
+            // 
+            // mUserSessionBox
+            // 
+            this.mUserSessionBox.Enabled = false;
+            this.mUserSessionBox.ImeMode = System.Windows.Forms.ImeMode.Off;
+            this.mUserSessionBox.Location = new System.Drawing.Point(100, 85);
+            this.mUserSessionBox.Name = "mUserSessionBox";
+            this.mUserSessionBox.Size = new System.Drawing.Size(229, 19);
+            this.mUserSessionBox.TabIndex = 6;
             // 
             // mMailBox
             // 
@@ -509,6 +591,7 @@ namespace NicoLive
             this.mBrowser.Name = "mBrowser";
             this.mBrowser.Size = new System.Drawing.Size(163, 20);
             this.mBrowser.TabIndex = 5;
+            this.mBrowser.SelectedIndexChanged += new System.EventHandler(this.mBrowser_SelectedIndexChanged);
             // 
             // mUseBrowserCookie
             // 
@@ -546,9 +629,7 @@ namespace NicoLive
             this.groupBox2.Controls.Add(this.tbResetMessage);
             this.groupBox2.Controls.Add(this.mContWakuNotice);
             this.groupBox2.Controls.Add(this.mViewerAutoBoot);
-            this.groupBox2.Controls.Add(this.mAutoUsername);
             this.groupBox2.Controls.Add(this.mKeepalive);
-            this.groupBox2.Controls.Add(this.mNGNotice);
             this.groupBox2.Controls.Add(this.mTitleInc);
             this.groupBox2.Controls.Add(this.mRestTime);
             this.groupBox2.Controls.Add(this.mSekigaeMinutes);
@@ -560,17 +641,33 @@ namespace NicoLive
             this.groupBox2.Controls.Add(this.mSaveLog);
             this.groupBox2.Controls.Add(this.mAutoReConnect);
             this.groupBox2.Controls.Add(this.mTalkBat);
-            this.groupBox2.Location = new System.Drawing.Point(9, 107);
+            this.groupBox2.Location = new System.Drawing.Point(9, 122);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(462, 337);
+            this.groupBox2.Size = new System.Drawing.Size(462, 322);
             this.groupBox2.TabIndex = 5;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "その他";
             // 
+            // label24
+            // 
+            this.label24.AutoSize = true;
+            this.label24.Location = new System.Drawing.Point(32, 213);
+            this.label24.Name = "label24";
+            this.label24.Size = new System.Drawing.Size(80, 12);
+            this.label24.TabIndex = 33;
+            this.label24.Text = "予告メッセージ：";
+            // 
+            // tbResetMessage
+            // 
+            this.tbResetMessage.Location = new System.Drawing.Point(118, 210);
+            this.tbResetMessage.Name = "tbResetMessage";
+            this.tbResetMessage.Size = new System.Drawing.Size(235, 19);
+            this.tbResetMessage.TabIndex = 32;
+            // 
             // mContWakuNotice
             // 
             this.mContWakuNotice.AutoSize = true;
-            this.mContWakuNotice.Location = new System.Drawing.Point(20, 84);
+            this.mContWakuNotice.Location = new System.Drawing.Point(17, 81);
             this.mContWakuNotice.Name = "mContWakuNotice";
             this.mContWakuNotice.Size = new System.Drawing.Size(343, 16);
             this.mContWakuNotice.TabIndex = 31;
@@ -580,7 +677,7 @@ namespace NicoLive
             // mViewerAutoBoot
             // 
             this.mViewerAutoBoot.AutoSize = true;
-            this.mViewerAutoBoot.Location = new System.Drawing.Point(19, 304);
+            this.mViewerAutoBoot.Location = new System.Drawing.Point(17, 257);
             this.mViewerAutoBoot.Name = "mViewerAutoBoot";
             this.mViewerAutoBoot.Size = new System.Drawing.Size(228, 16);
             this.mViewerAutoBoot.TabIndex = 30;
@@ -588,42 +685,20 @@ namespace NicoLive
             this.toolTip1.SetToolTip(this.mViewerAutoBoot, ">>n番さんNGです！的な");
             this.mViewerAutoBoot.UseVisualStyleBackColor = true;
             // 
-            // mAutoUsername
-            // 
-            this.mAutoUsername.AutoSize = true;
-            this.mAutoUsername.Location = new System.Drawing.Point(19, 123);
-            this.mAutoUsername.Name = "mAutoUsername";
-            this.mAutoUsername.Size = new System.Drawing.Size(272, 16);
-            this.mAutoUsername.TabIndex = 29;
-            this.mAutoUsername.Text = "「184」を外しているユーザーの名前を自動で取得する";
-            this.toolTip1.SetToolTip(this.mAutoUsername, "コテハン自動取得");
-            this.mAutoUsername.UseVisualStyleBackColor = true;
-            // 
             // mKeepalive
             // 
             this.mKeepalive.AutoSize = true;
-            this.mKeepalive.Location = new System.Drawing.Point(20, 191);
+            this.mKeepalive.Location = new System.Drawing.Point(17, 166);
             this.mKeepalive.Name = "mKeepalive";
             this.mKeepalive.Size = new System.Drawing.Size(303, 16);
             this.mKeepalive.TabIndex = 22;
             this.mKeepalive.Text = "コメントサーバーとの接続を維持するために/keepaliveを送る";
             this.mKeepalive.UseVisualStyleBackColor = true;
             // 
-            // mNGNotice
-            // 
-            this.mNGNotice.AutoSize = true;
-            this.mNGNotice.Location = new System.Drawing.Point(18, 282);
-            this.mNGNotice.Name = "mNGNotice";
-            this.mNGNotice.Size = new System.Drawing.Size(163, 16);
-            this.mNGNotice.TabIndex = 21;
-            this.mNGNotice.Text = "NGコメントを主コメで通知する";
-            this.toolTip1.SetToolTip(this.mNGNotice, ">>n番さんNGです！的な");
-            this.mNGNotice.UseVisualStyleBackColor = true;
-            // 
             // mTitleInc
             // 
             this.mTitleInc.AutoSize = true;
-            this.mTitleInc.Location = new System.Drawing.Point(18, 260);
+            this.mTitleInc.Location = new System.Drawing.Point(17, 235);
             this.mTitleInc.Name = "mTitleInc";
             this.mTitleInc.Size = new System.Drawing.Size(177, 16);
             this.mTitleInc.TabIndex = 20;
@@ -634,7 +709,7 @@ namespace NicoLive
             // mRestTime
             // 
             this.mRestTime.ImeMode = System.Windows.Forms.ImeMode.Off;
-            this.mRestTime.Location = new System.Drawing.Point(109, 59);
+            this.mRestTime.Location = new System.Drawing.Point(109, 56);
             this.mRestTime.Maximum = new decimal(new int[] {
             25,
             0,
@@ -656,7 +731,7 @@ namespace NicoLive
             // 
             // mSekigaeMinutes
             // 
-            this.mSekigaeMinutes.Location = new System.Drawing.Point(118, 211);
+            this.mSekigaeMinutes.Location = new System.Drawing.Point(118, 186);
             this.mSekigaeMinutes.Maximum = new decimal(new int[] {
             99,
             0,
@@ -680,7 +755,7 @@ namespace NicoLive
             // mFMEcompact
             // 
             this.mFMEcompact.AutoSize = true;
-            this.mFMEcompact.Location = new System.Drawing.Point(20, 213);
+            this.mFMEcompact.Location = new System.Drawing.Point(17, 188);
             this.mFMEcompact.Name = "mFMEcompact";
             this.mFMEcompact.Size = new System.Drawing.Size(247, 16);
             this.mFMEcompact.TabIndex = 18;
@@ -691,7 +766,7 @@ namespace NicoLive
             // mSkip5min
             // 
             this.mSkip5min.AutoSize = true;
-            this.mSkip5min.Location = new System.Drawing.Point(19, 18);
+            this.mSkip5min.Location = new System.Drawing.Point(17, 18);
             this.mSkip5min.Name = "mSkip5min";
             this.mSkip5min.Size = new System.Drawing.Size(113, 16);
             this.mSkip5min.TabIndex = 17;
@@ -702,14 +777,14 @@ namespace NicoLive
             // mRestBatt
             // 
             this.mRestBatt.ImeMode = System.Windows.Forms.ImeMode.Off;
-            this.mRestBatt.Location = new System.Drawing.Point(120, 145);
+            this.mRestBatt.Location = new System.Drawing.Point(118, 120);
             this.mRestBatt.Minimum = new decimal(new int[] {
             1,
             0,
             0,
             0});
             this.mRestBatt.Name = "mRestBatt";
-            this.mRestBatt.Size = new System.Drawing.Size(49, 19);
+            this.mRestBatt.Size = new System.Drawing.Size(43, 19);
             this.mRestBatt.TabIndex = 14;
             this.mRestBatt.Value = new decimal(new int[] {
             1,
@@ -720,7 +795,7 @@ namespace NicoLive
             // mAutoConnect
             // 
             this.mAutoConnect.AutoSize = true;
-            this.mAutoConnect.Location = new System.Drawing.Point(19, 40);
+            this.mAutoConnect.Location = new System.Drawing.Point(17, 38);
             this.mAutoConnect.Name = "mAutoConnect";
             this.mAutoConnect.Size = new System.Drawing.Size(203, 16);
             this.mAutoConnect.TabIndex = 8;
@@ -730,7 +805,7 @@ namespace NicoLive
             // mTalk3Min
             // 
             this.mTalk3Min.AutoSize = true;
-            this.mTalk3Min.Location = new System.Drawing.Point(19, 62);
+            this.mTalk3Min.Location = new System.Drawing.Point(17, 59);
             this.mTalk3Min.Name = "mTalk3Min";
             this.mTalk3Min.Size = new System.Drawing.Size(284, 16);
             this.mTalk3Min.TabIndex = 9;
@@ -741,7 +816,7 @@ namespace NicoLive
             // mSaveLog
             // 
             this.mSaveLog.AutoSize = true;
-            this.mSaveLog.Location = new System.Drawing.Point(20, 104);
+            this.mSaveLog.Location = new System.Drawing.Point(17, 101);
             this.mSaveLog.Name = "mSaveLog";
             this.mSaveLog.Size = new System.Drawing.Size(171, 16);
             this.mSaveLog.TabIndex = 11;
@@ -751,7 +826,7 @@ namespace NicoLive
             // mAutoReConnect
             // 
             this.mAutoReConnect.AutoSize = true;
-            this.mAutoReConnect.Location = new System.Drawing.Point(20, 170);
+            this.mAutoReConnect.Location = new System.Drawing.Point(17, 145);
             this.mAutoReConnect.Name = "mAutoReConnect";
             this.mAutoReConnect.Size = new System.Drawing.Size(84, 16);
             this.mAutoReConnect.TabIndex = 3;
@@ -762,7 +837,7 @@ namespace NicoLive
             // mTalkBat
             // 
             this.mTalkBat.AutoSize = true;
-            this.mTalkBat.Location = new System.Drawing.Point(20, 148);
+            this.mTalkBat.Location = new System.Drawing.Point(17, 123);
             this.mTalkBat.Name = "mTalkBat";
             this.mTalkBat.Size = new System.Drawing.Size(346, 16);
             this.mTalkBat.TabIndex = 13;
@@ -771,6 +846,7 @@ namespace NicoLive
             // 
             // mTabCommentList
             // 
+            this.mTabCommentList.Controls.Add(this.groupBox17);
             this.mTabCommentList.Controls.Add(this.groupBox12);
             this.mTabCommentList.Controls.Add(this.groupBox11);
             this.mTabCommentList.Location = new System.Drawing.Point(4, 21);
@@ -792,9 +868,9 @@ namespace NicoLive
             this.groupBox12.Controls.Add(this.label15);
             this.groupBox12.Controls.Add(this.mBackColor);
             this.groupBox12.Controls.Add(this.label12);
-            this.groupBox12.Location = new System.Drawing.Point(7, 97);
+            this.groupBox12.Location = new System.Drawing.Point(7, 83);
             this.groupBox12.Name = "groupBox12";
-            this.groupBox12.Size = new System.Drawing.Size(461, 301);
+            this.groupBox12.Size = new System.Drawing.Size(461, 154);
             this.groupBox12.TabIndex = 33;
             this.groupBox12.TabStop = false;
             this.groupBox12.Text = "色";
@@ -803,7 +879,7 @@ namespace NicoLive
             // 
             this.mOwnerColor.BackColor = System.Drawing.Color.Red;
             this.mOwnerColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.mOwnerColor.Location = new System.Drawing.Point(123, 89);
+            this.mOwnerColor.Location = new System.Drawing.Point(104, 68);
             this.mOwnerColor.Name = "mOwnerColor";
             this.mOwnerColor.Size = new System.Drawing.Size(64, 18);
             this.mOwnerColor.TabIndex = 15;
@@ -812,7 +888,7 @@ namespace NicoLive
             // label14
             // 
             this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(31, 95);
+            this.label14.Location = new System.Drawing.Point(12, 74);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(80, 12);
             this.label14.TabIndex = 14;
@@ -822,7 +898,7 @@ namespace NicoLive
             // 
             this.mMobileColor.BackColor = System.Drawing.Color.Blue;
             this.mMobileColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.mMobileColor.Location = new System.Drawing.Point(123, 158);
+            this.mMobileColor.Location = new System.Drawing.Point(104, 117);
             this.mMobileColor.Name = "mMobileColor";
             this.mMobileColor.Size = new System.Drawing.Size(64, 18);
             this.mMobileColor.TabIndex = 19;
@@ -831,7 +907,7 @@ namespace NicoLive
             // label19
             // 
             this.label19.AutoSize = true;
-            this.label19.Location = new System.Drawing.Point(31, 164);
+            this.label19.Location = new System.Drawing.Point(12, 123);
             this.label19.Name = "label19";
             this.label19.Size = new System.Drawing.Size(61, 12);
             this.label19.TabIndex = 18;
@@ -841,7 +917,7 @@ namespace NicoLive
             // 
             this.mNGColor.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
             this.mNGColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.mNGColor.Location = new System.Drawing.Point(123, 123);
+            this.mNGColor.Location = new System.Drawing.Point(104, 92);
             this.mNGColor.Name = "mNGColor";
             this.mNGColor.Size = new System.Drawing.Size(64, 18);
             this.mNGColor.TabIndex = 17;
@@ -850,7 +926,7 @@ namespace NicoLive
             // label17
             // 
             this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(31, 129);
+            this.label17.Location = new System.Drawing.Point(12, 98);
             this.label17.Name = "label17";
             this.label17.Size = new System.Drawing.Size(39, 12);
             this.label17.TabIndex = 16;
@@ -860,7 +936,7 @@ namespace NicoLive
             // 
             this.mTextColor.BackColor = System.Drawing.Color.Black;
             this.mTextColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.mTextColor.Location = new System.Drawing.Point(123, 56);
+            this.mTextColor.Location = new System.Drawing.Point(104, 42);
             this.mTextColor.Name = "mTextColor";
             this.mTextColor.Size = new System.Drawing.Size(64, 18);
             this.mTextColor.TabIndex = 13;
@@ -869,7 +945,7 @@ namespace NicoLive
             // label15
             // 
             this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(31, 62);
+            this.label15.Location = new System.Drawing.Point(12, 48);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(47, 12);
             this.label15.TabIndex = 12;
@@ -879,7 +955,7 @@ namespace NicoLive
             // 
             this.mBackColor.BackColor = System.Drawing.Color.White;
             this.mBackColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.mBackColor.Location = new System.Drawing.Point(123, 21);
+            this.mBackColor.Location = new System.Drawing.Point(104, 17);
             this.mBackColor.Name = "mBackColor";
             this.mBackColor.Size = new System.Drawing.Size(64, 18);
             this.mBackColor.TabIndex = 11;
@@ -888,7 +964,7 @@ namespace NicoLive
             // label12
             // 
             this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(31, 27);
+            this.label12.Location = new System.Drawing.Point(12, 23);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(47, 12);
             this.label12.TabIndex = 10;
@@ -903,15 +979,15 @@ namespace NicoLive
             this.groupBox11.Controls.Add(this.label6);
             this.groupBox11.Location = new System.Drawing.Point(7, 6);
             this.groupBox11.Name = "groupBox11";
-            this.groupBox11.Size = new System.Drawing.Size(461, 85);
+            this.groupBox11.Size = new System.Drawing.Size(461, 71);
             this.groupBox11.TabIndex = 32;
             this.groupBox11.TabStop = false;
-            this.groupBox11.Text = "コメビュ設定";
+            this.groupBox11.Text = "表示設定";
             // 
             // mFontSettingBtn
             // 
             this.mFontSettingBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.mFontSettingBtn.Location = new System.Drawing.Point(271, 18);
+            this.mFontSettingBtn.Location = new System.Drawing.Point(251, 15);
             this.mFontSettingBtn.Name = "mFontSettingBtn";
             this.mFontSettingBtn.Size = new System.Drawing.Size(75, 22);
             this.mFontSettingBtn.TabIndex = 38;
@@ -924,7 +1000,7 @@ namespace NicoLive
             this.mFontLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.mFontLabel.AutoSize = true;
-            this.mFontLabel.Location = new System.Drawing.Point(125, 23);
+            this.mFontLabel.Location = new System.Drawing.Point(102, 20);
             this.mFontLabel.Name = "mFontLabel";
             this.mFontLabel.Size = new System.Drawing.Size(51, 12);
             this.mFontLabel.TabIndex = 37;
@@ -933,7 +1009,7 @@ namespace NicoLive
             // label20
             // 
             this.label20.AutoSize = true;
-            this.label20.Location = new System.Drawing.Point(31, 23);
+            this.label20.Location = new System.Drawing.Point(12, 20);
             this.label20.Name = "label20";
             this.label20.Size = new System.Drawing.Size(76, 12);
             this.label20.TabIndex = 34;
@@ -941,7 +1017,7 @@ namespace NicoLive
             // 
             // mCmtMax
             // 
-            this.mCmtMax.Location = new System.Drawing.Point(123, 45);
+            this.mCmtMax.Location = new System.Drawing.Point(104, 42);
             this.mCmtMax.Maximum = new decimal(new int[] {
             100000,
             0,
@@ -955,7 +1031,7 @@ namespace NicoLive
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(31, 47);
+            this.label6.Location = new System.Drawing.Point(12, 44);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(80, 12);
             this.label6.TabIndex = 32;
@@ -2169,21 +2245,152 @@ namespace NicoLive
             this.mSessionFileDlg.Filter = "fmesessions.dat|*.dat";
             this.mSessionFileDlg.Title = "fmesessions.dat";
             // 
-            // tbResetMessage
+            // mTabGeneral2
             // 
-            this.tbResetMessage.Location = new System.Drawing.Point(118, 235);
-            this.tbResetMessage.Name = "tbResetMessage";
-            this.tbResetMessage.Size = new System.Drawing.Size(235, 19);
-            this.tbResetMessage.TabIndex = 32;
+            this.mTabGeneral2.Controls.Add(this.groupBox16);
+            this.mTabGeneral2.Location = new System.Drawing.Point(4, 21);
+            this.mTabGeneral2.Name = "mTabGeneral2";
+            this.mTabGeneral2.Padding = new System.Windows.Forms.Padding(3);
+            this.mTabGeneral2.Size = new System.Drawing.Size(477, 456);
+            this.mTabGeneral2.TabIndex = 10;
+            this.mTabGeneral2.Text = "一般2";
+            this.mTabGeneral2.UseVisualStyleBackColor = true;
             // 
-            // label24
+            // groupBox16
             // 
-            this.label24.AutoSize = true;
-            this.label24.Location = new System.Drawing.Point(32, 238);
-            this.label24.Name = "label24";
-            this.label24.Size = new System.Drawing.Size(80, 12);
-            this.label24.TabIndex = 33;
-            this.label24.Text = "予告メッセージ：";
+            this.groupBox16.Controls.Add(this.checkBox3);
+            this.groupBox16.Controls.Add(this.checkBox2);
+            this.groupBox16.Location = new System.Drawing.Point(7, 6);
+            this.groupBox16.Name = "groupBox16";
+            this.groupBox16.Size = new System.Drawing.Size(461, 237);
+            this.groupBox16.TabIndex = 0;
+            this.groupBox16.TabStop = false;
+            this.groupBox16.Text = "その他";
+            // 
+            // checkBox2
+            // 
+            this.checkBox2.AutoSize = true;
+            this.checkBox2.Enabled = false;
+            this.checkBox2.Location = new System.Drawing.Point(9, 17);
+            this.checkBox2.Name = "checkBox2";
+            this.checkBox2.Size = new System.Drawing.Size(158, 16);
+            this.checkBox2.TabIndex = 0;
+            this.checkBox2.Text = "新配信コンソールを利用する";
+            this.checkBox2.UseVisualStyleBackColor = true;
+            // 
+            // checkBox3
+            // 
+            this.checkBox3.AutoSize = true;
+            this.checkBox3.Enabled = false;
+            this.checkBox3.Location = new System.Drawing.Point(9, 39);
+            this.checkBox3.Name = "checkBox3";
+            this.checkBox3.Size = new System.Drawing.Size(207, 16);
+            this.checkBox3.TabIndex = 1;
+            this.checkBox3.Text = "配信コンソールのフラッシュを利用しない";
+            this.checkBox3.UseVisualStyleBackColor = true;
+            // 
+            // groupBox17
+            // 
+            this.groupBox17.Controls.Add(this.mUserID);
+            this.groupBox17.Controls.Add(this.label26);
+            this.groupBox17.Controls.Add(this.mUseNameTestResult);
+            this.groupBox17.Controls.Add(this.button2);
+            this.groupBox17.Controls.Add(this.mUserNameRegex);
+            this.groupBox17.Controls.Add(this.lUserNameRegex);
+            this.groupBox17.Controls.Add(this.mAutoUsername);
+            this.groupBox17.Controls.Add(this.mNGNotice);
+            this.groupBox17.Controls.Add(this.mUseWelcomeMessage);
+            this.groupBox17.Location = new System.Drawing.Point(11, 243);
+            this.groupBox17.Name = "groupBox17";
+            this.groupBox17.Size = new System.Drawing.Size(457, 198);
+            this.groupBox17.TabIndex = 34;
+            this.groupBox17.TabStop = false;
+            this.groupBox17.Text = "コメビュ設定";
+            // 
+            // mUseWelcomeMessage
+            // 
+            this.mUseWelcomeMessage.AutoSize = true;
+            this.mUseWelcomeMessage.Location = new System.Drawing.Point(10, 109);
+            this.mUseWelcomeMessage.Name = "mUseWelcomeMessage";
+            this.mUseWelcomeMessage.Size = new System.Drawing.Size(180, 16);
+            this.mUseWelcomeMessage.TabIndex = 36;
+            this.mUseWelcomeMessage.Text = "初コメントでいらっしゃい！って言う";
+            this.toolTip1.SetToolTip(this.mUseWelcomeMessage, ">>n番さんいらっしゃい的な！");
+            this.mUseWelcomeMessage.UseVisualStyleBackColor = true;
+            // 
+            // mAutoUsername
+            // 
+            this.mAutoUsername.AutoSize = true;
+            this.mAutoUsername.Location = new System.Drawing.Point(10, 21);
+            this.mAutoUsername.Name = "mAutoUsername";
+            this.mAutoUsername.Size = new System.Drawing.Size(272, 16);
+            this.mAutoUsername.TabIndex = 38;
+            this.mAutoUsername.Text = "「184」を外しているユーザーの名前を自動で取得する";
+            this.toolTip1.SetToolTip(this.mAutoUsername, "コテハン自動取得");
+            this.mAutoUsername.UseVisualStyleBackColor = true;
+            // 
+            // mNGNotice
+            // 
+            this.mNGNotice.AutoSize = true;
+            this.mNGNotice.Location = new System.Drawing.Point(10, 87);
+            this.mNGNotice.Name = "mNGNotice";
+            this.mNGNotice.Size = new System.Drawing.Size(163, 16);
+            this.mNGNotice.TabIndex = 37;
+            this.mNGNotice.Text = "NGコメントを主コメで通知する";
+            this.toolTip1.SetToolTip(this.mNGNotice, ">>n番さんNGです！的な");
+            this.mNGNotice.UseVisualStyleBackColor = true;
+            // 
+            // lUserNameRegex
+            // 
+            this.lUserNameRegex.AutoSize = true;
+            this.lUserNameRegex.Location = new System.Drawing.Point(29, 41);
+            this.lUserNameRegex.Name = "lUserNameRegex";
+            this.lUserNameRegex.Size = new System.Drawing.Size(59, 12);
+            this.lUserNameRegex.TabIndex = 39;
+            this.lUserNameRegex.Text = "正規表現：";
+            // 
+            // mUserNameRegex
+            // 
+            this.mUserNameRegex.Location = new System.Drawing.Point(93, 38);
+            this.mUserNameRegex.Name = "mUserNameRegex";
+            this.mUserNameRegex.Size = new System.Drawing.Size(189, 19);
+            this.mUserNameRegex.TabIndex = 40;
+            // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(294, 38);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(56, 19);
+            this.button2.TabIndex = 41;
+            this.button2.Text = "テスト";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
+            // mUseNameTestResult
+            // 
+            this.mUseNameTestResult.AutoSize = true;
+            this.mUseNameTestResult.Location = new System.Drawing.Point(292, 62);
+            this.mUseNameTestResult.Name = "mUseNameTestResult";
+            this.mUseNameTestResult.Size = new System.Drawing.Size(11, 12);
+            this.mUseNameTestResult.TabIndex = 42;
+            this.mUseNameTestResult.Text = "-";
+            // 
+            // mUserID
+            // 
+            this.mUserID.Location = new System.Drawing.Point(93, 59);
+            this.mUserID.Name = "mUserID";
+            this.mUserID.Size = new System.Drawing.Size(56, 19);
+            this.mUserID.TabIndex = 44;
+            this.mUserID.Text = "155149";
+            // 
+            // label26
+            // 
+            this.label26.AutoSize = true;
+            this.label26.Location = new System.Drawing.Point(29, 62);
+            this.label26.Name = "label26";
+            this.label26.Size = new System.Drawing.Size(62, 12);
+            this.label26.TabIndex = 43;
+            this.label26.Text = "ユーザーID：";
             // 
             // SettingDialog
             // 
@@ -2195,9 +2402,7 @@ namespace NicoLive
             this.Controls.Add(this.mCancelBtn);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Name = "SettingDialog";
-            this.ShowInTaskbar = false;
             this.Text = "設定";
-            this.TopMost = true;
             this.Load += new System.EventHandler(this.SettingDialog_Load);
             this.mTabPage8.ResumeLayout(false);
             this.mTabGeneral.ResumeLayout(false);
@@ -2251,6 +2456,11 @@ namespace NicoLive
             this.groupBox13.ResumeLayout(false);
             this.groupBox13.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.mLauncherList)).EndInit();
+            this.mTabGeneral2.ResumeLayout(false);
+            this.groupBox16.ResumeLayout(false);
+            this.groupBox16.PerformLayout();
+            this.groupBox17.ResumeLayout(false);
+            this.groupBox17.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -2306,6 +2516,8 @@ namespace NicoLive
             // センタリング
             this.Top = (Screen.PrimaryScreen.WorkingArea.Height - this.Height) / 2;
             this.Left = (Screen.PrimaryScreen.WorkingArea.Width - this.Width) / 2;
+
+            mLoginResult.Text = "";
         }
 
         //-------------------------------------------------------------------------
@@ -2338,7 +2550,11 @@ namespace NicoLive
             this.mContWakuNotice.Enabled = Properties.Settings.Default.talk_3min;
 
             tbResetMessage.Text = Properties.Settings.Default.reset_message;
-            
+
+            this.mUseWelcomeMessage.Checked = Properties.Settings.Default.use_welcome_message;
+            this.mUserNameRegex.Text = Properties.Settings.Default.user_name_regex;
+
+
 
             // クッキー
             ICookieGetter[] cookieGetters = CookieGetter.CreateInstances(true);
@@ -2354,6 +2570,7 @@ namespace NicoLive
                 mBrowser.SelectedIndex = sel;
             }
             mUseBrowserCookie.Checked = Properties.Settings.Default.UseBrowserCookie;
+            mLoginTest.Enabled = Properties.Settings.Default.UseBrowserCookie;
             mBrowser.Enabled = mUseBrowserCookie.Checked;
             mMailBox.Enabled = !mUseBrowserCookie.Checked;
             mPasswdBox.Enabled = !mUseBrowserCookie.Checked;
@@ -2485,6 +2702,11 @@ namespace NicoLive
             Properties.Settings.Default.viewer_auto_boot = mViewerAutoBoot.Checked;
             Properties.Settings.Default.cont_waku_notice = this.mContWakuNotice.Checked;
             Properties.Settings.Default.reset_message = tbResetMessage.Text;
+
+            Properties.Settings.Default.use_welcome_message = this.mUseWelcomeMessage.Checked;
+
+            Properties.Settings.Default.user_name_regex = this.mUserNameRegex.Text;
+
             
 
             // クッキー
@@ -3049,6 +3271,114 @@ namespace NicoLive
         {
 
         }
+
+        private void mTabGeneral_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btmLoasUserSession_Click(object sender, EventArgs e)
+        {
+            getUserSession();
+        }
+
+        private void getUserSession()
+        {
+
+            ICookieGetter[] cookieGetters = CookieGetter.CreateInstances(true);
+
+            ICookieGetter s = null;
+            foreach (ICookieGetter es in cookieGetters)
+            {
+                if (es.ToString().Equals(this.mBrowser.SelectedItem.ToString()))
+                {
+                    s = es;
+                    break;
+                }
+
+            }
+            System.Net.CookieCollection collection = s.GetCookieCollection(new Uri("http://live.nicovideo.jp/"));
+            if (collection["user_session"] != null)
+            {
+                mUserSessionBox.Text = collection["user_session"].Value;
+            }
+            else
+            {
+                mUserSessionBox.Text = "";
+            }
+        }
+
+        private void groupBox1_Enter(object sender, EventArgs e)
+        {
+
+        }
+
+        private void mBrowser_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            getUserSession();
+        }
+
+        private void mLoginTest_Click(object sender, EventArgs e)
+        {
+            Thread th = new Thread(delegate()
+            {
+                this.Invoke((Action)delegate()
+                {
+                    this.mLoginResult.Text = "ログイン中…";
+                });
+                string msg = "ログイン失敗";
+                if (Nico.Instance.LoginTest(mUserSessionBox.Text))
+                {
+                    msg = "ログイン成功";
+                }
+                this.Invoke((Action)delegate()
+                {
+                    this.mLoginResult.Text = msg;
+                });
+
+            });
+            th.Name = "SettingDialog.mLoginTest";
+            th.Start();
+
+
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            Thread th = new Thread(delegate()
+            {
+                this.Invoke((Action)delegate()
+                {
+                    this.mUseNameTestResult.Text = "取得中…";
+                });
+                string msg = "取得失敗";
+                if (!Nico.Instance.LoginTest(mUserSessionBox.Text))
+                {
+                    msg = "ログイン失敗";
+
+                }
+                else
+                {
+                    string name = Nico.Instance.GetUsername(mUserID.Text, mUserNameRegex.Text, mUserSessionBox.Text);
+                    if (name.Length > 0)
+                    {
+                        msg = name;
+                    }
+                    else
+                    {
+                        msg = "取得失敗";
+                    }
+                }
+                this.Invoke((Action)delegate()
+                {
+                    this.mUseNameTestResult.Text = "\""+msg + "\"";
+                });
+
+            });
+            th.Name = "SettingDialog.mLoginTest";
+            th.Start();
+        }
+
 
 
 

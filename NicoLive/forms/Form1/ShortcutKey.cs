@@ -63,6 +63,18 @@ namespace NicoLive
                 return true;
             }
 
+            // 接続中止
+            if (keyData == (Keys.F12 | Keys.Control))
+            {
+                if (this.mLoginWorker.IsBusy)
+                {
+                    this.mLogin_cancel = true;
+                    this.mAutoReconnectOnGoing = false;
+                    this.mConnectBtn.Enabled = true;
+                }
+                return true;
+            }
+
             // コメントパクる
             if (keyData == (Keys.W | Keys.Control))
             {
@@ -79,9 +91,31 @@ namespace NicoLive
             {
                 if (this.mCommentList.SelectedRows.Count > 0)
                 {
-                    string  no = this.mCommentList.SelectedRows[0].Cells[(int)CommentColumn.COLUMN_NUMBER].Value.ToString();
+                    string no = this.mCommentList.SelectedRows[0].Cells[(int)CommentColumn.COLUMN_NUMBER].Value.ToString();
                     string comment = this.mCommentList.SelectedRows[0].Cells[(int)CommentColumn.COLUMN_COMMENT].Value.ToString();
-                    this.SendComment( ">>" + no  +  " " + comment, true);
+                    this.SendComment(">>" + no + " " + comment, true);
+                }
+
+            }
+
+            // コメントツイート
+            if (keyData == (Keys.T | Keys.Control))
+            {
+                if (this.mCommentList.SelectedRows.Count > 0)
+                {
+                    string no = this.mCommentList.SelectedRows[0].Cells[(int)CommentColumn.COLUMN_NUMBER].Value.ToString();
+                    string comment = this.mCommentList.SelectedRows[0].Cells[(int)CommentColumn.COLUMN_COMMENT].Value.ToString();
+                    //string name = this.mCommentList.SelectedRows[0].Cells[(int)CommentColumn.COLUMN_HANDLE].Value.ToString();
+                    //this.SendComment(">>" + no + " " + comment, true);
+                    string liveid = this.LiveID;
+                    System.Threading.Thread th = new System.Threading.Thread(delegate()
+                    {
+                        Utils.Tweet(comment + "(>>" + no + " http://nico.ms/" + liveid + " #" + liveid + ")");
+                    });
+                    th.Name = "ShortcutKey: tweet comment";
+                    th.Start();
+
+
                 }
 
             }
@@ -157,6 +191,8 @@ namespace NicoLive
                     }
                 }
             }
+
+
 
             ContainerControl containerControl;
             if (keyData == (Keys.I | Keys.Control) ||

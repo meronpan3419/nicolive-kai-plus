@@ -627,12 +627,18 @@ namespace NicoLive
             MessageSettings msgSet = MessageSettings.Instance;
 
             string msg = String.Format(msgSet.GetMessage("枠取り順番待ち、残り{0}人"), iWaitCnt);
+            Tweet(msg);
 
+
+        }
+
+        public static void Tweet(string iTweetString)
+        {
             using (Twitter tw = new Twitter())
             {
                 try
                 {
-                    tw.Post(msg, Properties.Settings.Default.tw_hash);
+                    tw.Post(iTweetString, Properties.Settings.Default.tw_hash);
 
                 }
                 catch (Exception)
@@ -641,6 +647,8 @@ namespace NicoLive
             }
         }
 
+
+
         //-------------------------------------------------------------------------
         // ログ書き出し
         //-------------------------------------------------------------------------
@@ -648,7 +656,8 @@ namespace NicoLive
         {
             using (StreamWriter writer = new StreamWriter("error_log.txt", true))
             {
-                writer.WriteLine("【" + iTitle + "】");
+                writer.Write(DateTime.Now);
+                writer.Write(" 【" + iTitle + "】");
                 writer.WriteLine(iStr);
                 writer.Flush();
                 writer.Close();

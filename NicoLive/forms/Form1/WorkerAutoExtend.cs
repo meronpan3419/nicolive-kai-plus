@@ -53,7 +53,7 @@ namespace NicoLive
                     // 延長が完了したらしばらく休憩
                     if (extend_wait)
                     {
-                        Thread.Sleep(1000 * 60 * 5);
+                        Thread.Sleep(1000 * 60 * 5);    // 5分
                         extend_wait = false;
                         continue;
                     }
@@ -136,6 +136,8 @@ namespace NicoLive
                         }
                     }
 
+
+
                     if (Properties.Settings.Default.use_hq)
                     {
                         // 自動配信開始
@@ -165,6 +167,8 @@ namespace NicoLive
                             if (Properties.Settings.Default.auto_connect)
                             {
                                 int r = ax.AutoStart(this.Bounds, this.Location.X, this.Location.Y);
+                                //int r = ax.AutoStart(this.Handle, this.Location.X, this.Location.Y);
+
                                 switch (r)
                                 {
                                     // 配信開始

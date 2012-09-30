@@ -39,6 +39,8 @@ namespace NicoLive
 
         public static NLE_Status require_status = NLE_Status.NLE_IDLE;
 
+        public static bool start = true;
+
 
         [DllImport("user32.dll")]
         static extern IntPtr SendMessage(IntPtr hWnd, UInt32 Msg, Int32 wParam, Int32 lParam);
@@ -79,8 +81,33 @@ namespace NicoLive
                         uint WM_LBUTTONDOWN = 0x201;
                         uint WM_LBUTTONUP = 0x202;
                         int _lParam = (10 & 0xffff) | (10 << 16);
-                        SendMessage(hWndParent, WM_LBUTTONDOWN, _lParam, _lParam);
-                        SendMessage(hWndParent, WM_LBUTTONUP, 0, _lParam);
+
+                        int try_count = 0;
+                        while (try_count < 10)
+                        {
+                            SendMessage(hWndParent, WM_LBUTTONDOWN, _lParam, _lParam);
+                            SendMessage(hWndParent, WM_LBUTTONUP, 0, _lParam);
+                            try_count++;
+                                                      
+                            Thread.Sleep(3 * 1000);
+
+                            if (start)
+                            {
+                                if (IsBroadCast)
+                                {
+                                    break;
+                                }
+                            }
+                            else
+                            {
+
+                                if (!IsBroadCast)
+                                {
+                                    break;
+                                }
+                            }
+                            Debug.WriteLine("NLE.push_start_button_proc try_count:" + try_count);
+                        }
                         buttonpushed = true;
                         return 0;
                     }
@@ -93,8 +120,9 @@ namespace NicoLive
         }
 
 
-        private static void push_start_button()
+        private static void push_start_button(bool iStart)
         {
+            start = iStart;
             EnumChildWindows(hNLEWnd, push_start_button_proc, 0);
         }
         private static string Text
@@ -146,7 +174,7 @@ namespace NicoLive
 
             buttonpushed = false;
             FindNLEMainWindow();
-            push_start_button();
+            push_start_button(true);
 
 
         }
@@ -158,7 +186,7 @@ namespace NicoLive
             {
                 buttonpushed = false;
                 FindNLEMainWindow();
-                push_start_button();
+                push_start_button(false);
             }
 
 

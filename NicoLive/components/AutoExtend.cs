@@ -314,6 +314,92 @@ namespace NicoLive
 		}
 
         //-------------------------------------------------------------------------
+        // 自動放送開始チェック
+        //-------------------------------------------------------------------------
+        public int AutoStart(IntPtr hWnd, int iX, int iY)
+        {
+            const int padding = 10;
+            const int padding2 = 10;
+            const int thres = 10;
+            const int thres2 = 30;
+
+            Point start_offs = new Point(829, 115);    		// 放送開始ボタンのオフセット
+            //Point ok_offs    = new Point(424, 169);     	// 放送開始後のはいボタン
+            Point ok_offs = new Point(410, 150);     	// 放送開始後のはいボタン
+            Point prechat_offs = new Point(776, 108);
+
+            Point fme_stop_offs = new Point(450, 185);
+
+            using (ScreenCapture scr = new ScreenCapture())
+            {
+                Point outPos = new Point();
+                Bitmap bmp = scr.Capture2(hWnd);
+
+
+                if (ContainBitmap(mStopFME, bmp, fme_stop_offs.X - padding2, fme_stop_offs.Y - padding, fme_stop_offs.X + padding2, fme_stop_offs.Y + padding, ref outPos, thres))
+                {
+                    Mouse.MouseClick(iX + outPos.X + 12, iY + outPos.Y + 8);
+                    //Mouse.MouseClick2(outPos.X + 12, outPos.Y + 8);
+
+                    //bmp.Dispose();
+                    //bmp = null;
+                    //Debug.WriteLine("FME FOUND");
+                    //return 0;
+                }
+                else
+                {
+                    //Debug.WriteLine("FME NOT FOUND");
+                }
+
+
+                if (ContainBitmap(mPreChat, bmp, prechat_offs.X - padding2, prechat_offs.Y - padding, prechat_offs.X + padding2, prechat_offs.Y + padding, ref outPos, thres))
+                {
+                    Mouse.MouseClick(iX + outPos.X + 12, iY + outPos.Y + 11);
+                    //Mouse.MouseClick2(outPos.X + 12, outPos.Y + 11);
+                    bmp.Dispose();
+                    bmp = null;
+                    return 0;
+                }
+
+                if (ContainBitmap(mStartBmp, bmp, start_offs.X - padding, start_offs.Y - padding, start_offs.X + padding, start_offs.Y + padding, ref outPos, thres))
+                {
+                    Mouse.MouseClick(iX + outPos.X + 50, iY + outPos.Y + 30);
+                    //Mouse.MouseClick2( outPos.X + 50,  outPos.Y + 30);
+                    bmp.Dispose();
+                    bmp = null;
+                    return 1;
+                }
+                if (ContainBitmap(mBroOkBmp, bmp, ok_offs.X - padding2, ok_offs.Y - padding, ok_offs.X + padding2, ok_offs.Y + padding, ref outPos, thres2))
+                {
+                    Mouse.MouseClick(iX + outPos.X + 20, iY + outPos.Y + 40);
+                    //Mouse.MouseClick2(outPos.X + 20, outPos.Y + 40);
+                    bmp.Dispose();
+                    bmp = null;
+                    return 2;
+                }
+                if (ContainBitmap(mBroOk2Bmp, bmp, ok_offs.X - padding2, ok_offs.Y - padding, ok_offs.X + padding2, ok_offs.Y + padding, ref outPos, thres2))
+                {
+                    Mouse.MouseClick(iX + outPos.X + 20, iY + outPos.Y + 40);
+                    //Mouse.MouseClick2(outPos.X + 20, outPos.Y + 40);
+                    bmp.Dispose();
+                    bmp = null;
+                    return 2;
+                }
+                if (ContainBitmap(mOpenChat, bmp, prechat_offs.X - padding2, prechat_offs.Y - padding, prechat_offs.X + padding2, prechat_offs.Y + padding, ref outPos, thres))
+                {
+                    Mouse.MouseClick(iX + outPos.X + 12, iY + outPos.Y + 11);
+                    //Mouse.MouseClick2( outPos.X + 12,  outPos.Y + 11);
+                    bmp.Dispose();
+                    bmp = null;
+                    return 0;
+                }
+                bmp.Dispose();
+                bmp = null;
+            }
+            return 0;
+        }
+
+        //-------------------------------------------------------------------------
         // 画像ピクセル値比較（完全一致版）
         //-------------------------------------------------------------------------
         public bool CompareBitmap( Bitmap iBmp,  Bitmap iTgt, int iOffsX, int iOffsY)

@@ -107,6 +107,8 @@ namespace NicoLive
 
         private readonly string URI_STARTFME2 = "http://live.nicovideo.jp/api/configurestream?version=2&v=";
 
+        private readonly string URI_WATCH_URL = "http://live.nicovideo.jp/watch";
+
         // コメントサーバーへのTCPソケット
         private TcpClient mTcp = null;
 
@@ -283,14 +285,17 @@ namespace NicoLive
                 {
                     try
                     {
+                        //System.Net.Cookie cookie = s.GetCookie(new Uri("http://live.nicovideo.jp/"), "user_session");
+
                         System.Net.CookieCollection collection = s.GetCookieCollection(new Uri("http://live.nicovideo.jp/"));
                         if (collection["user_session"] != null)
                         {
                             this.mCookieLogin.Add(new Cookie("user_session", collection["user_session"].Value, "/", ".nicovideo.jp"));
-                            if (HttpGet("http://live.nicovideo.jp/my", ref this.mCookieLogin).Contains("<title>マイページ - ニコニコ生放送</title>"))
+                            if (LoginTest(collection["user_session"].Value))
                             {
                                 ret = "ログイン成功";
-                            }
+
+                            };
                         }
                     }
                     catch (Exception)
@@ -364,6 +369,17 @@ namespace NicoLive
             return true;
         }
 
+        public bool LoginTest(string iUserSession)
+        {
+            CookieContainer user_session = new CookieContainer();
+            user_session.Add(new Cookie("user_session", iUserSession, "/", ".nicovideo.jp"));
+            if (HttpGet("http://live.nicovideo.jp/my", ref user_session).Contains("<title>マイページ - ニコニコ生放送</title>"))
+            {
+                return true;
+            }
+            return false;
+        }
+
         private void IEIsProtectedModeProcess()
         {
             throw new NotImplementedException();
@@ -414,6 +430,30 @@ namespace NicoLive
 
             return name;
         }
+
+        public string GetUsername(string iUserID, string iRegex, string iUserSession)
+        {
+            if (iUserID.Length <= 0) return "";
+
+            string name = "";
+            string uri = "http://www.nicovideo.jp/user/" + iUserID;
+            CookieContainer user_session = new CookieContainer();
+            user_session.Add(new Cookie("user_session", iUserSession, "/", ".nicovideo.jp"));
+            string res = HttpGet(uri, ref user_session);
+
+
+            if (res != null)
+            {
+                Match match = Regex.Match(res, iRegex);
+                if (match.Success)
+                {
+                    name = match.Groups[1].Value;
+                }
+            }
+            return name;
+        }
+
+
 
         //-------------------------------------------------------------------------
         // 動画情報取得
@@ -647,6 +687,45 @@ namespace NicoLive
         }
 
         //-------------------------------------------------------------------------
+        // コミュ限か
+        //-------------------------------------------------------------------------
+        public bool IsMemberOnly(string iLiveID)
+        {
+            // check already logged in or not
+            if (mIsLogin == false)
+                return false;
+            // check have a valid cookie or not
+            if (this.mCookieLogin == null)
+                return false;
+
+            Dictionary<string, string> ret = new Dictionary<string, string>();
+
+            // send request (GET)
+            string uri = URI_WATCH_URL + "/" + iLiveID;
+            string response = HttpGet(uri, ref this.mCookieLogin);
+
+            if (response == null)
+                return false;
+
+            //Debug.WriteLine(response);
+
+            string regex = "<ul id=\"livetags\"(.*?)>メンバー限定</a>(.*?)</li>";
+            Regex reg = new Regex(regex, RegexOptions.Singleline);
+            Match match = reg.Match(response);
+            if (match.Success)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+
+            
+
+        }
+
+        //-------------------------------------------------------------------------
         // 主コメント送信
         //-------------------------------------------------------------------------
         public bool SendOwnerComment(string iLiveID, string iComment, string iName, string iToken)
@@ -667,12 +746,12 @@ namespace NicoLive
 
             Dictionary<string, string> post_arg = new Dictionary<string, string>();
 
-            post_arg["mail"] = Uri.EscapeUriString(iMail);
+            post_arg["mail"] = Uri.EscapeDataString(iMail);
             post_arg["is184"] = "true";
             post_arg["token"] = iToken;
-            post_arg["body"] = Uri.EscapeUriString(iComment);
+            post_arg["body"] = Uri.EscapeDataString(iComment);
             if (iName.Length > 0)
-                post_arg["name"] = Uri.EscapeUriString(iName);
+                post_arg["name"] = Uri.EscapeDataString(iName);
 
             Debug.WriteLine("OWNER:" + iComment);
 
@@ -699,6 +778,8 @@ namespace NicoLive
             catch (Exception e)
             {
                 Debug.WriteLine("SendNULLComment(): " + e.StackTrace);
+                Utils.WriteLog("SendNULLComment()", e.Message);
+                Utils.WriteLog("SendNULLComment()", e.StackTrace);
             }
 
             return true;
@@ -866,6 +947,7 @@ namespace NicoLive
             {
                 Debug.WriteLine("GetCommentXML:" + e.Message);
                 mIsLogin = false;
+                return NicoErr.ERR_COULD_NOT_CONNECT_COMMENT_SERVER;
             }
 
             minfo = null;
@@ -923,10 +1005,12 @@ namespace NicoLive
                 Debug.WriteLine("閉じました。");
                 return;
             }
-            catch (SocketException)
+            catch (SocketException e)
             {
                 //閉じた時
                 Debug.WriteLine("閉じました。");
+                Utils.WriteLog("ReceiveDataCallback()", e.Message);
+                Utils.WriteLog("ReceiveDataCallback()", e.StackTrace);
                 mIsLogin = false;
                 return;
             }
@@ -1369,7 +1453,7 @@ namespace NicoLive
 
             if (res.Contains("<li id=\"error_message\">"))
             {
-                Utils.WriteLog(match.Groups[1].Value, org_res);
+                Utils.WriteLog("Nico.GetWaku() WakuErr.ERR_UNKOWN:" + match.Groups[1].Value, org_res);
                 return WakuErr.ERR_UNKOWN;
             }
             if (res.Contains("番組が見つかりません"))
@@ -1404,7 +1488,7 @@ namespace NicoLive
             }
             */
 
-            Utils.WriteLog("UNKOWN", org_res);
+            Utils.WriteLog("Nico.GetWaku() 想定外" , org_res);
 
             Debug.WriteLine(org_res);
             return WakuErr.ERR_UNKOWN;

@@ -17,7 +17,7 @@ namespace NicoLive
         //-------------------------------------------------------------------------
         private void CmtCxtMenu_Opening(object sender, CancelEventArgs e)
         {
-            System.Diagnostics.Debug.WriteLine("CmtCxtMenu_Opening: ");
+
             this.mCopyComment.Enabled = (this.mCommentList.SelectedRows.Count > 0);
             this.mCopyID.Enabled = (this.mCommentList.SelectedRows.Count > 0);
             this.mRename.Enabled = (this.mCommentList.SelectedRows.Count > 0);
@@ -56,7 +56,11 @@ namespace NicoLive
                 Rename rm = new Rename();
                 rm.MyOwner = this;
                 rm.ID = this.mCommentList.SelectedRows[0].Cells[(int)CommentColumn.COLUMN_ID].Value.ToString();
-                rm.UserName = this.mCommentList.SelectedRows[0].Cells[(int)CommentColumn.COLUMN_HANDLE].Value.ToString(); 
+                if(this.mCommentList.SelectedRows[0].Cells[(int)CommentColumn.COLUMN_HANDLE].Value == null){
+                    rm.UserName = "";
+                } else {
+                    rm.UserName = this.mCommentList.SelectedRows[0].Cells[(int)CommentColumn.COLUMN_HANDLE].Value.ToString();
+                }
                 rm.Show();
             }
         }

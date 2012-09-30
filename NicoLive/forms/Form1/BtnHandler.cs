@@ -155,7 +155,7 @@ namespace NicoLive
                 }
 
                 this.LiveID = dlg.mLv;
-                Connect(true);
+                Connect(false);
             }
             else if (dlg.mState == WakuResult.JUNBAN)
             {

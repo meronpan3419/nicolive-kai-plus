@@ -19,7 +19,7 @@ namespace NicoLive
 {
     static class Program
     {
-        public static string VERSION_KAI_PLUS = "kai_p11e";
+        public static string VERSION_KAI_PLUS = "kai_p11ф";
 
         /// <summary>
         /// アプリケーションのメイン エントリ ポイントです。
@@ -30,7 +30,7 @@ namespace NicoLive
 
         static void Main()
         {
-
+            
             // 多重起動回避 ----------------------------------
             if (Process.GetProcessesByName(
                  Process.GetCurrentProcess().ProcessName).Length > 1)
@@ -102,12 +102,23 @@ namespace NicoLive
                 }
             }
             //------------------------------------------------
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            Form1 form = new Form1();
-            form.mAutoConnect = auto_connect;
-            Application.Run(form);
 
+            try
+            {
+                Application.EnableVisualStyles();
+                Application.SetCompatibleTextRenderingDefault(false);
+                Form1 form = new Form1();
+                form.mAutoConnect = auto_connect;
+                Application.Run(form);
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine("Main() " + e.Message);
+                Debug.WriteLine("Main() " + e.StackTrace);
+
+                Utils.WriteLog("Main()", e.Message);
+                Utils.WriteLog("Main()", e.StackTrace);
+            }
         }
     }
 }

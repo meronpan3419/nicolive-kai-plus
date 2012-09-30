@@ -43,6 +43,7 @@ namespace NicoLive
         private string mNickname = "";
 		private string mToken = "";
         private string mTitle = "";
+        private bool mIsMemberOnly = false;
 
         // ルームラベル
         public string RoomLabel 
@@ -105,6 +106,14 @@ namespace NicoLive
             get { return mTitle; }
             set { mTitle = value; }
         }
+        //コミュ限
+        public bool IsMemberOnly
+        {
+            get { return mIsMemberOnly; }
+            set { mIsMemberOnly = value; }
+        }
+
+
 		//-------------------------------------------------------------------------
 		// コンストラクタ
 		//-------------------------------------------------------------------------
@@ -320,6 +329,13 @@ namespace NicoLive
 
 			return err;
 		}
+
+        public bool GetMemberOnlyInfo(string iLiveID)
+        {
+            Nico nico = Nico.Instance;
+            mIsMemberOnly = nico.IsMemberOnly(iLiveID);
+            return mIsMemberOnly;
+        }
 	}
 }
 

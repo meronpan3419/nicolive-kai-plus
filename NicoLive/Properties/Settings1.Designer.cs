@@ -1366,5 +1366,29 @@ namespace NicoLive.Properties {
                 this["user_name_regex"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool use_welcome_message {
+            get {
+                return ((bool)(this["use_welcome_message"]));
+            }
+            set {
+                this["use_welcome_message"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("@nameさんいらっしゃい！")]
+        public string welcome_message {
+            get {
+                return ((string)(this["welcome_message"]));
+            }
+            set {
+                this["welcome_message"] = value;
+            }
+        }
     }
 }

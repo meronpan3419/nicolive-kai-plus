@@ -512,33 +512,63 @@ namespace NicoLive
         private void WelcomeMessage(Comment iCmt)
         {
             if (iCmt.IsOwner) return;
+            if (!Properties.Settings.Default.use_welcome_message) return;
 
             string uid = iCmt.Uid;
 
+
             if (!mWelcomeList.Contains(uid))
             {
-                mWelcomeList.Add(iCmt.Uid);
 
-                string msg = "さんいらっしゃい！";
-                //if (mUid.Contains(uid))
-                //{
-                    string nick = mUid.CheckNickname(iCmt.Uid);
+                Thread th = new Thread(delegate()
+                {
+                    mWelcomeList.Add(iCmt.Uid);
+
+                    string msg = Properties.Settings.Default.welcome_message;
+
+
+                    string nick = null;
+                    int wait = 5;
+
+                    // コテハン自動取得の為にwait秒間待ってみる
+                    while (wait > 0)
+                    {
+                        nick = mUid.CheckNickname(iCmt.Uid);
+                        if (nick != null)
+                        {
+                            // 取得できたら抜ける
+                            break;
+                        }
+                        Thread.Sleep(1000); 
+                        wait--;
+                    }
+
                     if (nick != null)
                     {
-                        msg = nick + msg;
+                        msg = msg.Replace("@name", nick);
                     }
                     else
                     {
-                        msg = ">>" + iCmt.No + msg; 
+                        int id;
+                        if (!int.TryParse(iCmt.Uid, out id)) // 184
+                        {
+                            msg = ">>" + iCmt.No + msg.Replace("@name", "(" + iCmt.Uid.Substring(0, 4) + ")");
+                        }
+                        else
+                        {
+                            msg = ">>" + msg.Replace("@name", iCmt.No);
+                        }
                     }
                     this.Invoke((Action)delegate()
                     {
                         this.SendComment(msg, true);
                     });
-                //}
-            
-            
-            
+
+
+                });
+                th.Start();
+
+
             }
 
 
@@ -575,7 +605,7 @@ namespace NicoLive
             if (!match.Success)
             {
                 tmp = iCmt.Text.Replace("＠", "@");
-                if (tmp.Contains("@"))
+                if (tmp.Contains("@") && !iCmt.IsOwner && !iCmt.IsOperator)
                 {
                     int idx = tmp.LastIndexOf("@");
                     if (idx >= 0)
@@ -700,9 +730,9 @@ namespace NicoLive
         private void AddComment(Comment iCmt)
         {
 
-           
+
             if (mPastChat)
-            {   
+            {
                 // 過去コメ
                 System.Drawing.Color color = this.mUid.getUserColor(iCmt.Uid);
                 Utils.AddComment(ref mCommentList, iCmt, color, ref mPastChatList);

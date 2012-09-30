@@ -47,7 +47,12 @@ namespace NicoLive
                     {
                         this.Invoke((Action)delegate()
                         {
-                            this.Text = "豆ライブ(NicoLive)" + "　【" + mLiveInfo.Title + "】" + "　[GC:" + GC.GetTotalMemory(false) + "]";
+                            string member_only = "";
+                            if (mLiveInfo.IsMemberOnly)
+                            {
+                                member_only = "　【コミュ限】";
+                            }
+                            this.Text = "豆ライブ(NicoLive)" + member_only + "　【" + mLiveInfo.Title + "】" + "　[GC:" + GC.GetTotalMemory(false) + "]";
                         });
                     }
                     catch (Exception)
@@ -61,9 +66,17 @@ namespace NicoLive
                         this.Invoke((Action)delegate()
                         {
                             if (mLiveInfo.Title.Length > 0)
-                                this.Text = "豆ライブ(NicoLive)" + "　【" + mLiveInfo.Title + "】";
+                            {
+                                string member_only = "";
+                                if(mLiveInfo.IsMemberOnly){
+                                    member_only = "　【コミュ限】";
+                                }
+                                this.Text = "豆ライブ(NicoLive)" + member_only +  "　【コミュ限　" + mLiveInfo.Title + "】";
+                            }
                             else
+                            {
                                 this.Text = "豆ライブ(NicoLive)";
+                            }
                         });
                     }
                     catch (Exception)
@@ -118,7 +131,7 @@ namespace NicoLive
                                 {
                                     this.mTalkLimit = true;
 
-                                    this.mBouyomi.Talk(msg);                                    
+                                    this.mBouyomi.Talk(msg);
 
                                     // 連続枠取り通知
                                     if (Properties.Settings.Default.cont_waku_notice)
@@ -178,109 +191,110 @@ namespace NicoLive
         //-------------------------------------------------------------------------
         private void UpdateLogin()
         {
+
+            if (mNico != null)
+            {
+                this.mLoginLabel.Text = "未接続";
+                this.mLoginLabel.ForeColor = Color.Black;
+                this.mPrevLogin = false;
+                return;
+            }
+
             // ステータスを接続中に
-            if (!this.mConnectBtn.Enabled && !mLoginWorker.IsBusy)
+            if (!this.mConnectBtn.Enabled && mLoginWorker.IsBusy)
             {
                 this.mLoginLabel.Text = "接続中";
                 this.mLoginLabel.ForeColor = Color.Black;
                 return;
             }
 
-            if (mNico != null)
+            if (!mLoginWorker.IsBusy)
             {
-                if (!mLoginWorker.IsBusy)
-                {
-                    this.mLoginLabel.Text = (mNico.IsLogin) ? "ログイン済" : "未ログイン";
-                    this.mLoginLabel.ForeColor = (mNico.IsLogin) ? Color.Red : Color.Black;
-                }
-
-                // 再接続処理中？
-                if (mAutoReconnectOnGoing)
-                {
-                    if (mDisconnect /*mNico.IsLogin*/)
-                    {
-                        // 再接続成功
-                        string msg = "再接続に成功しました";
-
-                        if (this.mBouyomiBtn.Checked)
-                        {
-                            this.mBouyomi.Talk(msg);
-                        }
-                        mAutoReconnectOnGoing = false;
-                        mConnectCount = 0;
-                    }
-                    else
-                    {
-                        //if (mConnectCount > 20)
-                        //{
-                        //    //再接続失敗
-                        //    string msg = "再接続に失敗しました。再接続を中止します。";
-                        //    if (this.mBouyomiBtn.Checked)
-                        //    {
-                        //        this.mBouyomi.Talk(msg);
-                        //    }
-                        //    mAutoReconnectOnGoing = false;
-                        //}
-
-                        // 再接続を試みながら、リターン
-                        this.Invoke((Action)delegate()
-                        {
-                            this.mConnectBtn.Enabled = false;
-                            this.Connect(false);  //falseがチェックする //クッキーは有効である前提で、クッキー有効確認のページ読み込み省略できるハズ
-                        });
-                        mConnectCount++;
-                        this.mLoginLabel.Text = "接続中(" + mConnectCount + ")";
-                        this.mLoginLabel.ForeColor = Color.Black;
-                        return;
-                    }
-                }
-
-                // ログアウト通知
-                bool show_err = false;
-
-                show_err = this.mPrevLogin && !mNico.IsLogin && !mDisconnect;
-                    
-
-                this.mPrevLogin = mNico.IsLogin;
-
-                if (show_err)
-                {
-                    if (Properties.Settings.Default.auto_reconnect)
-                    {
-                        // 再接続スタート
-                        string msg = "再接続を開始します";
-
-                        if (this.mBouyomiBtn.Checked)
-                        {
-                            this.mBouyomi.Talk(msg);
-                        }
-
-                        mAutoReconnectOnGoing = true;
-                        this.Invoke((Action)delegate()
-                        {
-                            this.mConnectBtn.Enabled = false;
-                            this.Connect(true);
-                        });
-                    }
-                    else
-                    {
-                        string msg = "切断されました";
-
-                        if (this.mBouyomiBtn.Checked)
-                        {
-                            this.mBouyomi.Talk(msg);
-                        }
-                        this.mPrevLogin = mNico.IsLogin;
-                        //MessageBox.Show(msg, "豆ライブ");
-                    }
-                }
+                this.mLoginLabel.Text = (mNico.IsLogin) ? "ログイン済" : "未ログイン";
+                this.mLoginLabel.ForeColor = (mNico.IsLogin) ? Color.Red : Color.Black;
             }
-            else
+
+            // 再接続処理中？
+            if (mAutoReconnectOnGoing)
             {
-                this.mLoginLabel.Text = "未接続";
+                if (mNico.IsLogin)
+                {
+                    // 再接続成功
+                    string msg = "再接続に成功しました";
+
+                    if (this.mBouyomiBtn.Checked)
+                    {
+                        this.mBouyomi.Talk(msg);
+                    }
+                    mAutoReconnectOnGoing = false;
+                    //mConnectCount = 0;
+                    return;
+                }
+
+                //if (mConnectCount > 10)
+                //{
+                //    //再接続失敗
+                //    string msg = "再接続に失敗しました。再接続を中止します。";
+                //    if (this.mBouyomiBtn.Checked)
+                //    {
+                //        this.mBouyomi.Talk(msg);
+                //    }
+                //    mAutoReconnectOnGoing = false;
+                //}
+
+                // 再接続を試みながら、リターン
+                this.Invoke((Action)delegate()
+                {
+                    this.mConnectBtn.Enabled = false;
+                    this.Connect(false);  //falseがチェックする //クッキーは有効である前提で、クッキー有効確認のページ読み込み省略できるハズ
+                });
+                mConnectCount++;
+                this.mLoginLabel.Text = "再接続中(" + mConnectCount + "回目)";
                 this.mLoginLabel.ForeColor = Color.Black;
-                this.mPrevLogin = false;
+
+
             }
+
+            // ログアウト通知
+            bool show_err = false;
+
+            show_err = this.mPrevLogin && !mNico.IsLogin && !mDisconnect;
+
+
+            this.mPrevLogin = mNico.IsLogin;
+
+            if (show_err)
+            {
+                if (Properties.Settings.Default.auto_reconnect)
+                {
+                    // 再接続スタート
+                    string msg = "再接続を開始します";
+
+                    if (this.mBouyomiBtn.Checked)
+                    {
+                        this.mBouyomi.Talk(msg);
+                    }
+
+                    mAutoReconnectOnGoing = true;
+                    this.Invoke((Action)delegate()
+                    {
+                        this.mConnectBtn.Enabled = false;
+                        this.Connect(false);
+                    });
+                }
+                else
+                {
+                    string msg = "切断されました";
+
+                    if (this.mBouyomiBtn.Checked)
+                    {
+                        this.mBouyomi.Talk(msg);
+                    }
+                    this.mPrevLogin = mNico.IsLogin;
+                    //MessageBox.Show(msg, "豆ライブ");
+                }
+            }
+
         }
 
         //-------------------------------------------------------------------------

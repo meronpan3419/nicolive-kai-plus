@@ -65,6 +65,9 @@ namespace NicoLive
         // 再接続カウント
         public int mConnectCount = 0;
 
+        // 接続中か
+        public bool mLogin_cancel = false;
+
         // console.swfのuri
         private readonly string mConsoleUri = "http://live.nicovideo.jp/console.swf?v=";
 
@@ -299,11 +302,11 @@ namespace NicoLive
             // 放送ＩＤをフォーマット
             mLiveID.Text = ParseLiveID();
 
-            // FMEチェック
-            //if (FMLE.hasFME())
-            //{
-            //    FMLE.Stop();
-            //}
+            // HQチェック
+            if (HQ.hasHQ())
+            {
+                HQ.Stop();
+            }
 
             // 切断
             mNico.Close();

@@ -158,6 +158,7 @@ namespace NicoLive
                         mLastConnectionCheckTime = DateTime.Now;
                         if(!tc.Connected){
                             mNico.setIsLogin(false);
+                            Utils.WriteLog("UITimer_Tick()", "!mNico.getTcpClient().Connected");
                         }
                         Debug.WriteLine("ConnectionCheck:" + tc.Connected.ToString());
                     }

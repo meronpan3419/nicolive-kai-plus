@@ -338,5 +338,11 @@
     <Setting Name="user_name_regex" Type="System.String" Scope="User">
       <Value Profile="(Default)">&lt;h2&gt;(.*?)&lt;small&gt;さん&lt;/small&gt;&lt;/h2&gt;</Value>
     </Setting>
+    <Setting Name="use_welcome_message" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="welcome_message" Type="System.String" Scope="User">
+      <Value Profile="(Default)">@nameさんいらっしゃい！</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

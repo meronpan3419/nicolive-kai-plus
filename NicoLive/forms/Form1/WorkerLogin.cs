@@ -34,6 +34,11 @@ namespace NicoLive
 
 
         GET_LIVE_ID:
+            if (this.mLogin_cancel)
+            {
+                goto END;
+            }
+
             // LVが入ってないときは自動で取ってくる
             if (live_id.Length <= 2)
             {
@@ -60,18 +65,13 @@ namespace NicoLive
                     //});
                     Debug.WriteLine("Retry: GET_LIVE_ID " + try_cnt);
                     Thread.Sleep(500);
+
                     goto GET_LIVE_ID;
                 }
             }
 
             if (live_id.Length <= 2)
             {
-                //this.Invoke((Action)delegate()
-                //{
-                //    this.mLoginLabel.Text = "LV番号取得エラー";
-                //    this.mLoginLabel.ForeColor = System.Drawing.Color.Black;
-                //});
-
                 goto END;
             }
 
@@ -85,6 +85,12 @@ namespace NicoLive
             if (login)
             {
             GET_COMMENT:
+                if (this.mLogin_cancel)
+                {
+                    goto END;
+                }
+
+
                 if (!mNico.IsLogin)
                     mNico.Login(user_id, passwd);
 
@@ -107,7 +113,7 @@ namespace NicoLive
                         if (try_cnt < 30)
                         {
                             try_cnt++;
-                            Thread.Sleep(1000);
+                            Thread.Sleep(500);
                             Debug.WriteLine("Retry: ERR_COULD_NOT_CONNECT_COMMENT_SERVER" + try_cnt);
                             goto GET_COMMENT;
                         }
@@ -192,6 +198,8 @@ namespace NicoLive
 
                         // 情報を取得
                         mLiveInfo.GetInfo(live_id);
+                        mLiveInfo.GetMemberOnlyInfo(live_id);
+
 
                         // 開演待ちスキップするか？
                         if (Properties.Settings.Default.skip5min)
@@ -240,6 +248,8 @@ namespace NicoLive
                 }
             }
         END:
+            mLogin_cancel = false;
+            mAutoReconnectOnGoing = false;
             this.Invoke((Action)delegate()
             {
                 this.mConnectBtn.Enabled = true;
