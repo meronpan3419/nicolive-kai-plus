@@ -192,7 +192,7 @@ namespace NicoLive
         private void UpdateLogin()
         {
 
-            if (mNico != null)
+            if (mNico == null)
             {
                 this.mLoginLabel.Text = "未接続";
                 this.mLoginLabel.ForeColor = Color.Black;
@@ -201,7 +201,7 @@ namespace NicoLive
             }
 
             // ステータスを接続中に
-            if (!this.mConnectBtn.Enabled && mLoginWorker.IsBusy)
+            if (!this.mConnectBtn.Enabled && mLoginWorker.IsBusy && !mAutoReconnectOnGoing)
             {
                 this.mLoginLabel.Text = "接続中";
                 this.mLoginLabel.ForeColor = Color.Black;
@@ -227,7 +227,7 @@ namespace NicoLive
                         this.mBouyomi.Talk(msg);
                     }
                     mAutoReconnectOnGoing = false;
-                    //mConnectCount = 0;
+                    mConnectCount = 0;
                     return;
                 }
 

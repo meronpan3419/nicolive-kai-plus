@@ -1177,7 +1177,7 @@ namespace NicoLive.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("現在地は「 @ADDRESS」です")]
+        [global::System.Configuration.DefaultSettingValueAttribute("「@ADDRESS」ですね")]
         public string address_template {
             get {
                 return ((string)(this["address_template"]));
@@ -1189,7 +1189,7 @@ namespace NicoLive.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("/perm 現在地は「 @ADDRESS」です")]
+        [global::System.Configuration.DefaultSettingValueAttribute("現在地：@ADDRESS")]
         public string address_template2 {
             get {
                 return ((string)(this["address_template2"]));

@@ -17,9 +17,9 @@ namespace OAuth
     public class oAuthTwitter : OAuthBase
     {
         public enum Method { GET, POST };
-        public const string REQUEST_TOKEN = "http://twitter.com/oauth/request_token";
-        public const string AUTHORIZE = "http://twitter.com/oauth/authorize";
-        public const string ACCESS_TOKEN = "http://twitter.com/oauth/access_token";
+        public const string REQUEST_TOKEN = "http://api.twitter.com/oauth/request_token";
+        public const string AUTHORIZE = "http://api.twitter.com/oauth/authorize";
+        public const string ACCESS_TOKEN = "http://api.twitter.com/oauth/access_token";
 
         private string _consumerKey = "";
         private string _consumerSecret = "";

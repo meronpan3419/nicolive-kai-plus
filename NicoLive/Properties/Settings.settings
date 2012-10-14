@@ -291,10 +291,10 @@
       <Value Profile="(Default)">時速 @SPEED kmです</Value>
     </Setting>
     <Setting Name="address_template" Type="System.String" Scope="User">
-      <Value Profile="(Default)">現在地は「 @ADDRESS」です</Value>
+      <Value Profile="(Default)">「@ADDRESS」ですね</Value>
     </Setting>
     <Setting Name="address_template2" Type="System.String" Scope="User">
-      <Value Profile="(Default)">/perm 現在地は「 @ADDRESS」です</Value>
+      <Value Profile="(Default)">現在地：@ADDRESS</Value>
     </Setting>
     <Setting Name="use_nle" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>

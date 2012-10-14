@@ -407,8 +407,11 @@ namespace NicoLive
                 ImaDoko.UpdateSpeedAndPlace();
                 string msg = Properties.Settings.Default.address_template;
                 msg = msg.Replace("@ADDRESS", ImaDoko.Place);
+                msg = msg.Replace("@ALTITUDE_EGM96", ((int)ImaDoko.AltitudeEGM96).ToString());
+                msg = msg.Replace("@ALTITUDE", ((int)ImaDoko.Altitude).ToString());
                 string mail = Properties.Settings.Default.imakoko_genzaichi_hidden ? "hidden" : "";
-                SendComment(msg, mail, true, true);
+                bool IsOwner = Properties.Settings.Default.imakoko_genzaichi_owner;
+                SendComment(msg, mail, IsOwner, true);
             });
             th.Name = "NivoLive.Form1.Comment.SendCurrentPosition()";
             th.Start();
@@ -440,7 +443,8 @@ namespace NicoLive
                 msg = msg.Replace("@ALTITUDE_EGM96", ((int)ImaDoko.AltitudeEGM96).ToString());
                 msg = msg.Replace("@ALTITUDE", ((int)ImaDoko.Altitude).ToString());
                 string mail = Properties.Settings.Default.imakoko_genzaichi_hidden ? "hidden" : "";
-                SendComment(msg, mail, true, true);
+                bool IsOwner = Properties.Settings.Default.imakoko_genzaichi_owner;
+                SendComment(msg, mail, IsOwner, true);
             });
             th.Name = "NivoLive.Form1.Comment.SendCurrentPosition()";
             th.Start();
@@ -801,14 +805,14 @@ namespace NicoLive
         //-------------------------------------------------------------------------
         // コメント送信
         //-------------------------------------------------------------------------
-        private void SendComment(string iComment, bool iAdmin)
+        private void SendComment(string iComment, bool Owner)
         {
             if (mNico == null) return;
             if (!mNico.IsLogin) return;
 
             Thread th = new Thread(delegate()
             {
-                if (!iAdmin)
+                if (!Owner)
                     mNico.SendComment(LiveID, iComment, true);
                 else
                     mNico.SendOwnerComment(LiveID, iComment, mLiveInfo.Nickname, mLiveInfo.Token);
@@ -820,14 +824,14 @@ namespace NicoLive
         //-------------------------------------------------------------------------
         // コメント送信
         //-------------------------------------------------------------------------
-        private void SendComment(string iComment, bool iAdmin, bool i184)
+        private void SendComment(string iComment, bool Owner, bool i184)
         {
             if (mNico == null) return;
             if (!mNico.IsLogin) return;
 
             Thread th = new Thread(delegate()
             {
-                if (!iAdmin)
+                if (!Owner)
                     mNico.SendComment(LiveID, iComment, i184);
                 else
                     mNico.SendOwnerComment(LiveID, iComment, mLiveInfo.Nickname, mLiveInfo.Token);
@@ -839,14 +843,14 @@ namespace NicoLive
         //-------------------------------------------------------------------------
         // コメント送信
         //-------------------------------------------------------------------------
-        private void SendComment(string iComment, string iMail, bool iAdmin, bool i184)
+        private void SendComment(string iComment, string iMail, bool Owner, bool i184)
         {
             if (mNico == null) return;
             if (!mNico.IsLogin) return;
 
             Thread th = new Thread(delegate()
             {
-                if (!iAdmin)
+                if (!Owner)
                     mNico.SendComment(LiveID, iComment, i184);
                 else
                     mNico.SendOwnerComment(LiveID, iComment, iMail, mLiveInfo.Nickname, mLiveInfo.Token);

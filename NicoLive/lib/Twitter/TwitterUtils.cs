@@ -10,7 +10,7 @@ namespace iPentec.TwitterUtils
 {
     public class TwitterUtils
     {
-        const string EXP = "http://twitter.com/statuses/update.xml";
+        const string EXP = "http://api.twitter.com/1/statuses/update.xml";
         const string TwitterUser = "(TwitterのユーザーID)";
         const string TwitterPass = "(Twitterのパスワード)";
 

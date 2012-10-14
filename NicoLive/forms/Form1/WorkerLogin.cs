@@ -248,8 +248,11 @@ namespace NicoLive
                 }
             }
         END:
-            mLogin_cancel = false;
-            mAutoReconnectOnGoing = false;
+            if (mLogin_cancel)
+            {
+                mAutoReconnectOnGoing = false;
+            }
+            mLogin_cancel = false;            
             this.Invoke((Action)delegate()
             {
                 this.mConnectBtn.Enabled = true;

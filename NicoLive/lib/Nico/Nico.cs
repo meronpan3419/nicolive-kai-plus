@@ -335,7 +335,11 @@ namespace NicoLive
                 return false;
             }
             string user_session = cc["user_session"].ToString();
-            user_session += "; path=/; domain=.nicovideo.jp";
+            DateTime expires = DateTime.Now.AddDays(3);
+            //Thu, 1-Jan-2030 00:00:00 GMT
+
+            user_session += "; path=/; domain=.nicovideo.jp; expires=" + expires.ToString("ddd, d-MMM-yyyy HH:mm:ss GMT") + ";";
+
 
             // IEのCookieを書き換える
 
@@ -1449,6 +1453,11 @@ namespace NicoLive
             if (res.Contains("<title>ニコニコ動画　ログインフォーム</title>"))
             {
                 return WakuErr.ERR_LOGIN;
+            }
+            if (res.Contains("<li id=\"error_message\">") && res.Contains("WEBページの有効期限が切れています<br>※お手数ですがもう一度はじめから操作しなおしてください"))
+            {
+                Utils.WriteLog("Nico.GetWaku() WEBページの有効期限が切れています:" + match.Groups[1].Value, "");
+                return WakuErr.ERR_KIYAKU;
             }
 
             if (res.Contains("<li id=\"error_message\">"))
