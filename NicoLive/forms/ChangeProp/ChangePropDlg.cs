@@ -210,7 +210,7 @@ namespace NicoLive
                     string key = "taglock" + (i + 1).ToString();
                     arr.Add(key, val);
                 }
-                //Console.WriteLine(mLivetags.Rows[i].Cells[1].Value);
+                //Utils.WriteLog(mLivetags.Rows[i].Cells[1].Value);
             }
             return arr;
         }
@@ -413,7 +413,7 @@ namespace NicoLive
                 }
                 catch (Exception e)
                 {
-                    Debug.WriteLine("LoadHistory:" + e.Message);
+                    Utils.WriteLog("LoadHistory:" + e.Message);
                 }
             }
         }

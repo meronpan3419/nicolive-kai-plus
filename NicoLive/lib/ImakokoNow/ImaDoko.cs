@@ -49,7 +49,7 @@ namespace NicoLive
 
 
 
-        const string AddressURI2 = "http://geocode.didit.jp/reverse/";
+
         const string GetPosURI = "http://imakoko-gps.appspot.com/api/latest";
         static Regex Reg_Lon_Lat = new Regex("\"lon\":\"(\\d+\\.\\d+)\".*?\"lat\":\"(\\d+\\.\\d+)\"");
         static Regex Reg_Speed = new Regex("\"velocity\":\"(\\d+\\.\\d+)\"");
@@ -73,7 +73,8 @@ namespace NicoLive
             try
             {
                 // HTTP用WebRequestの作成
-                string url = AddressURI2 + "?lat=" + lat.ToString("##0.000") + "&lon=" + lon.ToString("##0.000");
+                string url = Properties.Settings.Default.geocode_address_url
+                    + "?lat=" + lat.ToString("##0.000") + "&lon=" + lon.ToString("##0.000");
                 HttpWebRequest req = (HttpWebRequest)WebRequest.Create(url);
                 req.Method = WebRequestMethods.Http.Get;
                 req.Timeout = 6000;
@@ -83,7 +84,8 @@ namespace NicoLive
                 WebResponse res = req.GetResponse();
                 using (StreamReader sr = new StreamReader(res.GetResponseStream()))
                 {
-                    using (XmlTextReader reader = new XmlTextReader(sr))
+                    string xml = sr.ReadToEnd();
+                    using (XmlTextReader reader = new XmlTextReader(new StringReader(xml)))
                     {
                         while (reader.Read())
                         {
@@ -94,7 +96,7 @@ namespace NicoLive
                                 if (reader.NodeType == XmlNodeType.Text)
                                 {
                                     string result = reader.Value;
-                                    //Console.WriteLine(result);
+                                    //Utils.WriteLog(result);
                                     return result;
                                 }
                                 else
@@ -102,13 +104,16 @@ namespace NicoLive
                                     break;
                                 }
                             }
+
                         }
+                        Utils.WriteLog("ReverseGeocode: AddressShort not found", xml);
                     }
                 }
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.ToString());
+                Utils.WriteLog(e.ToString());
+                Utils.WriteLog("ReverseGeocode:", e.ToString());
             }
             return "";
         }
@@ -182,7 +187,7 @@ namespace NicoLive
                     if (result == null)
                     {
                         //dSendComment("いまココ、接続し忘れたかも", true);
-                        Debug.WriteLine("いまココ、接続し忘れたかも");
+                        Utils.WriteLog("いまココ、接続し忘れたかも");
                         IsCheckOnGoing = false;
                         return;
                     }
@@ -235,7 +240,7 @@ namespace NicoLive
             }
             catch (Exception e)
             {
-                Debug.WriteLine(e.Message);
+                Utils.WriteLog(e.Message);
             }
             finally
             {
@@ -254,7 +259,7 @@ namespace NicoLive
 
                 if (!File.Exists(WW15MGH))
                 {
-                    System.Diagnostics.Debug.WriteLine("calculate_efm96_geoid(): " + WW15MGH + "not found");
+                    Utils.WriteLog("calculate_efm96_geoid(): " + WW15MGH + "not found");
                 }
 
                 int offset = 0;
@@ -280,7 +285,7 @@ namespace NicoLive
             }
             catch (Exception e)
             {
-                System.Diagnostics.Debug.WriteLine(e.StackTrace);
+                Utils.WriteLog(e.StackTrace);
             }
             return 0;
         }

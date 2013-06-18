@@ -11,13 +11,6 @@ namespace NicoLive
 {
     partial class Form1
     {
-        //-------------------------------------------------------------------------
-        // 外部コメントウィンド
-        //-------------------------------------------------------------------------
-        private void CommentBtn_Click(object sender, EventArgs e)
-        {
-            mCommentForm.Show();
-        }
 
         //-------------------------------------------------------------------------
         // 接続ボタン押し
@@ -53,7 +46,7 @@ namespace NicoLive
                     return;
                 }
             }
-
+            
             MakeWakutori(false);
         }
         //-------------------------------------------------------------------------
@@ -172,46 +165,6 @@ namespace NicoLive
             imk.MyOwner = this;
             imk.Show();
 
-            /*
-            // --  DEBUG --
-            using (ScreenCapture scr = new ScreenCapture())
-            {
-                Bitmap bmp2 = scr.Capture(this.Bounds);
-                string filePath = @"screen.bmp";
-                bmp2.Save(filePath, ImageFormat.Bmp);
-                Process.Start(filePath);
-            }
-            */
-
-            /*
-            using (AutoExtend ax = new AutoExtend())
-            {
-                using (ScreenCapture scr = new ScreenCapture())
-                {
-                    //Bitmap bmp1 = NicoLive.Properties.Resources._500;
-                    //Bitmap bmp1 = NicoLive.Properties.Resources.bro_ok;
-                    //Bitmap bmp1 = NicoLive.Properties.Resources.bro_ok2;
-                    Bitmap bmp1 = NicoLive.Properties.Resources.stop_fme;
-
-                    Bitmap bmp2 = new Bitmap("screen4.bmp");
-                    //Bitmap bmp2 = scr.Capture(this.Bounds);
-                    
-                    //string filePath = @"C:\screen.bmp";
-                    //bmp2.Save(filePath, ImageFormat.Bmp);
-                    //Process.Start(filePath);
-                    
-                    int padding = 10;
-                    Point start_offs = new Point(408, 202);    // 放送開始ボタンのオフセット
-                    Point pos = new Point();
-                    ax.ContainBitmap(bmp1, bmp2, 0, 0, 1024, 768, ref pos,10);
-                    //ax.ContainBitmap(bmp1, bmp2, start_offs.X - padding, start_offs.Y - padding, start_offs.X + padding, start_offs.Y + padding, ref pos);
-                    
-                    //ax.CheckExtend(this.Bounds, this.Location.X, this.Location.Y);
-                }
-            }
-            */
-
-            // --  DEBUG --
         }
 
     }

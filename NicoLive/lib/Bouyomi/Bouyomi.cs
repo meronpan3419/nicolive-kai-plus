@@ -67,7 +67,7 @@ namespace NicoLive
             }
             catch (Exception)
             {
-                Debug.WriteLine("接続失敗");
+                Utils.WriteLog("接続失敗");
             }
 
             if (tc != null)

@@ -23,14 +23,14 @@ namespace NicoLive
         ERR_NOT_LOGIN
     };
 
-	public class LiveInfo
-	{
-		private static LiveInfo mInstance = null;
+    public class LiveInfo
+    {
+        private static LiveInfo mInstance = null;
 
-	    // ユーザーリスト
+        // ユーザーリスト
         private List<string> mUserList = null;
-		// アクティブ用ハッシュテーブル
-        private Dictionary<string,long> mActiveHash = null;
+        // アクティブ用ハッシュテーブル
+        private Dictionary<string, long> mActiveHash = null;
         private ReaderWriterLock mActiveLock = new ReaderWriterLock();
 
         private string mRoomLabel = "";
@@ -41,12 +41,12 @@ namespace NicoLive
         private UInt32 mUnixTime = 0;
         private UInt32 mWatchCount = 0;
         private string mNickname = "";
-		private string mToken = "";
+        private string mToken = "";
         private string mTitle = "";
         private bool mIsMemberOnly = false;
 
         // ルームラベル
-        public string RoomLabel 
+        public string RoomLabel
         {
             get { return mRoomLabel; }
             set { mRoomLabel = value; }
@@ -94,12 +94,12 @@ namespace NicoLive
             get { return mNickname; }
             set { mNickname = value; }
         }
-		// トークン 
-		public string Token
-		{
-			get { return mToken; }
-			set { mToken = value; }
-		}
+        // トークン 
+        public string Token
+        {
+            get { return mToken; }
+            set { mToken = value; }
+        }
         // タイトル 
         public string Title
         {
@@ -114,49 +114,49 @@ namespace NicoLive
         }
 
 
-		//-------------------------------------------------------------------------
-		// コンストラクタ
-		//-------------------------------------------------------------------------
-		private LiveInfo()
-		{
-			mActiveHash = new Dictionary<string,long>();
-			mUserList = new List<string>();
-		}
+        //-------------------------------------------------------------------------
+        // コンストラクタ
+        //-------------------------------------------------------------------------
+        private LiveInfo()
+        {
+            mActiveHash = new Dictionary<string, long>();
+            mUserList = new List<string>();
+        }
 
-		//-------------------------------------------------------------------------
-		// シングルトン用
-		//-------------------------------------------------------------------------
-		public static LiveInfo Instance
-		{
-			get 
-			{
-				if (mInstance == null)
-				{
-					mInstance = new LiveInfo();
-				}
-				return mInstance;
-			}
-		}
+        //-------------------------------------------------------------------------
+        // シングルトン用
+        //-------------------------------------------------------------------------
+        public static LiveInfo Instance
+        {
+            get
+            {
+                if (mInstance == null)
+                {
+                    mInstance = new LiveInfo();
+                }
+                return mInstance;
+            }
+        }
 
-		//-------------------------------------------------------------------------
-		// クリア
-		//-------------------------------------------------------------------------
-		public void Clear()
-		{
-			mUserList.Clear();
-			mActiveHash.Clear();
-			mEndTime = 0;
+        //-------------------------------------------------------------------------
+        // クリア
+        //-------------------------------------------------------------------------
+        public void Clear()
+        {
+            mUserList.Clear();
+            mActiveHash.Clear();
+            mEndTime = 0;
             UnixTime = Utils.GetUnixTime(DateTime.Now);
             mStartTime = 0;
-			mTime = 0;
+            mTime = 0;
             mToken = "";
             mTitle = "";
-		}
+        }
 
-		//-------------------------------------------------------------------------
-		// アクティブ人数更新
-		//-------------------------------------------------------------------------
-		public void RefreshActive()
+        //-------------------------------------------------------------------------
+        // アクティブ人数更新
+        //-------------------------------------------------------------------------
+        public void RefreshActive()
         {
             if (mActiveHash != null && mActiveHash.Count > 0)
             {
@@ -170,7 +170,7 @@ namespace NicoLive
                     DateTime startTime = new DateTime(1970, 1, 1);
                     UInt32 time_t = Convert.ToUInt32((DateTime.Now - startTime).TotalSeconds);
 
-                    
+
                     foreach (string key in mActiveHash.Keys)
                     {
                         long t = (long)mActiveHash[key];
@@ -204,20 +204,20 @@ namespace NicoLive
             }
         }
 
-		//-------------------------------------------------------------------------
-		// アクティブ人数取得
-		//-------------------------------------------------------------------------
-		public int GetActiveCount()
-		{
-			return mActiveHash.Count;
-		}
+        //-------------------------------------------------------------------------
+        // アクティブ人数取得
+        //-------------------------------------------------------------------------
+        public int GetActiveCount()
+        {
+            return mActiveHash.Count;
+        }
 
-		//-------------------------------------------------------------------------
-		// ユーザーをアクティブ化
-		//-------------------------------------------------------------------------
-		public void ActivateUser( string iID,string iDate )
-		{
-			// アクティブ数設定
+        //-------------------------------------------------------------------------
+        // ユーザーをアクティブ化
+        //-------------------------------------------------------------------------
+        public void ActivateUser(string iID, string iDate)
+        {
+            // アクティブ数設定
             if (iDate.Length == 0) return;
 
             try
@@ -229,106 +229,103 @@ namespace NicoLive
             {
                 mActiveLock.ReleaseWriterLock();
             }
-		}
+        }
 
-		//-------------------------------------------------------------------------
-		// ユーザー追加
-		//-------------------------------------------------------------------------
-		public void AddUser( string iID )
-		{
-			// ユーザーリストにＩＤを追加
-            if (!mUserList.Contains(iID) )
+        //-------------------------------------------------------------------------
+        // ユーザー追加
+        //-------------------------------------------------------------------------
+        public void AddUser(string iID)
+        {
+            // ユーザーリストにＩＤを追加
+            if (!mUserList.Contains(iID))
                 mUserList.Add(iID);
-		}
+        }
 
-		//-------------------------------------------------------------------------
-		// トータル人数取得
-		//-------------------------------------------------------------------------
-		public int GetTotalCount()
-		{
-			return mUserList.Count;
-		}
+        //-------------------------------------------------------------------------
+        // トータル人数取得
+        //-------------------------------------------------------------------------
+        public int GetTotalCount()
+        {
+            return mUserList.Count;
+        }
 
-		//-------------------------------------------------------------------------
-		// 情報取得
-		//-------------------------------------------------------------------------
+        //-------------------------------------------------------------------------
+        // 情報取得
+        //-------------------------------------------------------------------------
         public InfoErr GetInfo(string iLiveID)
-		{
-			Nico nico = Nico.Instance;
-            Dictionary<string, string> info = nico.GetPublishStatus(iLiveID);
-            Dictionary<string, string> info2 = nico.GetPlayerStatus(iLiveID);
+        {
+            Nico nico = Nico.Instance;
+            Dictionary<string, string> info_PublishStatus = nico.GetPublishStatus(iLiveID);
+            Dictionary<string, string> info_PlayerStatus = nico.GetPlayerStatus(iLiveID);
 
-            if (info2 != null)
+            if (info_PlayerStatus != null)
             {
                 // コミュ番号取得
-                if (info2.ContainsKey("room_label"))
+                if (info_PlayerStatus.ContainsKey("room_label"))
                 {
-                    RoomLabel = info2["room_label"];
+                    RoomLabel = info_PlayerStatus["room_label"];
                 }
-                if (info2.ContainsKey("title"))
+                if (info_PlayerStatus.ContainsKey("title"))
                 {
-                    Title = info2["title"];
+                    Title = info_PlayerStatus["title"];
+                }
+                // 来場者数
+                if (info_PlayerStatus.ContainsKey("watch_count"))
+                {
+                    WatchCount = uint.Parse(info_PlayerStatus["watch_count"].ToString());
                 }
             }
 
-            if (info != null && info.ContainsKey("code") && info["code"].Equals("permission_denied"))
+            if (info_PublishStatus != null && info_PublishStatus.ContainsKey("code") && info_PublishStatus["code"].Equals("permission_denied"))
             {
                 return InfoErr.ERR_NO_ERR;
             }
-            if (info2 != null)
+
+            if (info_PublishStatus != null)
             {
                 // 来場者数
-                if (info2.ContainsKey("watch_count"))
-                {
-                    WatchCount = uint.Parse(info2["watch_count"].ToString());
-                }
-            }
+                //                if (info.ContainsKey("watch_count"))
+                //                {
+                //                    WatchCount = uint.Parse(info["watch_count"].ToString());
+                //                }
 
-			if( info != null )
-			{
-                // 来場者数
-//                if (info.ContainsKey("watch_count"))
-//                {
-//                    WatchCount = uint.Parse(info["watch_count"].ToString());
-//                }
-
-                if (!info.ContainsKey("token"))
+                if (!info_PublishStatus.ContainsKey("token"))
                 {
                     return InfoErr.ERR_NOT_LOGIN;
                 }
 
-				// 時間
-				if (info.ContainsKey("time") &&
-					info.ContainsKey("start_time") &&
-					info.ContainsKey("base_time") )
-				{
-					Time = Convert.ToUInt32(info["time"]);
-					BaseTime = Convert.ToUInt32(info["base_time"]);
-                    StartTime = Convert.ToUInt32(info["start_time"]);
-                    EndTime = Convert.ToUInt32(info["end_time"]);
-                    UnixTime = Utils.GetUnixTime(DateTime.Now);
-				}
-
-				// ニックネーム
-                if (info.ContainsKey("nickname"))
+                // 時間
+                if (info_PublishStatus.ContainsKey("time") &&
+                    info_PublishStatus.ContainsKey("start_time") &&
+                    info_PublishStatus.ContainsKey("base_time"))
                 {
-                    Nickname = info["nickname"];
+                    Time = Convert.ToUInt32(info_PublishStatus["time"]);
+                    BaseTime = Convert.ToUInt32(info_PublishStatus["base_time"]);
+                    StartTime = Convert.ToUInt32(info_PublishStatus["start_time"]);
+                    EndTime = Convert.ToUInt32(info_PublishStatus["end_time"]);
+                    UnixTime = Utils.GetUnixTime(DateTime.Now);
                 }
 
-				// トークン
-				if( info.ContainsKey("token") ) 
-				{
-					Token = info["token"];
-				}
-			}
+                // ニックネーム
+                if (info_PublishStatus.ContainsKey("nickname"))
+                {
+                    Nickname = info_PublishStatus["nickname"];
+                }
 
-			InfoErr err = (info != null)?InfoErr.ERR_NO_ERR:InfoErr.ERR_COULD_NOT_GET;
+                // トークン
+                if (info_PublishStatus.ContainsKey("token"))
+                {
+                    Token = info_PublishStatus["token"];
+                }
+            }
 
-			info = null;
-			info2 = null;
+            InfoErr err = (info_PublishStatus != null) ? InfoErr.ERR_NO_ERR : InfoErr.ERR_COULD_NOT_GET;
 
-			return err;
-		}
+            info_PublishStatus = null;
+            info_PlayerStatus = null;
+
+            return err;
+        }
 
         public bool GetMemberOnlyInfo(string iLiveID)
         {
@@ -336,7 +333,7 @@ namespace NicoLive
             mIsMemberOnly = nico.IsMemberOnly(iLiveID);
             return mIsMemberOnly;
         }
-	}
+    }
 }
 
 //-------------------------------------------------------------------------

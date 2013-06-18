@@ -57,61 +57,20 @@ namespace NicoLive
             TimeSpan ts = DateTime.Now - this.mLastWakusuTime;
             if (ts.Minutes >= 1)
             {
-                System.Diagnostics.Debug.WriteLine("update wakumachi()");
+                Utils.WriteLog("update wakumachi()");
                 UpdateWakumachi();
                 mLastWakusuTime = DateTime.Now;
 
 
             }
 
-            // 外部コメントウィンド
-            this.Invoke((Action)delegate()
-            {
-                // 経過時間
-                long resttime = 0;
-                if (mNico != null && mNico.IsLogin && !mNico.WakutoriMode)
-                {
-
-                    resttime = mLiveInfo.Time - mLiveInfo.StartTime + (Utils.GetUnixTime(DateTime.Now) - mLiveInfo.UnixTime);
-                }
-                if (resttime > 60 * 60 * 48) resttime = 0;
-                long min = resttime / 60;
-                long sec = resttime - min * 60;
-                long hour = min / 60;
-                min -= hour * 60;
-
-                mCommentForm.RestTime = (hour > 0 ? hour + ":" : "") + ((hour > 0 && min < 10) ? "0" : "") + min + ":" + (sec < 10 ? ("0" + sec) : sec.ToString());
-
-                // 残り時間
-                resttime = 0;
-                if (mNico != null && mNico.IsLogin && !mNico.WakutoriMode)
-                {
-                    resttime = mLiveInfo.EndTime - mLiveInfo.Time - (Utils.GetUnixTime(DateTime.Now) - mLiveInfo.UnixTime);
-                }
-                if (resttime < 180)
-                {
-                    mCommentForm.RestTimeForeColor = System.Drawing.Color.Red;
-                }
-                else
-                {
-                    mCommentForm.RestTimeForeColor = System.Drawing.Color.Black;
-                }
-
-                mCommentForm.ActiveCnt = mActiveCnt.Text;
-                mCommentForm.TotalCnt = mTotalCnt.Text;
-                mCommentForm.UniqCnt = mUniqCnt.Text;
-                mCommentForm.UpLink = mUpLink.Text;
-                mCommentForm.UpLinkForColor = mUpLink.ForeColor;
-                mCommentForm.Battery = mBattery.Text;
-                mCommentForm.CpuInfo = mCpuInfo.Text;
-            });
-
             // 外部配信ステータス更新
-            bool nowHQ =HQ.hasHQ();
-            
+            bool nowHQ = HQ.hasHQ();
 
+            // 配信方法が変わったら
             if (mLastHQ != nowHQ)
             {
+                // 外部配信ではない時
                 if (!nowHQ)
                 {
                     using (Bouyomi bm = new Bouyomi())
@@ -119,19 +78,68 @@ namespace NicoLive
                         if (Properties.Settings.Default.use_nle)
                         {
                             bm.Talk("えぬえるいー、停止を確認");
-                        } else 
-                        if (Properties.Settings.Default.use_xsplit)
-                        {
-                            bm.Talk("エックスプリット、停止を確認");
                         }
                         else
-                        {
-                            bm.Talk("えふえむいー停止を確認");
-                        }
+                            if (Properties.Settings.Default.use_xsplit)
+                            {
+                                bm.Talk("エックスプリット、停止を確認");
+                            }
+                            else
+                            {
+                                bm.Talk("えふえむいー停止を確認");
+                            }
                     }
                 }
             }
-            mLastHQ = nowHQ;            
+            mLastHQ = nowHQ;
+
+            if (HQ.hasHQ())
+            {
+                mHQStatus.Text = "動作中";
+                mHQStatus.ForeColor = System.Drawing.Color.Red;
+                mHQStartBtn.Enabled = false;
+                mHQStopBtn.Enabled = true;
+                mHQRestartBtn.Enabled = true;
+            }
+            else
+            {
+                mHQStatus.Text = "停止中";
+                mHQStatus.ForeColor = System.Drawing.Color.Green;
+                mHQStartBtn.Enabled = true;
+                mHQStopBtn.Enabled = false;
+                mHQRestartBtn.Enabled = false;
+            }
+
+            if (!mDisconnect)
+            {
+
+                string remaining_time = "残り時間　00:00";
+                int remaining_sec = Utils.CalcTime();
+                if (remaining_sec >= 0)
+                {
+                    remaining_time = String.Format("残り時間  {0:D2}:{1:D2}", (int)remaining_sec / 60, (int)remaining_sec % 60);
+                }
+                else
+                {
+
+                    remaining_time = String.Format("残り時間 -{0:D2}:{1:D2}", (int)((remaining_sec * -1) / 60), (int)((remaining_sec * -1) % 60));
+                }
+
+                this.Invoke((Action)delegate()
+                {
+                    //　残り時間3分以下で文字色を赤に
+                    if (remaining_sec < 3 * 60)
+                    {
+                        mRemainingTime.ForeColor = System.Drawing.Color.Red;
+                    }
+                    else
+                    {
+                        mRemainingTime.ForeColor = System.Drawing.Color.Black;
+                    }
+                    
+                    mRemainingTime.Text = remaining_time;
+                });
+            }
 
             // コメントサーバーとの接続キープ用
             if (mNico != null && mNico.IsLogin && !mDisconnect && !mNico.WakutoriMode)
@@ -154,13 +162,15 @@ namespace NicoLive
                     System.Net.Sockets.TcpClient tc = mNico.getTcpClient();
                     if (tc != null)
                     {
-                        mNico.SendNULLComment();
+                        mNico.SendPING();
                         mLastConnectionCheckTime = DateTime.Now;
-                        if(!tc.Connected){
+                        if (!tc.Connected)
+                        {
                             mNico.setIsLogin(false);
                             Utils.WriteLog("UITimer_Tick()", "!mNico.getTcpClient().Connected");
                         }
-                        Debug.WriteLine("ConnectionCheck:" + tc.Connected.ToString());
+                        Utils.WriteLog("ConnectionCheck:" + tc.Connected.ToString());
+                        
                     }
                 }
 
@@ -225,6 +235,8 @@ namespace NicoLive
                     mLastGenzaichiCommentTime = DateTime.Now;
                 }
 
+
+
             }
         }
 
@@ -243,9 +255,9 @@ namespace NicoLive
             mNextGC++;
             if (mNextGC > 60 * 3)
             {
-                Console.WriteLine("GC PRE :" + GC.GetTotalMemory(false));
+                Utils.WriteLog("GC PRE :" + GC.GetTotalMemory(false));
                 GC.Collect();
-                Console.WriteLine("GC POST:" + GC.GetTotalMemory(false));
+                Utils.WriteLog("GC POST:" + GC.GetTotalMemory(false));
                 mNextGC = 0;
             }
         }

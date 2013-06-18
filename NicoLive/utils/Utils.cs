@@ -267,12 +267,6 @@ namespace NicoLive
 
             iView.Rows[i].Cells[(int)CommentColumn.COLUMN_INFO].Value = info;
 
-            // NGコメントは送られてこない
-            //else if (iCmt.IsNG) 
-            //{
-            //    iView.Rows[0].Cells[(int)CommentColumn.COLUMN_COMMENT].Style.ForeColor = Properties.Settings.Default.ng_color;
-            //}
-
 
 
             // テロップの抜き出し
@@ -281,14 +275,6 @@ namespace NicoLive
                 // 色はパープル
                 iView.Rows[i].Cells[(int)CommentColumn.COLUMN_COMMENT].Style.ForeColor = Color.Purple;
 
-
-
-                //Regex deleteCommand = new Regex("^/telop (?:show|show0|perm) (.*)$");
-                //Match m = deleteCommand.Match(iCmt.Text);
-                //if (m.Success)
-                //{
-                //     iView.Rows[i].Cells[(int)CommentColumn.COLUMN_COMMENT].Value =m.Groups[1].Value;
-                //}
             }
 
             // change color for /press コマンド
@@ -600,7 +586,7 @@ namespace NicoLive
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine(ex.Message);
+                Utils.WriteLog(ex.Message);
             }
 
         }
@@ -654,15 +640,51 @@ namespace NicoLive
         //-------------------------------------------------------------------------
         public static void WriteLog(string iTitle, string iStr)
         {
-            using (StreamWriter writer = new StreamWriter("error_log.txt", true))
+            WriteLog(iTitle, iStr, false);
+        }
+
+        //-------------------------------------------------------------------------
+        // ログ書き出し
+        //-------------------------------------------------------------------------
+        public static void WriteLog(string iStr)
+        {
+            WriteLog("DEBUG", iStr, true);
+            System.Diagnostics.Debug.WriteLine(iStr);
+        }
+
+        //-------------------------------------------------------------------------
+        // ログ書き出し
+        //-------------------------------------------------------------------------
+        public static void WriteLog(string iTitle, string iStr, bool iIsInfo)
+        {
+            string log_name = "error_log.txt";
+# if DEBUG
+            if (iIsInfo)
             {
-                writer.Write(DateTime.Now);
-                writer.Write(" 【" + iTitle + "】");
-                writer.WriteLine(iStr);
-                writer.Flush();
-                writer.Close();
+                log_name = "info_log.txt";
+            }
+#else
+            if (iIsInfo)
+            {
+                return;
+            }
+#endif
+
+            try
+            {
+                using (StreamWriter writer = new StreamWriter(log_name, true))
+                {
+                    writer.Write(DateTime.Now);
+                    writer.Write(" 【" + iTitle + "】");
+                    writer.WriteLine(iStr);
+                    writer.Flush();
+                    writer.Close();
+                }
+            } catch{
+
             }
         }
+
         //-------------------------------------------------------------------------
         // LiveID抽出
         //-------------------------------------------------------------------------
@@ -770,8 +792,8 @@ namespace NicoLive
                 else
                 {
                     sub = (int)(info.EndTime - info.Time - passed_sec);  // 残り時間
-                    if (info.EndTime < info.Time + passed_sec)
-                        sub = 0;
+                    //if (info.EndTime < info.Time + passed_sec)
+                    //    sub = 0;
                 }
             }
             else

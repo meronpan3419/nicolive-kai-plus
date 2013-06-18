@@ -36,14 +36,14 @@ namespace NicoLive
                 this.mAutoExtendBtn.PerformClick();
                 return true;
             }
-            if ((int)keyData == (int)Keys.F4)
-            {
-                this.mCommentBtn.PerformClick();
-                return true;
-            }
             if ((int)keyData == (int)Keys.F3)
             {
                 this.mImakokoBtn.PerformClick();
+                return true;
+            }
+            if ((int)keyData == (int)(Keys.F2 | Keys.Control))
+            {
+                GetNextWaku();
                 return true;
             }
             if ((int)keyData == (int)Keys.F2)

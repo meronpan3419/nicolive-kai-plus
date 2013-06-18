@@ -1054,7 +1054,7 @@ namespace NicoLive
             }
             catch (Exception e)
             {
-                Debug.WriteLine(e.Message);
+                Utils.WriteLog(e.Message);
                 return false;
             }
             try
@@ -1066,7 +1066,7 @@ namespace NicoLive
             catch (Exception e)
             {
                 iBmp.UnlockBits(bmpData);
-                Debug.WriteLine(e.Message);
+                Utils.WriteLog(e.Message);
                 return false;
             }
 
@@ -1134,12 +1134,12 @@ namespace NicoLive
                     {
                         oPos.X = x;
                         oPos.Y = y;
-                        Debug.WriteLine("POSITION -> x: " + x + "    y: " + y);
+                        Utils.WriteLog("POSITION -> x: " + x + "    y: " + y);
                         return true;
                     }
                 }
             }
-            //Debug.WriteLine("NOT FOUND");
+            //Utils.WriteLog("NOT FOUND");
             return false;
         }
 

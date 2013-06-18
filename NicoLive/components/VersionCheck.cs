@@ -48,7 +48,7 @@ namespace NicoLive
                 }
                 catch (Exception e)
                 {
-                    Debug.WriteLine(e.Message);
+                    Utils.WriteLog(e.Message);
                 }
             }
             return true;

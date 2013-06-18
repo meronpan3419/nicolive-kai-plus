@@ -57,11 +57,6 @@ namespace NicoLive
             // メインのコメントリスト修正
             Utils.SetNickname(ref mCommentList, iID, iName);
 
-            // 外部コメントリスト修正
-            this.Invoke((Action)delegate()
-            {
-                mCommentForm.SetNickname(iID, iName);
-            });
         }
 
         //-------------------------------------------------------------------------
@@ -75,12 +70,6 @@ namespace NicoLive
             {
                 // メインのコメントリスト修正
                 Utils.SetNickname(ref mCommentList, iID, iName);
-
-                // 外部コメントリスト修正
-                this.Invoke((Action)delegate()
-                {
-                    mCommentForm.SetNickname(iID, iName);
-                });
             }
         }
     }

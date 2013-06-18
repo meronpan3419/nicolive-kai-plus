@@ -53,7 +53,7 @@ namespace NicoLive
 			{
 				if (xml == null)
 				{
-					Debug.WriteLine("ファイルが見つかりません");
+					Utils.WriteLog("ファイルが見つかりません");
 					return;
 				}
 
@@ -84,7 +84,7 @@ namespace NicoLive
 				}
 				catch (Exception e)
 				{
-					Debug.WriteLine("Message::Load:" + e.Message);
+					Utils.WriteLog("Message::Load:" + e.Message);
 				}
 			}
 		}

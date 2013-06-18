@@ -106,7 +106,7 @@ namespace NicoLive
                                     break;
                                 }
                             }
-                            Debug.WriteLine("NLE.push_start_button_proc try_count:" + try_count);
+                            Utils.WriteLog("NLE.push_start_button_proc try_count:" + try_count);
                         }
                         buttonpushed = true;
                         return 0;

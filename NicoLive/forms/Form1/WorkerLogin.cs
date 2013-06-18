@@ -63,7 +63,7 @@ namespace NicoLive
                     //    this.mLoginLabel.Text = "LV番号取得中(" + try_cnt + ")";
                     //    this.mLoginLabel.ForeColor = System.Drawing.Color.Black;
                     //});
-                    Debug.WriteLine("Retry: GET_LIVE_ID " + try_cnt);
+                    Utils.WriteLog("Retry: GET_LIVE_ID " + try_cnt);
                     Thread.Sleep(500);
 
                     goto GET_LIVE_ID;
@@ -106,7 +106,7 @@ namespace NicoLive
                 // コメントサーバーに接続
                 NicoErr err = mNico.ConnectToCommentServer(live_id, Properties.Settings.Default.comment_max);
 
-                System.Diagnostics.Debug.WriteLine("NicoErr:" + err.ToString());
+                Utils.WriteLog("NicoErr:" + err.ToString());
                 switch (err)
                 {
                     case NicoErr.ERR_COULD_NOT_CONNECT_COMMENT_SERVER:
@@ -114,7 +114,7 @@ namespace NicoLive
                         {
                             try_cnt++;
                             Thread.Sleep(500);
-                            Debug.WriteLine("Retry: ERR_COULD_NOT_CONNECT_COMMENT_SERVER" + try_cnt);
+                            Utils.WriteLog("Retry: ERR_COULD_NOT_CONNECT_COMMENT_SERVER" + try_cnt);
                             goto GET_COMMENT;
                         }
                         using (Bouyomi bm = new Bouyomi())
@@ -137,7 +137,7 @@ namespace NicoLive
                         {
                             Thread.Sleep(100);
                             live_id = "";
-                            Debug.WriteLine("Retry: ERR_NOT_LIVE" + try_cnt);
+                            Utils.WriteLog("Retry: ERR_NOT_LIVE" + try_cnt);
                             goto GET_LIVE_ID;
                         }
                         using (Bouyomi bm = new Bouyomi())
@@ -194,12 +194,16 @@ namespace NicoLive
                         mCommentList.Rows.Clear();
 
                         // プレイヤーロード
-                        GetPlayer();
+                        //GetPlayer();
+
+
+
+
+
 
                         // 情報を取得
                         mLiveInfo.GetInfo(live_id);
                         mLiveInfo.GetMemberOnlyInfo(live_id);
-
 
                         // 開演待ちスキップするか？
                         if (Properties.Settings.Default.skip5min)
@@ -218,7 +222,7 @@ namespace NicoLive
                             }
                             catch (Exception ex)
                             {
-                                Debug.WriteLine("LoginWorker_DoWork:" + ex.Message);
+                                Utils.WriteLog("LoginWorker_DoWork:" + ex.Message);
                             }
                         }
                         if (mViewer != null && !mViewer.IsDisposed)

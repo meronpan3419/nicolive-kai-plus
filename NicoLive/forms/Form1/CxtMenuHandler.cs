@@ -25,7 +25,7 @@ namespace NicoLive
             if (this.mNgID.Enabled)
             {
                 string id = this.mCommentList.SelectedRows[0].Cells[(int)CommentColumn.COLUMN_ID].Value.ToString();
-                System.Diagnostics.Debug.WriteLine("CmtCxtMenu_Opening: id:" + id);
+                Utils.WriteLog("CmtCxtMenu_Opening: id:" + id);
                 if (this.mUid.IsNGUser(id))
                 {
                     this.mNgID.Text = "このユーザーをNG解除";

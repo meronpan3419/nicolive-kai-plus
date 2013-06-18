@@ -27,7 +27,7 @@
       <Value Profile="(Default)">0, 0</Value>
     </Setting>
     <Setting Name="auto_connect" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
+      <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="tw_user" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
@@ -342,7 +342,40 @@
       <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="welcome_message" Type="System.String" Scope="User">
-      <Value Profile="(Default)">@nameさんいらっしゃい！</Value>
+      <Value Profile="(Default)">&gt;&gt;@nameさんいらっしゃい！</Value>
+    </Setting>
+    <Setting Name="geocode_address_url" Type="System.String" Scope="User">
+      <Value Profile="(Default)">http://geocode.didit.jp/reverse/</Value>
+    </Setting>
+    <Setting Name="welcome_message184" Type="System.String" Scope="User">
+      <Value Profile="(Default)">&gt;&gt;@no @name(184: @id)さんいらっしゃい！</Value>
+    </Setting>
+    <Setting Name="auto_nick_184" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="welcome_cruise_message" Type="System.String" Scope="User">
+      <Value Profile="(Default)">クルーズさんいらっしゃい！ゆっくり降りて184外してコテハン残していってね！！！！！！！１１</Value>
+    </Setting>
+    <Setting Name="use_welcome_cruise_message" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="use_new_flash_console" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="use_flash_console" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="use_loss_time" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="use_next_lv_notice" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="use_flash_comment_generator" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="nicolive_login_user_agent" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Mozilla/5.0 (Linux; U; Android 4.0.4; ja-jp; SC-06D Build/IMM76D) AppleWebKit/534.30 (KHTML, like Gecko)</Value>
     </Setting>
   </Settings>
 </SettingsFile>

@@ -42,17 +42,6 @@ namespace NicoLive
             mViewer.Activate();
         }
 
-        //-------------------------------------------------------------------------
-        // FMEステータスメニュー選択時
-        //-------------------------------------------------------------------------
-        private void FMEMenuItem_Click(object sender, EventArgs e)
-        {
-            if (mFMEStatus == null || mFMEStatus.IsDisposed)
-            {
-                this.mFMEStatus = new FMEStatus(this);
-            }
-            this.mFMEStatus.Show();
-        }
     }
 }
 //-------------------------------------------------------------------------

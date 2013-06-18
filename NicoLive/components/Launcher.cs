@@ -65,7 +65,7 @@ namespace NicoLive
             {
                 if (xml == null)
                 {
-                    Debug.WriteLine(file + "が見つかりません");
+                    Utils.WriteLog(file + "が見つかりません");
                     return;
                 }
 
@@ -125,7 +125,7 @@ namespace NicoLive
                 }
                 catch (Exception e)
                 {
-                    Debug.WriteLine("LoadLauncher:" + e.Message);
+                    Utils.WriteLog("LoadLauncher:" + e.Message);
                 }
             }
         }
@@ -152,7 +152,7 @@ namespace NicoLive
                     }
                     catch (Exception e)
                     {
-                        Debug.WriteLine("Launcher.Exec():" + e.Message);
+                        Utils.WriteLog("Launcher.Exec():" + e.Message);
                     }
                 });
                 th.Name = "Launcher.Exec(): " + cmd.mName;

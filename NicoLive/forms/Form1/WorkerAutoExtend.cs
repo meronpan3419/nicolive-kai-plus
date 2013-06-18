@@ -145,19 +145,38 @@ namespace NicoLive
                         {
                             if (!mStartHQ && mNico.IsLogin)
                             {
-                                int r = ax.AutoFME(this.Bounds, this.Location.X, this.Location.Y);
-                                if (r == 1)
+                                //int r = ax.AutoFME(this.Bounds, this.Location.X, this.Location.Y);
+                                //if (r == 1)
+                                //{
+                                if (!mDisconnect)
                                 {
-                                    HQ.Exec(LiveID);
+
+                                    //HQ.Exec(LiveID);
+                                    HQ.Restart(LiveID);
                                     mStartHQ = true;
 
                                     // Compact 予告時刻設定
                                     mLastCompctTime = DateTime.Now;
                                     mCompactForcast = false;
+
+                                    // 外部配信でフラッシュコンソール使わない
+                                    if (!Properties.Settings.Default.use_flash_console)
+                                    {
+                                        //this.Invoke((Action)delegate()
+                                        //{
+                                        //    string uri = "http://live.nicovideo.jp/broadcaster_v1.swf?120126092851&v=" + this.LiveID + "&_ut=" + Utils.GetUnixTime(DateTime.Now);
+                                        //    mFlash.Anchor = (AnchorStyles.Left | AnchorStyles.Top);
+                                        //    mFlash.Size = new System.Drawing.Size(958, 40);
+                                        //    mRemainingTime.Visible = true;
+                                        //    mDisconnectBtn.Visible = true;
+                                        //    mNextWakuFastBtn.Visible = true;
+                                        //    mFlash.LoadMovie(0, uri);
+                                        //});
+                                    }
                                 }
+                                //}
                             }
                         }
-
                     }
                     else
                     {

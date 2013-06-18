@@ -65,7 +65,7 @@ namespace NicoLive
             {
                 if (xml == null)
                 {
-                    Debug.WriteLine(file + "が見つかりません");
+                    Utils.WriteLog(file + "が見つかりません");
                     return;
                 }
 
@@ -106,7 +106,7 @@ namespace NicoLive
                                         DayOfWeek w = dt.DayOfWeek;
                                         if (w != DayOfWeek.Thursday || (w == DayOfWeek.Thursday && dt.Hour < 11))
                                         {
-                                            Debug.WriteLine("REFRESH ID");
+                                            Utils.WriteLog("REFRESH ID");
                                             return;
                                         }
                                     }
@@ -135,14 +135,14 @@ namespace NicoLive
 
                                 mNickHash[id] = nick;
                                 mColorHash[id] = System.Drawing.Color.FromArgb(Convert.ToInt32(a, 16), Convert.ToInt32(r, 16), Convert.ToInt32(b, 16), Convert.ToInt32(b, 16));
-                                //Debug.WriteLine(id + "   " + nick);
+                                //Utils.WriteLog(id + "   " + nick);
                             }
                         }
                     }
                 }
                 catch (Exception e)
                 {
-                    Debug.WriteLine("LoadUser:" + e.Message);
+                    Utils.WriteLog("LoadUser:" + e.Message);
                 }
             }
         }
@@ -214,7 +214,7 @@ namespace NicoLive
             {
                 if (xml == null)
                 {
-                    Debug.WriteLine(file + "が見つかりません");
+                    Utils.WriteLog(file + "が見つかりません");
                     return;
                 }
 
@@ -250,7 +250,7 @@ namespace NicoLive
                                         DayOfWeek w = dt.DayOfWeek;
                                         if (w != DayOfWeek.Thursday || (w == DayOfWeek.Thursday && dt.Hour < 11))
                                         {
-                                            Debug.WriteLine("REFRESH ID");
+                                            Utils.WriteLog("REFRESH ID");
                                             return;
                                         }
                                     }
@@ -271,14 +271,14 @@ namespace NicoLive
                                 }
 
                                 mNGUserList.Add(id);
-                                Debug.WriteLine("read ng user:  id:" + id);
+                                Utils.WriteLog("read ng user:  id:" + id);
                             }
                         }
                     }
                 }
                 catch (Exception e)
                 {
-                    Debug.WriteLine("LoadNGUser:" + e.Message);
+                    Utils.WriteLog("LoadNGUser:" + e.Message);
                 }
             }
         }

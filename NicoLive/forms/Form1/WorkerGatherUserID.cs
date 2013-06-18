@@ -48,7 +48,7 @@ namespace NicoLive
                 string name = mNico.GetUsername(user_id);
 
 
-                Debug.WriteLine("Gather UserID: " + user_id + " -> Name: " + name);
+                Utils.WriteLog("Gather UserID: " + user_id + " -> Name: " + name);
                 if (name.Length > 0)
                 {
                     this.Invoke((Action)delegate()
@@ -58,7 +58,7 @@ namespace NicoLive
                 }
                 else
                 {
-                    Debug.WriteLine("Gather ng");
+                    Utils.WriteLog("Gather ng");
                     mGatherUserID.Add(user_id);
                     Thread.Sleep(wait*10);
                 }

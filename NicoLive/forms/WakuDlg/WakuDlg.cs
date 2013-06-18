@@ -116,7 +116,7 @@ namespace NicoLive
 
             SetLabelFromThread("前枠番組情報の取得中", Color.Black, false);
 
-            // Debug.WriteLine(mLv);
+            // Utils.WriteLog(mLv);
 
             Dictionary<string, string> arr = new Dictionary<string, string>();
             Dictionary<string, string> comu = new Dictionary<string, string>();
@@ -231,11 +231,11 @@ namespace NicoLive
             if (mAbort) return;
 
             WakuErr err = mNico.GetWaku(ref arr, ref lv);
-            System.Diagnostics.Debug.WriteLine("WakuErr:" + err.ToString());
+            Utils.WriteLog("WakuErr:" + err.ToString());
             if (err == WakuErr.ERR_NO_ERR)
             {
                 mLv = lv;
-                System.Diagnostics.Debug.WriteLine("lv:" + mLv);
+                Utils.WriteLog("lv:" + mLv);
                 mState = WakuResult.NO_ERR;
 
                 SetLabelFromThread("枠取り完了", Color.Black, true);
@@ -297,12 +297,12 @@ namespace NicoLive
                         break;
                     }
 
-                    //Debug.WriteLine(lv);
+                    //Utils.WriteLog(lv);
 
                     if (!waitInfo.ContainsKey("count"))
                         continue;
                     int cnt = int.Parse(waitInfo["count"]);
-                    if (cnt <= 0)
+                    if (cnt <= 1)
                     {
                         mLv = lv;
                         SetLabelFromThread("枠取り完了", Color.Black, true);

@@ -26,7 +26,6 @@ namespace NicoLive
 
             mSpeakList = new List<string>();
             mGatherUserID = new List<string>();
-            mCommentForm = new CommentForm(this);
 
             // 色
             mCommentList.BackgroundColor = Properties.Settings.Default.back_color;
@@ -37,7 +36,7 @@ namespace NicoLive
             mUIStatus = UIStatus.Instance;
             mLiveInfo = LiveInfo.Instance;
             mRes = Response.Instance;
-            mLauncher  = Launcher.Instance;
+            mLauncher = Launcher.Instance;
 
 
 
@@ -99,7 +98,6 @@ namespace NicoLive
             mWakutoriBtn.Text = mWakutoriBtn.Text + "(F1)";
             mCopyBtn.Text = mCopyBtn.Text + "(F2)";
             mImakokoBtn.Text = mImakokoBtn.Text + "(F3)";
-            mCommentBtn.Text = mCommentBtn.Text + "(F4)";
             mAutoExtendBtn.Text = mAutoExtendBtn.Text + "(F5)";
             mContWaku.Text = mContWaku.Text + "(F6)";
             mVisitorBtn.Text = mVisitorBtn.Text + "(F7)";
@@ -119,7 +117,16 @@ namespace NicoLive
             ImakokoNow.Launch();
 
 
-
+            // 迅速に配信
+            if (this.mFastLive)
+            {
+                bool login = mNico.Login(Properties.Settings.Default.user_id,
+                           Properties.Settings.Default.password);
+                if (login)
+                {
+                    GetNextWaku();
+                }
+            }
 
 
         }
@@ -142,7 +149,7 @@ namespace NicoLive
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine(ex.Message);
+                    Utils.WriteLog(ex.Message);
                 }
             }
             // ID保存
@@ -160,7 +167,7 @@ namespace NicoLive
             // ウィンドステート保存
             if (this.WindowState == FormWindowState.Normal)
             {
-                Size size = new Size( this.Width,this.Height);
+                Size size = new Size(this.Width, this.Height);
                 Properties.Settings.Default.mw_size = size;
                 Point pos = new Point(this.Top, this.Left);
                 Properties.Settings.Default.mw_pos = pos;
@@ -200,22 +207,27 @@ namespace NicoLive
                 mUseHQBtn.Text = "通常配信";
                 Thread th = new Thread(delegate()
                 {
-                    FMLE.Stop();
+                    HQ.Stop();
                 });
                 th.Name = "NivoLive.Form1.EventHandler.mUseHQBtn_Click()";
                 th.Start();
 
+                //this.Invoke((Action)delegate()
+                //{
+                //    GetPlayer();
+                //});
+                
 
-                //Properties.Settings.Default.use_fme = false;
-                //Properties.Settings.Default.use_xsplit = false;
-                //Properties.Settings.Default.use_nle = false;
             }
             else
             {
                 Properties.Settings.Default.use_hq = true;
                 mUseHQBtn.Text = "外部配信";
 
-                //Properties.Settings.Default.use_fme = true;
+
+
+
+
             }
 
 
@@ -270,7 +282,7 @@ namespace NicoLive
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine(ex.Message);
+                Utils.WriteLog(ex.Message);
             }
         }
 
@@ -353,7 +365,7 @@ namespace NicoLive
         private void mCommentBox_KeyPress(object sender, KeyPressEventArgs e)
         {
             //EnterやEscapeキーでビープ音が鳴らないようにする
-            if (e.KeyChar == (char)Keys.Enter || e.KeyChar == (char)Keys.Escape )
+            if (e.KeyChar == (char)Keys.Enter || e.KeyChar == (char)Keys.Escape)
             {
                 e.Handled = true;
             }
@@ -425,7 +437,7 @@ namespace NicoLive
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine(ex.Message);
+                Utils.WriteLog(ex.Message);
             }
 
 
@@ -440,6 +452,13 @@ namespace NicoLive
         private void mCommentPostBtn_Click(object sender, EventArgs e)
         {
             CommentPost();
+        }
+        
+        private void mDisconnectBtn_Click(object sender, EventArgs e)
+        {
+            mNico.SendOwnerComment(LiveID, "/disconnect", "", mLiveInfo.Token);
+            mNico.LiveStop(LiveID, mLiveInfo.Token);
+
         }
     }
 }

@@ -92,12 +92,15 @@ namespace NicoLive
 
         // uri of api to logging in
         private readonly string URI_LOGIN = "https://secure.nicovideo.jp/secure/login?site=niconico";
+        //private readonly string URI_LOGIN = "https://secure.nicovideo.jp/secure/login?site=nicolivespweb";
+
 
         // getplayerstatus uri
         private readonly string URI_GETPLAYERSTATUS = "http://live.nicovideo.jp/api/getplayerstatus?v=";
 
         // getpublishstatus uri
-        private readonly string URI_GETPUBLISHSTATUS = "http://live.nicovideo.jp/api/getpublishstatus?v=";
+        private readonly string URI_GETPUBLISHSTATUS = "http://live.nicovideo.jp/api/getpublishstatus?version=2&v=";
+        private readonly string URI_GETPUBLISHSTATUS2 = "http://live.nicovideo.jp/api/getpublishstatus?version=2&a=";
 
         // profile uri
         private readonly string URI_GETFMEPROFILE = "http://live.nicovideo.jp/api/getfmeprofile?v=";
@@ -156,6 +159,46 @@ namespace NicoLive
             url = URI_STARTFME2 + iLV + "&key=exclude&value=0&token=" + iToken;
             xml = HttpGet(url, ref this.mCookieLogin);
 
+            if (!xml.Contains("status=\"ok\"")) return false;
+
+            //StartTime = Convert.ToUInt32(info_PublishStatus["start_time"]);
+            //<start_time>1355492291</start_time>
+            Regex r = new Regex("<start_time>(.*?)</start_time>");
+            Match m = r.Match(xml);
+            LiveInfo info = LiveInfo.Instance;
+            if (m.Success)
+            {
+                info.StartTime = Convert.ToUInt32(m.Groups[1].Value);
+            }
+            else
+            {
+                info.StartTime = 0;
+            }
+            r = new Regex("<end_time>(.*?)</end_time>");
+            m = r.Match(xml);
+            if (m.Success)
+            {
+                info.EndTime = Convert.ToUInt32(m.Groups[1].Value);
+            }
+            else
+            {
+                //info.EndTime = 0;
+            }
+
+            return true;
+        }
+
+        //-------------------------------------------------------------------------
+        // LiveStop
+        //-------------------------------------------------------------------------
+        public bool LiveStop(string iLV, string iToken)
+        {
+            if (iLV.Length <= 2) return false;
+            if (iToken.Length <= 0) return false;
+
+            string url = URI_STARTFME2 + iLV + "&key=end_now&token=" + iToken;
+            string xml = HttpGet(url, ref this.mCookieLogin);
+
             return (xml.Contains("status=\"ok\""));
         }
 
@@ -206,7 +249,7 @@ namespace NicoLive
             }
             catch (Exception e)
             {
-                Debug.WriteLine("Close:" + e.Message);
+                Utils.WriteLog("Close:" + e.Message);
             }
             IsLogin = false;
             WakutoriMode = false;
@@ -231,7 +274,7 @@ namespace NicoLive
                 if (match.Count > 0)
                 {
                     result = "lv" + match[0].Groups["videoid"].Value;
-                    Debug.WriteLine(result);
+                    Utils.WriteLog(result);
                 }
                 else
                 {
@@ -240,11 +283,11 @@ namespace NicoLive
                     if (match.Count > 0)
                     {
                         result = "lv" + match[0].Groups["videoid"].Value;
-                        Debug.WriteLine(result);
+                        Utils.WriteLog(result);
                     }
                 }
             }
-            return　result;
+            return result;
         }
 
         //-------------------------------------------------------------------------
@@ -309,7 +352,7 @@ namespace NicoLive
             {
 
                 // send POST request
-                ret = HttpPost(URI_LOGIN, post_arg, ref this.mCookieLogin);
+                ret = HttpPost(URI_LOGIN, post_arg, ref this.mCookieLogin, Properties.Settings.Default.nicolive_login_user_agent);
                 if (ret == null)
                 {
                     this.mCookieLogin = null;
@@ -326,35 +369,57 @@ namespace NicoLive
                 return false;
             }
 
+            string user_session = "";
+
             //CookieからセッションＩＤ取得
+            user_session = GetSessionidFromCookie(user_session);
+            if (user_session.Equals(""))
+            {
+                mIsLogin = false;
+                return false;
+            }
+
+            // IEのCookieを書き換える
+            OverrideIECookie(user_session);
+
+            // ログイン済みフラグを立てる
+            mIsLogin = true;
+            return true;
+        }
+
+        private string GetSessionidFromCookie(string user_session)
+        {
             Uri uri = new Uri(URI_LOGIN);
             CookieCollection cc = this.mCookieLogin.GetCookies(uri);
             if (cc["user_session"] == null)
             {
-                Debug.WriteLine("Could not get session id");
-                return false;
+                Utils.WriteLog("Could not get session id");
+                return "";
             }
-            string user_session = cc["user_session"].ToString();
+            user_session = cc["user_session"].ToString();
             DateTime expires = DateTime.Now.AddDays(3);
             //Thu, 1-Jan-2030 00:00:00 GMT
 
             user_session += "; path=/; domain=.nicovideo.jp; expires=" + expires.ToString("ddd, d-MMM-yyyy HH:mm:ss GMT") + ";";
+            return user_session;
+        }
 
+        private void OverrideIECookie(string user_session)
+        {
 
-            // IEのCookieを書き換える
 
             bool isIEProtectedMode = false;
             IEIsProtectedModeProcess(ref isIEProtectedMode);
 
-            Debug.WriteLine("IEIsProtectedModeProcess: " + isIEProtectedMode.ToString());
+            Utils.WriteLog("IEIsProtectedModeProcess: " + isIEProtectedMode.ToString());
             if (isIEProtectedMode)
             {
                 //IE保護モードON, win vista/7
                 if (!IESetProtectedModeCookie(URI_LOGIN, null,
                     user_session, 0x10))
                 {
-                    Debug.WriteLine("Cound not write cookie (isIEProtectedMode: " + isIEProtectedMode + ")");
-                    Debug.WriteLine(GetLastError().ToString());
+                    Utils.WriteLog("Cound not write cookie (isIEProtectedMode: " + isIEProtectedMode + ")");
+                    Utils.WriteLog(GetLastError().ToString());
                 }
             }
             else
@@ -363,14 +428,10 @@ namespace NicoLive
                 if (!InternetSetCookie(URI_LOGIN, null,
                     user_session))
                 {
-                    Debug.WriteLine("Cound not write cookie (isIEProtectedMode: " + isIEProtectedMode + ")");
-                    Debug.WriteLine(GetLastError().ToString());
+                    Utils.WriteLog("Cound not write cookie (isIEProtectedMode: " + isIEProtectedMode + ")");
+                    Utils.WriteLog(GetLastError().ToString());
                 }
             }
-
-            // ログイン済みフラグを立てる
-            mIsLogin = true;
-            return true;
         }
 
         public bool LoginTest(string iUserSession)
@@ -424,12 +485,12 @@ namespace NicoLive
                 }
                 else
                 {
-                    Debug.WriteLine("GetUsername ng1 : " + res);
+                    Utils.WriteLog("GetUsername ng1 : " + res);
                 }
             }
             else
             {
-                Debug.WriteLine("GetUsername ng2: " + res);
+                Utils.WriteLog("GetUsername ng2: " + res);
             }
 
             return name;
@@ -474,7 +535,7 @@ namespace NicoLive
             Dictionary<string, string> ret = new Dictionary<string, string>();
 
             // send request (GET)
-            string uri = URI_GETPUBLISHSTATUS + iLiveID;
+            string uri = URI_GETPUBLISHSTATUS2 + iLiveID;
             string response = HttpGet(uri, ref this.mCookieLogin);
 
             if (response == null)
@@ -597,7 +658,7 @@ namespace NicoLive
             if (response == null)
                 return null;
 
-            //Debug.WriteLine(response);
+            //Utils.WriteLog(response);
 
             using (MemoryStream ms = new MemoryStream(Encoding.UTF8.GetBytes(response), false))
             using (XmlTextReader reader = new XmlTextReader(ms))
@@ -711,7 +772,7 @@ namespace NicoLive
             if (response == null)
                 return false;
 
-            //Debug.WriteLine(response);
+            //Utils.WriteLog(response);
 
             string regex = "<ul id=\"livetags\"(.*?)>メンバー限定</a>(.*?)</li>";
             Regex reg = new Regex(regex, RegexOptions.Singleline);
@@ -725,7 +786,7 @@ namespace NicoLive
                 return false;
             }
 
-            
+
 
         }
 
@@ -750,40 +811,40 @@ namespace NicoLive
 
             Dictionary<string, string> post_arg = new Dictionary<string, string>();
 
-            post_arg["mail"] = Uri.EscapeDataString(iMail);
+            post_arg["mail"] = iMail;
             post_arg["is184"] = "true";
             post_arg["token"] = iToken;
-            post_arg["body"] = Uri.EscapeDataString(iComment);
+            post_arg["body"] = iComment;
             if (iName.Length > 0)
-                post_arg["name"] = Uri.EscapeDataString(iName);
+                post_arg["name"] = iName;
 
-            Debug.WriteLine("OWNER:" + iComment);
+            Utils.WriteLog("OWNER:" + iComment);
 
             // send POST request
             string ret = HttpPost(uri, post_arg, ref this.mCookieLogin);
-            Debug.WriteLine(ret);
+            Utils.WriteLog(ret);
             post_arg = null;
             return true;
         }
 
         //-------------------------------------------------------------------------
-        // NULLコメント送信
+        // PINGコメント送信
         //-------------------------------------------------------------------------
-        public bool SendNULLComment()
+        public bool SendPING()
         {
             // 送信
             try
             {
                 if (mTcp.Client.Connected)
                 {
-                    this.Send(mTcp.Client, "\0");
+                    this.Send(mTcp.Client, "<ping>EOT</ping>\0");
                 }
             }
             catch (Exception e)
             {
-                Debug.WriteLine("SendNULLComment(): " + e.StackTrace);
-                Utils.WriteLog("SendNULLComment()", e.Message);
-                Utils.WriteLog("SendNULLComment()", e.StackTrace);
+                Utils.WriteLog("SendPING(): " + e.StackTrace);
+                Utils.WriteLog("SendPING()", e.Message);
+                Utils.WriteLog("SendPING()", e.StackTrace);
             }
 
             return true;
@@ -801,11 +862,11 @@ namespace NicoLive
 
             if (iComment.Length <= 0)
             {
-                Debug.WriteLine("コメントが空");
+                Utils.WriteLog("コメントが空");
                 return false;
             }
 
-            Debug.WriteLine("COMMENT:" + iComment);
+            Utils.WriteLog("COMMENT:" + iComment);
 
             // MovieInfo取得
             if (mThread.Length <= 0 || mUserID.Length <= 0 || mBaseTime == 0)
@@ -815,7 +876,7 @@ namespace NicoLive
 
                 if (h == null)
                 {
-                    Debug.WriteLine("unable get movieinfo");
+                    Utils.WriteLog("unable get movieinfo");
                     return false;
                 }
                 mUserID = h["user_id"];
@@ -843,7 +904,7 @@ namespace NicoLive
 
             if (postkey.Length <= 0)
             {
-                Debug.WriteLine("unable get postkey");
+                Utils.WriteLog("unable get postkey");
                 return false;
             }
 
@@ -864,7 +925,7 @@ namespace NicoLive
                     mPremium,
                     iComment);
 
-            Debug.WriteLine(req);
+            Utils.WriteLog(req);
 
             // 送信
             this.Send(mTcp.Client, req);
@@ -927,11 +988,11 @@ namespace NicoLive
             // send request
             try
             {
-                Debug.WriteLine("Addr: " + uri + "    Port: " + port);
+                Utils.WriteLog("Addr: " + uri + "    Port: " + port);
                 if (mTcp != null)
                     mTcp.Close();
                 mTcp = new TcpClient(uri, int.Parse(port));
-                Debug.WriteLine("サーバーと接続しました。");
+                Utils.WriteLog("サーバーと接続しました。");
 
                 //NetworkStreamを取得する
                 NetworkStream ns = mTcp.GetStream();
@@ -949,7 +1010,7 @@ namespace NicoLive
             }
             catch (Exception e)
             {
-                Debug.WriteLine("GetCommentXML:" + e.Message);
+                Utils.WriteLog("GetCommentXML:" + e.Message);
                 mIsLogin = false;
                 return NicoErr.ERR_COULD_NOT_CONNECT_COMMENT_SERVER;
             }
@@ -1006,13 +1067,13 @@ namespace NicoLive
             catch (System.ObjectDisposedException)
             {
                 //閉じた時
-                Debug.WriteLine("閉じました。");
+                Utils.WriteLog("閉じました。");
                 return;
             }
             catch (SocketException e)
             {
                 //閉じた時
-                Debug.WriteLine("閉じました。");
+                Utils.WriteLog("閉じました。");
                 Utils.WriteLog("ReceiveDataCallback()", e.Message);
                 Utils.WriteLog("ReceiveDataCallback()", e.StackTrace);
                 mIsLogin = false;
@@ -1022,7 +1083,7 @@ namespace NicoLive
             //切断されたか調べる
             if (len <= 0)
             {
-                Debug.WriteLine("切断されました。");
+                Utils.WriteLog("切断されました。");
                 so.Socket.Close();
                 mIsLogin = false;
                 mComment = "<chat date=\"\" no=\"\" premium=\"2\" thread=\"\" user_id=\"\" vpos=\"\">コメントサーバーから切断されました</chat>";
@@ -1081,7 +1142,7 @@ namespace NicoLive
                 }
                 if (str.Contains("<chat_result"))
                 {
-                    Debug.WriteLine(str);
+                    Utils.WriteLog(str);
                 }
             }
 
@@ -1119,11 +1180,11 @@ namespace NicoLive
 
                 // Complete sending the data to the remote device.
                 int bytesSent = client.EndSend(ar);
-                Debug.WriteLine(String.Format("Sent {0} bytes to server.", bytesSent));
+                Utils.WriteLog(String.Format("Sent {0} bytes to server.", bytesSent));
             }
             catch (Exception e)
             {
-                Debug.WriteLine(e.ToString());
+                Utils.WriteLog(e.ToString());
             }
         }
 
@@ -1281,7 +1342,7 @@ namespace NicoLive
             {
                 foreach (Match m in mc)
                 {
-                    Console.WriteLine(m.Groups[1].Value);
+                    Utils.WriteLog(m.Groups[1].Value);
                     if (m.Groups[1].Value.ToString().Contains("checked"))
                         iInfo["livetaglockall"] = "ロックする";
                     else
@@ -1358,7 +1419,7 @@ namespace NicoLive
 
             if (match.Success)
             {
-                Debug.WriteLine(match.Groups[1].Value);
+                Utils.WriteLog(match.Groups[1].Value);
                 iInfo["confirm"] = match.Groups[1].Value;
             }
 
@@ -1405,7 +1466,7 @@ namespace NicoLive
 
             if (match.Success)
             {
-                Debug.WriteLine(match.Groups[1].Value);
+                Utils.WriteLog(match.Groups[1].Value);
                 iParam["confirm"] = match.Groups[1].Value;
             }
 
@@ -1443,7 +1504,7 @@ namespace NicoLive
                 if (err.Contains("放送するコミュニティが選択されていません"))
                     return WakuErr.ERR_ALREADY_LIVE;
                 else
-                    Debug.WriteLine(match.Groups[1].Value);
+                    Utils.WriteLog(match.Groups[1].Value);
             }
             if (res.Contains("<h2>メンテナンス中です</h2>"))
             {
@@ -1497,9 +1558,9 @@ namespace NicoLive
             }
             */
 
-            Utils.WriteLog("Nico.GetWaku() 想定外" , org_res);
+            Utils.WriteLog("Nico.GetWaku() 想定外", org_res);
 
-            Debug.WriteLine(org_res);
+            Utils.WriteLog(org_res);
             return WakuErr.ERR_UNKOWN;
         }
 
@@ -1534,7 +1595,7 @@ namespace NicoLive
 
             string res = HttpGet(url, ref mCookieLogin);
 
-            Debug.WriteLine(res);
+            Utils.WriteLog(res);
             Match match;
             match = Regex.Match(res, "<count>(.*?)</count>");
             if (match.Success)
@@ -1573,7 +1634,7 @@ namespace NicoLive
             }
             catch (Exception e)
             {
-                Debug.WriteLine("HttpGet:" + e.Message);
+                Utils.WriteLog("HttpGet:" + e.Message);
             }
             return null;
         }
@@ -1616,7 +1677,7 @@ namespace NicoLive
                 postData += vals[k] + "\r\n";
             }
             postData += "--" + boundary + "--\r\n";
-            //Debug.WriteLine(postData);
+            //Utils.WriteLog(postData);
 
             // バイト列に変換
             byte[] startData = enc.GetBytes(postData);
@@ -1634,7 +1695,7 @@ namespace NicoLive
                 /*
                 foreach (string s in res.Headers)
                 {
-                    Console.WriteLine(s + ":" + res.Headers[s]);
+                    Utils.WriteLog(s + ":" + res.Headers[s]);
                 }
                 */
 
@@ -1657,7 +1718,7 @@ namespace NicoLive
             }
             catch (Exception e)
             {
-                Debug.WriteLine("HttpPost2:" + e.Message);
+                Utils.WriteLog("HttpPost2:" + e.Message);
             }
             reqStream.Close();
             return "";
@@ -1668,19 +1729,33 @@ namespace NicoLive
         //-------------------------------------------------------------------------
         private string HttpPost(string url, Dictionary<string, string> vals, ref CookieContainer cc)
         {
+            return HttpPost(url, vals, ref  cc, "");
+        }
+
+        private string HttpPost(string url, Dictionary<string, string> vals, ref CookieContainer cc, string user_agent)
+        {
             // concatinate all key-value pair
             string param = "";
             foreach (string k in vals.Keys)
             {
-                param += String.Format("{0}={1}&", k, vals[k]);
+                param += String.Format("{0}={1}&", Uri.EscapeDataString(k), Uri.EscapeDataString(vals[k]));
             }
-            Debug.WriteLine(param);
+            Utils.WriteLog(param);
             byte[] data = Encoding.ASCII.GetBytes(param);
 
             // create HttpWebRequest
             HttpWebRequest req = (HttpWebRequest)WebRequest.Create(url);
             req.Method = "POST";
+            req.Proxy = null;
             req.ContentType = "application/x-www-form-urlencoded";
+            if (user_agent.Equals(""))
+            {
+                req.UserAgent = "";
+            }
+            else
+            {
+                req.UserAgent = user_agent;
+            }
             req.ContentLength = data.Length;
             req.CookieContainer = cc;
 
@@ -1693,7 +1768,7 @@ namespace NicoLive
             }
             catch (Exception e)
             {
-                Debug.WriteLine("HttpPost:" + e.Message);
+                Utils.WriteLog("HttpPost:" + e.Message);
                 mIsLogin = false;
             }
             try
@@ -1713,9 +1788,10 @@ namespace NicoLive
             catch (Exception e)
             {
                 mIsLogin = false;
-                Debug.WriteLine("HttpPost:" + e.Message);
+                Utils.WriteLog("HttpPost:" + e.Message);
             }
             return null;
+
         }
 
         //-------------------------------------------------------------------------
@@ -1754,7 +1830,7 @@ namespace NicoLive
             catch (Exception e)
             {
                 mIsLogin = false;
-                Debug.WriteLine("HttpPost:" + e.Message);
+                Utils.WriteLog("HttpPost:" + e.Message);
             }
             return null;
         }
@@ -1767,7 +1843,7 @@ namespace NicoLive
             string url = "http://watch.live.nicovideo.jp/api/getsalelist?v=" + iLv;
             string xml = HttpGet(url, ref mCookieLogin);
 
-            //Debug.WriteLine(xml);
+            //Utils.WriteLog(xml);
 
             if (!xml.Contains("status=\"ok\""))
                 return false;
@@ -1878,7 +1954,7 @@ namespace NicoLive
             string url = "http://watch.live.nicovideo.jp/api/usepoint?v=" + iLv + "&code=" + iItem.mCode + "&item=" + iItem.mItem + "&token=" + iToken + "&num=" + iItem.mNum;
             string xml = HttpGet(url, ref mCookieLogin);
 
-            Debug.WriteLine(xml);
+            Utils.WriteLog(xml);
 
             if (!xml.Contains("status=\"ok\""))
                 return false;

@@ -41,7 +41,7 @@ namespace NicoLive
         private List<string> mGatherUserID = null;
         private ReaderWriterLock mGatherLock = new ReaderWriterLock();
 
-       
+
 
         // 前のログイン状態
         private bool mPrevLogin = false;
@@ -59,6 +59,9 @@ namespace NicoLive
         // 自動接続
         public bool mAutoConnect = false;
 
+        // 迅速に配信
+        public bool mFastLive = false;
+
         // 自動再接続
         public bool mAutoReconnectOnGoing = false;
 
@@ -73,6 +76,7 @@ namespace NicoLive
 
         // Twitterで放送開始をポストしたかどうか
         private bool mTwPost = false;
+        private string mTwPostedLv = "";
 
         // 自分の配信かどうか
         private bool mOwnLive = false;
@@ -82,6 +86,9 @@ namespace NicoLive
 
         // 最後にコメントを読み上げた時間
         //private DateTime mSpeakTime;
+
+        // 次枠取得中か
+        private bool mDoingGetNextWaku2 = false;
 
         // 残り3分通知したかどうか
         private bool mTalkLimit = false;
@@ -103,10 +110,6 @@ namespace NicoLive
 
         // メッセージ設定
         private MessageSettings mMsg;
-
-        // 外部コメントウィンド
-        private CommentForm mCommentForm;
-        private ReaderWriterLock mCommentListLock = new ReaderWriterLock();
 
         // 返信クラス
         private Response mRes;
@@ -143,8 +146,6 @@ namespace NicoLive
         // 外部配信開始フラグ
         private bool mStartHQ = false;
         private bool _boot = true;
-
-        private FMEStatus mFMEStatus = null;
 
 
         private bool mSkipLogin;
@@ -246,14 +247,6 @@ namespace NicoLive
             mUpLink.Visible = Properties.Settings.Default.UpLink_view;
             mWakumachi.Visible = Properties.Settings.Default.wakumachi_view;
 
-            // サブウインドウもついでに更新
-            if (mCommentForm != null && mCommentForm.Visible)
-            {
-                mCommentForm.Invoke((Action)delegate()
-                {
-                    mCommentForm.UpdateStatusVisibility();
-                });
-            }
         }
 
         //-------------------------------------------------------------------------
@@ -291,6 +284,7 @@ namespace NicoLive
             mOwnLive = false;
             mDisconnect = true;
             mTalkLimit = false;
+            mDoingGetNextWaku2 = false;
             mNextGC = 0;
             mNico.Comment = "";
             mTargetVisitorCnt = 10;
@@ -325,13 +319,11 @@ namespace NicoLive
             }
 
 
-            // 外部コメントウィンド
             this.Invoke((Action)delegate()
             {
                 this.mCommentList.Rows.Clear();
 
                 this.mConnectBtn.Enabled = false;
-                mCommentForm.Clear();
             });
 
             mLastChatTime = DateTime.Now;
@@ -391,12 +383,15 @@ namespace NicoLive
         //-------------------------------------------------------------------------
         private void GetPlayer()
         {
-            string uri = mConsoleUri + LiveID + "&_ut=" + Utils.GetUnixTime(DateTime.Now);
-            //if (uri.Equals(mFlash.Movie))
-            //{
-            //    mFlash.LoadMovie(0, mConsoleUri);
-            //}
-            mFlash.LoadMovie(0, uri);
+            //string uri = mConsoleUri + LiveID + "&_ut=" + Utils.GetUnixTime(DateTime.Now);
+            ////if (uri.Equals(mFlash.Movie))
+            ////{
+            ////    mFlash.LoadMovie(0, mConsoleUri);
+            ////}
+            //mFlash.Anchor = (AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top);
+            //mFlash.Size = new System.Drawing.Size(958, 205);
+            //mFlash.LoadMovie(0, uri);
+            
 
         }
 
@@ -466,8 +461,8 @@ namespace NicoLive
                 Twitter t = new Twitter();
                 string comment = mCommentBox.Text;
                 string msg = comment + " (" + mLiveInfo.Title + " http://nico.ms/" + LiveID + " ) " + Properties.Settings.Default.tw_hash;
-                System.Diagnostics.Debug.WriteLine("msg:" + msg);
-                System.Diagnostics.Debug.WriteLine("msg length:" + msg.Length);
+                Utils.WriteLog("msg:" + msg);
+                Utils.WriteLog("msg length:" + msg.Length);
 
                 try
                 {
@@ -536,7 +531,7 @@ namespace NicoLive
             {
                 HQ.Restart(LiveID);
             }
-        
+
 
         }
 
@@ -563,6 +558,67 @@ namespace NicoLive
             }
 
         }
+
+        private void mNextWakuFastBtn_Click(object sender, EventArgs e)
+        {
+
+
+            //次枠通知
+            if (Properties.Settings.Default.use_loss_time && Properties.Settings.Default.use_next_lv_notice)
+            {
+                if (!mDoingGetNextWaku2)
+                {
+                    // 枠取り画面へ 
+                    if (mOwnLive)
+                    {
+                        mDoingGetNextWaku2 = true;
+                        Thread.Sleep(500);
+
+                        // 棒読みちゃんで自動枠取り通知
+                        this.mBouyomi.Talk(mMsg.GetMessage("枠取りを開始します"));
+
+                        mNico.LiveStop(LiveID, mLiveInfo.Token);
+
+                        this.Invoke((Action)delegate()
+                        {
+                            GetNextWaku2();
+                        });
+                    }
+                }
+            }
+        }
+
+
+
+
+
+        private void mHQRestartBtn_Click(object sender, EventArgs e)
+        {
+            HQ.Restart(LiveID);
+        }
+
+        private void mHQStartBtn_Click(object sender, EventArgs e)
+        {
+            HQ.Exec(LiveID);
+        }
+
+        private void mHQStopBtn_Click(object sender, EventArgs e)
+        {
+            HQ.Stop();
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

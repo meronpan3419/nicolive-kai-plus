@@ -84,7 +84,7 @@ namespace NicoLive
             {
                 if (xml == null)
                 {
-                    Debug.WriteLine(file + "が見つかりません");
+                    Utils.WriteLog(file + "が見つかりません");
                     return;
                 }
 
@@ -131,14 +131,14 @@ namespace NicoLive
                                     mMsgHash[msg] = act;
                                 }
 
-								//Debug.WriteLine( String.Format("res: {0}  msg: {1}", res, msg));
+								//Utils.WriteLog( String.Format("res: {0}  msg: {1}", res, msg));
                             }
                         }
                     }
                 }
                 catch (Exception e)
                 {
-                    Debug.WriteLine("LoadUser:" + e.Message);
+                    Utils.WriteLog("LoadUser:" + e.Message);
                 }
             }
         }
@@ -211,7 +211,7 @@ namespace NicoLive
                     proc.WaitForExit();
                 }
             }catch(Exception e){
-                 Debug.WriteLine(e.Message);
+                 Utils.WriteLog(e.Message);
             }
             return ret;
         }

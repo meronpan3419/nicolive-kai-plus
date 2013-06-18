@@ -39,7 +39,6 @@
             this.mLiveID = new System.Windows.Forms.ToolStripTextBox();
             this.mConnectBtn = new System.Windows.Forms.ToolStripButton();
             this.toolStripDropDownButton1 = new System.Windows.Forms.ToolStripDropDownButton();
-            this.FMEMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ViewerMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.初期設定ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -54,8 +53,6 @@
             this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
             this.mAutoExtendBtn = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.mCommentBtn = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
             this.mImakokoBtn = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.mCopyBtn = new System.Windows.Forms.ToolStripButton();
@@ -74,7 +71,6 @@
             this.mUpLink = new System.Windows.Forms.ToolStripStatusLabel();
             this.mDownLink = new System.Windows.Forms.ToolStripStatusLabel();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.mFlash = new AxShockwaveFlashObjects.AxShockwaveFlash();
             this.mCommentList = new System.Windows.Forms.DataGridView();
             this.mNo = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.mID = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -94,14 +90,22 @@
             this.mNgID = new System.Windows.Forms.ToolStripMenuItem();
             this.miCommentColor = new System.Windows.Forms.ToolStripMenuItem();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.mHQStatus = new System.Windows.Forms.Label();
+            this.mHQStopBtn = new System.Windows.Forms.Button();
+            this.mHQStartBtn = new System.Windows.Forms.Button();
+            this.mHQRestartBtn = new System.Windows.Forms.Button();
             this.mUseNLE = new System.Windows.Forms.RadioButton();
             this.mUseXSplit = new System.Windows.Forms.RadioButton();
             this.mUseFME = new System.Windows.Forms.RadioButton();
-            this.mCommandBox = new System.Windows.Forms.TextBox();
             this.mUpdateFMLEProfileListBtn = new System.Windows.Forms.Button();
+            this.mFMLEProfileList = new System.Windows.Forms.ComboBox();
+            this.mNextWakuFastBtn = new System.Windows.Forms.Button();
+            this.mDisconnectBtn = new System.Windows.Forms.Button();
+            this.mRemainingTime = new System.Windows.Forms.Label();
+            this.mCommandBox = new System.Windows.Forms.TextBox();
             this.mResetBtn = new System.Windows.Forms.Button();
             this.mUseHQBtn = new System.Windows.Forms.Button();
-            this.mFMLEProfileList = new System.Windows.Forms.ComboBox();
             this.mCommentPostBtn = new System.Windows.Forms.Button();
             this.cbCommentTwitter = new System.Windows.Forms.CheckBox();
             this.mCommentBox = new System.Windows.Forms.TextBox();
@@ -120,10 +124,10 @@
             this.mToolStrip.SuspendLayout();
             this.mStatusStrip.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.mFlash)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.mCommentList)).BeginInit();
             this.mCmtCxtMenu.SuspendLayout();
             this.panel1.SuspendLayout();
+            this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.mPerfCnt)).BeginInit();
             this.SuspendLayout();
             // 
@@ -143,8 +147,6 @@
             this.toolStripSeparator7,
             this.mAutoExtendBtn,
             this.toolStripSeparator2,
-            this.mCommentBtn,
-            this.toolStripSeparator6,
             this.mImakokoBtn,
             this.toolStripSeparator3,
             this.mCopyBtn,
@@ -185,7 +187,6 @@
             this.toolStripDropDownButton1.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
             this.toolStripDropDownButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.None;
             this.toolStripDropDownButton1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.FMEMenuItem,
             this.ViewerMenuItem,
             this.toolStripSeparator5,
             this.初期設定ToolStripMenuItem,
@@ -196,13 +197,6 @@
             this.toolStripDropDownButton1.Name = "toolStripDropDownButton1";
             this.toolStripDropDownButton1.Size = new System.Drawing.Size(13, 22);
             this.toolStripDropDownButton1.Text = "その他";
-            // 
-            // FMEMenuItem
-            // 
-            this.FMEMenuItem.Name = "FMEMenuItem";
-            this.FMEMenuItem.Size = new System.Drawing.Size(193, 22);
-            this.FMEMenuItem.Text = "FMEステータス";
-            this.FMEMenuItem.Click += new System.EventHandler(this.FMEMenuItem_Click);
             // 
             // ViewerMenuItem
             // 
@@ -220,7 +214,7 @@
             // 
             this.初期設定ToolStripMenuItem.Name = "初期設定ToolStripMenuItem";
             this.初期設定ToolStripMenuItem.Size = new System.Drawing.Size(193, 22);
-            this.初期設定ToolStripMenuItem.Text = "初期設定";
+            this.初期設定ToolStripMenuItem.Text = "設定";
             this.初期設定ToolStripMenuItem.Click += new System.EventHandler(this.SettingMenu_Click);
             // 
             // toolStripMenuItem1
@@ -317,23 +311,6 @@
             this.toolStripSeparator2.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
             this.toolStripSeparator2.Name = "toolStripSeparator2";
             this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
-            // 
-            // mCommentBtn
-            // 
-            this.mCommentBtn.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.mCommentBtn.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.mCommentBtn.Image = ((System.Drawing.Image)(resources.GetObject("mCommentBtn.Image")));
-            this.mCommentBtn.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.mCommentBtn.Name = "mCommentBtn";
-            this.mCommentBtn.Size = new System.Drawing.Size(34, 22);
-            this.mCommentBtn.Text = "ｺﾒﾝﾄ";
-            this.mCommentBtn.Click += new System.EventHandler(this.CommentBtn_Click);
-            // 
-            // toolStripSeparator6
-            // 
-            this.toolStripSeparator6.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.toolStripSeparator6.Name = "toolStripSeparator6";
-            this.toolStripSeparator6.Size = new System.Drawing.Size(6, 25);
             // 
             // mImakokoBtn
             // 
@@ -525,31 +502,16 @@
             this.tableLayoutPanel1.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Outset;
             this.tableLayoutPanel1.ColumnCount = 1;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Controls.Add(this.mFlash, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this.mCommentList, 0, 2);
-            this.tableLayoutPanel1.Controls.Add(this.panel1, 0, 1);
+            this.tableLayoutPanel1.Controls.Add(this.mCommentList, 0, 1);
+            this.tableLayoutPanel1.Controls.Add(this.panel1, 0, 0);
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 25);
             this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 3;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 205F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 65F));
+            this.tableLayoutPanel1.RowCount = 2;
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 85F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.Size = new System.Drawing.Size(962, 383);
             this.tableLayoutPanel1.TabIndex = 2;
-            // 
-            // mFlash
-            // 
-            this.mFlash.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.mFlash.Enabled = true;
-            this.mFlash.Location = new System.Drawing.Point(2, 2);
-            this.mFlash.Margin = new System.Windows.Forms.Padding(0);
-            this.mFlash.Name = "mFlash";
-            this.mFlash.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("mFlash.OcxState")));
-            this.mFlash.Size = new System.Drawing.Size(958, 205);
-            this.mFlash.TabIndex = 2;
             // 
             // mCommentList
             // 
@@ -576,7 +538,7 @@
             this.mCommentList.ContextMenuStrip = this.mCmtCxtMenu;
             this.mCommentList.Dock = System.Windows.Forms.DockStyle.Fill;
             this.mCommentList.GridColor = System.Drawing.SystemColors.ActiveBorder;
-            this.mCommentList.Location = new System.Drawing.Point(2, 276);
+            this.mCommentList.Location = new System.Drawing.Point(2, 89);
             this.mCommentList.Margin = new System.Windows.Forms.Padding(0);
             this.mCommentList.MultiSelect = false;
             this.mCommentList.Name = "mCommentList";
@@ -584,7 +546,7 @@
             this.mCommentList.RowHeadersVisible = false;
             this.mCommentList.RowTemplate.Height = 21;
             this.mCommentList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.mCommentList.Size = new System.Drawing.Size(958, 130);
+            this.mCommentList.Size = new System.Drawing.Size(958, 292);
             this.mCommentList.TabIndex = 3;
             this.mCommentList.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.mCommentList_CellDoubleClick);
             this.mCommentList.RowsAdded += new System.Windows.Forms.DataGridViewRowsAddedEventHandler(this.mCommentList_RowsAdded);
@@ -726,33 +688,96 @@
             // 
             // panel1
             // 
-            this.panel1.Controls.Add(this.mUseNLE);
-            this.panel1.Controls.Add(this.mUseXSplit);
-            this.panel1.Controls.Add(this.mUseFME);
+            this.panel1.Controls.Add(this.groupBox1);
+            this.panel1.Controls.Add(this.mNextWakuFastBtn);
+            this.panel1.Controls.Add(this.mDisconnectBtn);
+            this.panel1.Controls.Add(this.mRemainingTime);
             this.panel1.Controls.Add(this.mCommandBox);
-            this.panel1.Controls.Add(this.mUpdateFMLEProfileListBtn);
             this.panel1.Controls.Add(this.mResetBtn);
             this.panel1.Controls.Add(this.mUseHQBtn);
-            this.panel1.Controls.Add(this.mFMLEProfileList);
             this.panel1.Controls.Add(this.mCommentPostBtn);
             this.panel1.Controls.Add(this.cbCommentTwitter);
             this.panel1.Controls.Add(this.mCommentBox);
             this.panel1.Controls.Add(this.cbComment184);
             this.panel1.Controls.Add(this.cbCommentOwner);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(5, 212);
+            this.panel1.Location = new System.Drawing.Point(5, 5);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(952, 59);
+            this.panel1.Size = new System.Drawing.Size(952, 79);
             this.panel1.TabIndex = 4;
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.groupBox1.Controls.Add(this.mHQStatus);
+            this.groupBox1.Controls.Add(this.mHQStopBtn);
+            this.groupBox1.Controls.Add(this.mHQStartBtn);
+            this.groupBox1.Controls.Add(this.mHQRestartBtn);
+            this.groupBox1.Controls.Add(this.mUseNLE);
+            this.groupBox1.Controls.Add(this.mUseXSplit);
+            this.groupBox1.Controls.Add(this.mUseFME);
+            this.groupBox1.Controls.Add(this.mUpdateFMLEProfileListBtn);
+            this.groupBox1.Controls.Add(this.mFMLEProfileList);
+            this.groupBox1.Location = new System.Drawing.Point(634, 1);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(311, 70);
+            this.groupBox1.TabIndex = 22;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "外部配信";
+            // 
+            // mHQStatus
+            // 
+            this.mHQStatus.AutoSize = true;
+            this.mHQStatus.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.mHQStatus.Font = new System.Drawing.Font("MS UI Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.mHQStatus.ForeColor = System.Drawing.Color.Red;
+            this.mHQStatus.Location = new System.Drawing.Point(175, 18);
+            this.mHQStatus.Name = "mHQStatus";
+            this.mHQStatus.Size = new System.Drawing.Size(61, 18);
+            this.mHQStatus.TabIndex = 30;
+            this.mHQStatus.Text = "停止中";
+            // 
+            // mHQStopBtn
+            // 
+            this.mHQStopBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.mHQStopBtn.Location = new System.Drawing.Point(59, 18);
+            this.mHQStopBtn.Name = "mHQStopBtn";
+            this.mHQStopBtn.Size = new System.Drawing.Size(46, 23);
+            this.mHQStopBtn.TabIndex = 29;
+            this.mHQStopBtn.Text = "停止";
+            this.mHQStopBtn.UseVisualStyleBackColor = true;
+            this.mHQStopBtn.Click += new System.EventHandler(this.mHQStopBtn_Click);
+            // 
+            // mHQStartBtn
+            // 
+            this.mHQStartBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.mHQStartBtn.Location = new System.Drawing.Point(7, 18);
+            this.mHQStartBtn.Name = "mHQStartBtn";
+            this.mHQStartBtn.Size = new System.Drawing.Size(46, 23);
+            this.mHQStartBtn.TabIndex = 28;
+            this.mHQStartBtn.Text = "起動";
+            this.mHQStartBtn.UseVisualStyleBackColor = true;
+            this.mHQStartBtn.Click += new System.EventHandler(this.mHQStartBtn_Click);
+            // 
+            // mHQRestartBtn
+            // 
+            this.mHQRestartBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.mHQRestartBtn.Location = new System.Drawing.Point(111, 18);
+            this.mHQRestartBtn.Name = "mHQRestartBtn";
+            this.mHQRestartBtn.Size = new System.Drawing.Size(59, 23);
+            this.mHQRestartBtn.TabIndex = 27;
+            this.mHQRestartBtn.Text = "再起動";
+            this.mHQRestartBtn.UseVisualStyleBackColor = true;
+            this.mHQRestartBtn.Click += new System.EventHandler(this.mHQRestartBtn_Click);
             // 
             // mUseNLE
             // 
             this.mUseNLE.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.mUseNLE.AutoSize = true;
-            this.mUseNLE.Location = new System.Drawing.Point(882, 10);
+            this.mUseNLE.Location = new System.Drawing.Point(118, 48);
             this.mUseNLE.Name = "mUseNLE";
             this.mUseNLE.Size = new System.Drawing.Size(44, 16);
-            this.mUseNLE.TabIndex = 15;
+            this.mUseNLE.TabIndex = 26;
             this.mUseNLE.TabStop = true;
             this.mUseNLE.Text = "NLE";
             this.mUseNLE.UseVisualStyleBackColor = true;
@@ -762,10 +787,10 @@
             // 
             this.mUseXSplit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.mUseXSplit.AutoSize = true;
-            this.mUseXSplit.Location = new System.Drawing.Point(823, 10);
+            this.mUseXSplit.Location = new System.Drawing.Point(59, 48);
             this.mUseXSplit.Name = "mUseXSplit";
             this.mUseXSplit.Size = new System.Drawing.Size(53, 16);
-            this.mUseXSplit.TabIndex = 14;
+            this.mUseXSplit.TabIndex = 25;
             this.mUseXSplit.TabStop = true;
             this.mUseXSplit.Text = "XSplit";
             this.mUseXSplit.UseVisualStyleBackColor = true;
@@ -775,39 +800,79 @@
             // 
             this.mUseFME.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.mUseFME.AutoSize = true;
-            this.mUseFME.Location = new System.Drawing.Point(776, 10);
+            this.mUseFME.Location = new System.Drawing.Point(7, 48);
             this.mUseFME.Name = "mUseFME";
             this.mUseFME.Size = new System.Drawing.Size(46, 16);
-            this.mUseFME.TabIndex = 13;
+            this.mUseFME.TabIndex = 24;
             this.mUseFME.TabStop = true;
             this.mUseFME.Text = "FME";
             this.mUseFME.UseVisualStyleBackColor = true;
             this.mUseFME.CheckedChanged += new System.EventHandler(this.mUseFME_CheckedChanged);
             // 
-            // mCommandBox
-            // 
-            this.mCommandBox.Location = new System.Drawing.Point(17, 37);
-            this.mCommandBox.Name = "mCommandBox";
-            this.mCommandBox.Size = new System.Drawing.Size(151, 19);
-            this.mCommandBox.TabIndex = 12;
-            // 
             // mUpdateFMLEProfileListBtn
             // 
             this.mUpdateFMLEProfileListBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.mUpdateFMLEProfileListBtn.Location = new System.Drawing.Point(882, 33);
+            this.mUpdateFMLEProfileListBtn.Location = new System.Drawing.Point(242, 18);
             this.mUpdateFMLEProfileListBtn.Name = "mUpdateFMLEProfileListBtn";
-            this.mUpdateFMLEProfileListBtn.Size = new System.Drawing.Size(62, 23);
-            this.mUpdateFMLEProfileListBtn.TabIndex = 11;
+            this.mUpdateFMLEProfileListBtn.Size = new System.Drawing.Size(63, 23);
+            this.mUpdateFMLEProfileListBtn.TabIndex = 23;
             this.mUpdateFMLEProfileListBtn.Text = "リスト更新";
             this.mUpdateFMLEProfileListBtn.UseVisualStyleBackColor = true;
             this.mUpdateFMLEProfileListBtn.Click += new System.EventHandler(this.mUpdateFMLEProfileListBtn_Click);
             // 
+            // mFMLEProfileList
+            // 
+            this.mFMLEProfileList.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.mFMLEProfileList.FormattingEnabled = true;
+            this.mFMLEProfileList.Location = new System.Drawing.Point(175, 47);
+            this.mFMLEProfileList.Name = "mFMLEProfileList";
+            this.mFMLEProfileList.Size = new System.Drawing.Size(130, 20);
+            this.mFMLEProfileList.TabIndex = 22;
+            this.mFMLEProfileList.SelectedIndexChanged += new System.EventHandler(this.mFMLEProfileList_SelectedIndexChanged);
+            // 
+            // mNextWakuFastBtn
+            // 
+            this.mNextWakuFastBtn.Location = new System.Drawing.Point(328, 11);
+            this.mNextWakuFastBtn.Name = "mNextWakuFastBtn";
+            this.mNextWakuFastBtn.Size = new System.Drawing.Size(76, 27);
+            this.mNextWakuFastBtn.TabIndex = 18;
+            this.mNextWakuFastBtn.Text = "いつでも次枠";
+            this.mNextWakuFastBtn.UseVisualStyleBackColor = true;
+            this.mNextWakuFastBtn.Click += new System.EventHandler(this.mNextWakuFastBtn_Click);
+            // 
+            // mDisconnectBtn
+            // 
+            this.mDisconnectBtn.Location = new System.Drawing.Point(410, 11);
+            this.mDisconnectBtn.Name = "mDisconnectBtn";
+            this.mDisconnectBtn.Size = new System.Drawing.Size(76, 27);
+            this.mDisconnectBtn.TabIndex = 17;
+            this.mDisconnectBtn.Text = "配信終了";
+            this.mDisconnectBtn.UseVisualStyleBackColor = true;
+            this.mDisconnectBtn.Click += new System.EventHandler(this.mDisconnectBtn_Click);
+            // 
+            // mRemainingTime
+            // 
+            this.mRemainingTime.AutoSize = true;
+            this.mRemainingTime.Font = new System.Drawing.Font("メイリオ", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.mRemainingTime.Location = new System.Drawing.Point(7, 5);
+            this.mRemainingTime.Name = "mRemainingTime";
+            this.mRemainingTime.Size = new System.Drawing.Size(233, 41);
+            this.mRemainingTime.TabIndex = 16;
+            this.mRemainingTime.Text = "残り時間　00:00";
+            // 
+            // mCommandBox
+            // 
+            this.mCommandBox.Location = new System.Drawing.Point(178, 50);
+            this.mCommandBox.Name = "mCommandBox";
+            this.mCommandBox.Size = new System.Drawing.Size(91, 19);
+            this.mCommandBox.TabIndex = 12;
+            // 
             // mResetBtn
             // 
             this.mResetBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.mResetBtn.Location = new System.Drawing.Point(628, 6);
+            this.mResetBtn.Location = new System.Drawing.Point(561, 46);
             this.mResetBtn.Name = "mResetBtn";
-            this.mResetBtn.Size = new System.Drawing.Size(63, 50);
+            this.mResetBtn.Size = new System.Drawing.Size(63, 25);
             this.mResetBtn.TabIndex = 10;
             this.mResetBtn.Text = "/reset";
             this.mResetBtn.UseVisualStyleBackColor = true;
@@ -816,30 +881,21 @@
             // mUseHQBtn
             // 
             this.mUseHQBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.mUseHQBtn.Location = new System.Drawing.Point(702, 6);
+            this.mUseHQBtn.Location = new System.Drawing.Point(556, 14);
             this.mUseHQBtn.Name = "mUseHQBtn";
             this.mUseHQBtn.Size = new System.Drawing.Size(68, 23);
             this.mUseHQBtn.TabIndex = 8;
             this.mUseHQBtn.Text = "通常配信";
             this.mUseHQBtn.UseVisualStyleBackColor = true;
+            this.mUseHQBtn.Visible = false;
             this.mUseHQBtn.Click += new System.EventHandler(this.mUseHQBtn_Click);
-            // 
-            // mFMLEProfileList
-            // 
-            this.mFMLEProfileList.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.mFMLEProfileList.FormattingEnabled = true;
-            this.mFMLEProfileList.Location = new System.Drawing.Point(702, 36);
-            this.mFMLEProfileList.Name = "mFMLEProfileList";
-            this.mFMLEProfileList.Size = new System.Drawing.Size(174, 20);
-            this.mFMLEProfileList.TabIndex = 7;
-            this.mFMLEProfileList.SelectedIndexChanged += new System.EventHandler(this.mFMLEProfileList_SelectedIndexChanged);
             // 
             // mCommentPostBtn
             // 
             this.mCommentPostBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.mCommentPostBtn.Location = new System.Drawing.Point(559, 6);
+            this.mCommentPostBtn.Location = new System.Drawing.Point(492, 46);
             this.mCommentPostBtn.Name = "mCommentPostBtn";
-            this.mCommentPostBtn.Size = new System.Drawing.Size(63, 50);
+            this.mCommentPostBtn.Size = new System.Drawing.Size(63, 25);
             this.mCommentPostBtn.TabIndex = 4;
             this.mCommentPostBtn.Text = "コメント";
             this.mCommentPostBtn.UseVisualStyleBackColor = true;
@@ -848,7 +904,7 @@
             // cbCommentTwitter
             // 
             this.cbCommentTwitter.AutoSize = true;
-            this.cbCommentTwitter.Location = new System.Drawing.Point(119, 10);
+            this.cbCommentTwitter.Location = new System.Drawing.Point(115, 52);
             this.cbCommentTwitter.Name = "cbCommentTwitter";
             this.cbCommentTwitter.Size = new System.Drawing.Size(57, 16);
             this.cbCommentTwitter.TabIndex = 3;
@@ -859,11 +915,11 @@
             // 
             this.mCommentBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.mCommentBox.Location = new System.Drawing.Point(182, 8);
+            this.mCommentBox.Location = new System.Drawing.Point(275, 49);
             this.mCommentBox.Multiline = true;
             this.mCommentBox.Name = "mCommentBox";
             this.mCommentBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.mCommentBox.Size = new System.Drawing.Size(371, 48);
+            this.mCommentBox.Size = new System.Drawing.Size(211, 21);
             this.mCommentBox.TabIndex = 2;
             this.mCommentBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.mCommentBox_KeyDown);
             this.mCommentBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.mCommentBox_KeyPress);
@@ -874,7 +930,7 @@
             this.cbComment184.Checked = true;
             this.cbComment184.CheckState = System.Windows.Forms.CheckState.Checked;
             this.cbComment184.Enabled = false;
-            this.cbComment184.Location = new System.Drawing.Point(71, 10);
+            this.cbComment184.Location = new System.Drawing.Point(67, 52);
             this.cbComment184.Name = "cbComment184";
             this.cbComment184.Size = new System.Drawing.Size(42, 16);
             this.cbComment184.TabIndex = 1;
@@ -886,7 +942,7 @@
             this.cbCommentOwner.AutoSize = true;
             this.cbCommentOwner.Checked = true;
             this.cbCommentOwner.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbCommentOwner.Location = new System.Drawing.Point(17, 10);
+            this.cbCommentOwner.Location = new System.Drawing.Point(13, 52);
             this.cbCommentOwner.Name = "cbCommentOwner";
             this.cbCommentOwner.Size = new System.Drawing.Size(48, 16);
             this.cbCommentOwner.TabIndex = 0;
@@ -956,11 +1012,12 @@
             this.mStatusStrip.ResumeLayout(false);
             this.mStatusStrip.PerformLayout();
             this.tableLayoutPanel1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.mFlash)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.mCommentList)).EndInit();
             this.mCmtCxtMenu.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.mPerfCnt)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -983,7 +1040,6 @@
         private System.Windows.Forms.ToolStripStatusLabel mTotalCnt;
         private System.Windows.Forms.ToolStripStatusLabel mActiveCnt;
         private System.Windows.Forms.ToolStripStatusLabel mLogLabel;
-        private AxShockwaveFlashObjects.AxShockwaveFlash mFlash;
         private System.Windows.Forms.ToolStripButton mVisitorBtn;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
@@ -1015,8 +1071,6 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator7;
         private System.Windows.Forms.ToolStripStatusLabel mUpLink;
         private System.Windows.Forms.ToolStripStatusLabel mDownLink;
-        private System.Windows.Forms.ToolStripButton mCommentBtn;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
         private System.Windows.Forms.ToolStripMenuItem mOpenURL;
         private System.Windows.Forms.DataGridView mCommentList;
         private System.ComponentModel.BackgroundWorker mGatherUserIDWorker;
@@ -1025,7 +1079,6 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator9;
         private System.Windows.Forms.ToolStripMenuItem ViewerMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
-        private System.Windows.Forms.ToolStripMenuItem FMEMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator10;
         private System.Windows.Forms.ToolStripMenuItem mNgID;
         private System.Windows.Forms.Timer mXSplitTimer;
@@ -1038,10 +1091,8 @@
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.ToolStripStatusLabel mWakumachi;
         private System.Windows.Forms.ToolStripMenuItem miCommentColor;
-        private System.Windows.Forms.Button mUpdateFMLEProfileListBtn;
         private System.Windows.Forms.Button mResetBtn;
         private System.Windows.Forms.Button mUseHQBtn;
-        private System.Windows.Forms.ComboBox mFMLEProfileList;
         private System.Windows.Forms.DataGridViewTextBoxColumn mNo;
         private System.Windows.Forms.DataGridViewTextBoxColumn mID;
         private System.Windows.Forms.DataGridViewTextBoxColumn mHandle;
@@ -1049,9 +1100,19 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn mDate;
         private System.Windows.Forms.DataGridViewTextBoxColumn mInfo;
         private System.Windows.Forms.TextBox mCommandBox;
+        private System.Windows.Forms.Button mNextWakuFastBtn;
+        private System.Windows.Forms.Button mDisconnectBtn;
+        private System.Windows.Forms.Label mRemainingTime;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.Button mHQStopBtn;
+        private System.Windows.Forms.Button mHQStartBtn;
+        private System.Windows.Forms.Button mHQRestartBtn;
         private System.Windows.Forms.RadioButton mUseNLE;
         private System.Windows.Forms.RadioButton mUseXSplit;
         private System.Windows.Forms.RadioButton mUseFME;
+        private System.Windows.Forms.Button mUpdateFMLEProfileListBtn;
+        private System.Windows.Forms.ComboBox mFMLEProfileList;
+        private System.Windows.Forms.Label mHQStatus;
     }
 }
 

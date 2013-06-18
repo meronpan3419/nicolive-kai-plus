@@ -106,7 +106,7 @@ namespace NicoLive
 
                 while (hasHQ())
                 {
-                    //System.Diagnostics.Debug.WriteLine("NLE require status: " + NLE.require_status.ToString());
+                    //Utils.WriteLog("NLE require status: " + NLE.require_status.ToString());
                     System.Threading.Thread.Sleep(500);
                 }
                 Exec(LiveID);

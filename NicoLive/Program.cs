@@ -19,7 +19,7 @@ namespace NicoLive
 {
     static class Program
     {
-        public static string VERSION_KAI_PLUS = "kai_p11ф";
+        public static string VERSION_KAI_PLUS = "kai_p12noyounamono2";
 
         /// <summary>
         /// アプリケーションのメイン エントリ ポイントです。
@@ -82,9 +82,10 @@ namespace NicoLive
 			}
 			
             //------------------------------------------------
-            // コマンドラインから放送ＩＤ取得
+            // コマンドライン起動オプション
             string[] args = Environment.GetCommandLineArgs();
             bool auto_connect = false;
+            bool fastlive_mode = false;
             if (args.Count() >= 2)
             {
                 string uri = "";
@@ -95,6 +96,11 @@ namespace NicoLive
                     int idx = args[1].IndexOf("lv");
                     uri = args[1].Substring(idx);
                 }
+                else if (args[1].StartsWith("fastlive"))
+                {
+                    fastlive_mode = true;
+                }
+
                 if (uri.Length >= 0)
                 {
                     Properties.Settings.Default.last_lv = uri;
@@ -109,12 +115,13 @@ namespace NicoLive
                 Application.SetCompatibleTextRenderingDefault(false);
                 Form1 form = new Form1();
                 form.mAutoConnect = auto_connect;
+                form.mFastLive = fastlive_mode;
                 Application.Run(form);
             }
             catch (Exception e)
             {
-                Debug.WriteLine("Main() " + e.Message);
-                Debug.WriteLine("Main() " + e.StackTrace);
+                Utils.WriteLog("Main() " + e.Message);
+                Utils.WriteLog("Main() " + e.StackTrace);
 
                 Utils.WriteLog("Main()", e.Message);
                 Utils.WriteLog("Main()", e.StackTrace);

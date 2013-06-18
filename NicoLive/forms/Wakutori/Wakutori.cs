@@ -207,7 +207,7 @@ namespace NicoLive
                     }
                     catch (Exception e)
                     {
-                        Console.WriteLine("Close:"+e.Message);
+                        Utils.WriteLog("Close:"+e.Message);
                     }
                 }
                 else if (uri.StartsWith(EDIT_URL))
@@ -221,7 +221,7 @@ namespace NicoLive
     			        {
                             string val = elem[0].GetAttribute("value");
                             int idx1 = val.IndexOf("lv");
-                            Debug.WriteLine(val);
+                            Utils.WriteLog(val);
 
                             if (idx1 > 0)
                             {
@@ -230,7 +230,7 @@ namespace NicoLive
                                 {
                                     string lv = val.Substring(idx1, idx2 - idx1 );
 
-                                    Debug.WriteLine(lv);
+                                    Utils.WriteLog(lv);
 
                                     this.Invoke((MethodInvoker)delegate()
                                     {
@@ -246,7 +246,7 @@ namespace NicoLive
                                     }
                                     catch (Exception ex)
                                     {
-                                        Console.WriteLine(ex.Message);
+                                        Utils.WriteLog(ex.Message);
                                     }
                                     
                                 }
@@ -430,7 +430,7 @@ namespace NicoLive
                 if (this.mBrowser.IsBusy) return;
                 string uri = mBrowser.Url.ToString();
 
-                Debug.WriteLine(uri);
+                Utils.WriteLog(uri);
 
                 // 半自動枠取りボタンがチェックされてない
                 if (!this.mEnableBtn.Checked) return;
@@ -472,7 +472,7 @@ namespace NicoLive
             }
             catch (Exception e)
             {
-                Debug.WriteLine(e.Message);
+                Utils.WriteLog(e.Message);
             }
         }
         //-------------------------------------------------------------------------
@@ -484,7 +484,7 @@ namespace NicoLive
 
             string uri = mBrowser.Url.ToString();
 
-            Debug.WriteLine(uri);
+            Utils.WriteLog(uri);
             
             // 画像認証ページ
             if (uri.StartsWith(EDIT_URL))

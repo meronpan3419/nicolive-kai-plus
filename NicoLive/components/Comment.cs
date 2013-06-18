@@ -234,7 +234,7 @@ namespace NicoLive
                 }
                 catch (Exception e)
                 {
-                    Debug.WriteLine("ParseComment:" + e.Message + "  " + iXml);
+                    Utils.WriteLog("ParseComment:" + e.Message + "  " + iXml);
                 }
             }
         }

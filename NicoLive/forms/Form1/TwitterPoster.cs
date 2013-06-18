@@ -26,6 +26,9 @@ namespace NicoLive
             if (token.Length == 0)
                 return;
 
+            // 放送中につぶやきまくると終了ポスト後、開始ポストするので。
+            if (iStart && mTwPostedLv.Equals(LiveID)) return;
+                        
             Thread th = new Thread(delegate()
             {
                 using (Twitter tw = new Twitter())
@@ -42,7 +45,7 @@ namespace NicoLive
                     // タイトル取得
                     //for (int i = 0; i < 5; i++)
                     //{
-                    //    Debug.WriteLine("TwWorker_DoWork: タイトル取得(" + i + ") : ");
+                    //    Utils.WriteLog("TwWorker_DoWork: タイトル取得(" + i + ") : ");
                     if (msg.Contains("@TITLE"))
                     {
                         //using (WebClient wc = new WebClient())
@@ -73,14 +76,14 @@ namespace NicoLive
                         //    }
                         //    catch (Exception ex)
                         //    {
-                        //        Debug.WriteLine("TwWorker_DoWork:" + ex.Message);
+                        //        Utils.WriteLog("TwWorker_DoWork:" + ex.Message);
                         //        return;
                         //    }
                         //}
                     }
                     //}
 
-                    Debug.WriteLine(msg);
+                    Utils.WriteLog(msg);
 
                     // Twitterは140文字制限
                     if (msg.Length > 140)
@@ -105,6 +108,8 @@ namespace NicoLive
                             //例外出たら配信ポストしたことにする
                             mTwPost = true;
                         }
+
+                        mTwPostedLv = LiveID;
                     }
                 }
             });

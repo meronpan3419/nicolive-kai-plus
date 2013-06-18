@@ -182,14 +182,14 @@ namespace NicoLive
             }
 
             // システム情報を出力
-            Console.WriteLine(
+            Utils.WriteLog(String.Format(
               "{0} (Platform {1} Version {2}.{3} Build {4}) {5}",
               windowsName,
               strPlatform,
               osInfo.dwMajorVersion,
               osInfo.dwMinorVersion,
               osInfo.dwBuildNumber,
-              osInfo.szCSDVersion);
+              osInfo.szCSDVersion));
 
             return windowsName;
         }
