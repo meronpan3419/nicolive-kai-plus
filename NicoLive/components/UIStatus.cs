@@ -21,7 +21,6 @@ namespace NicoLive
 
 		// NetworkSpeed計測用
         private float mPrevSent = 0;
-        private float mMaxSent = 0;
         private float mPrevBat = 100;
 
         public enum HardInfo
@@ -67,38 +66,19 @@ namespace NicoLive
 
             float bytesSentSpeed = (sent - mPrevSent) / 1024;
             string unit_sent = "K";
-            //string unit_max_sent = "K";
-            float max_sent = 0;
 
-            // 最大送信速度計算
-            if (mPrevSent != 0)
-            {
-                if (mMaxSent <= bytesSentSpeed)
-                {
-                    mMaxSent = bytesSentSpeed;
-                }
-            }
-
-            max_sent = mMaxSent;
-
-            //if (max_sent > 1024)
-            //{
-            //    max_sent /= 1024;
-            //    unit_max_sent = "M";
-            //}
 
             // 送信速度計算
-            if (bytesSentSpeed > 1024)
-            {
-                bytesSentSpeed /= 1024;
-                unit_sent = "M";
-            }
+            //if (bytesSentSpeed > 1024)
+            //{
+            //    bytesSentSpeed /= 1024;
+            //    unit_sent = "M";
+            //}
 
 
             if (mPrevSent != 0)
             {
-//                iLabel.Text = "上り：" + bytesSentSpeed.ToString("F0") + unit_sent + "bps / 最大：" + max_sent.ToString("F0") + unit_max_sent + "bps";
-                iLabel.Text = "上り：" + System.String.Format("{0, 5}", bytesSentSpeed.ToString("F0")) + unit_sent + "bps";
+               iLabel.Text = "上り：" + System.String.Format("{0, 5}", bytesSentSpeed.ToString("F0")) + unit_sent + "bps";
                 iLabel.ForeColor = (bytesSentSpeed < 100) ? Color.Red : ((bytesSentSpeed < 200) ? Color.Black : Color.Green);
             }
 

@@ -475,15 +475,22 @@ namespace NicoLive
                 }
                 else //通常読み上げ
                 {
-                    //コテハン読み上げるかどうか
+
+                    text = iCmt.Text;
+
+                    if (Properties.Settings.Default.use_comment_cut &&
+                        text.Length > Properties.Settings.Default.comment_cut_len)
+                    {
+                        text = text.Substring(0, Properties.Settings.Default.comment_cut_len) + "　以下略　";
+                    }
+
+
+                    //コテハン読み上げ
                     if (Properties.Settings.Default.speak_nick)
                     {
                         text = iCmt.Text + " " + iCmt.Handle;
                     }
-                    else
-                    {
-                        text = iCmt.Text;
-                    }
+
 
                 }
 

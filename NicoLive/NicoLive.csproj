@@ -78,7 +78,13 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\デスクトップ\nicolive-kaiplus5\CookieGetterSharp.dll</HintPath>
     </Reference>
+    <Reference Include="Hammock.ClientProfile">
+      <HintPath>.\Hammock.ClientProfile.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>.\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -99,13 +105,16 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="TweetSharp">
+      <HintPath>.\TweetSharp.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="components\AutoExtend.cs" />
     <Compile Include="components\Comment.cs" />
-    <Compile Include="components\FMEGUI.cs" />
+    <Compile Include="components\HQ\FMEGUI.cs" />
     <Compile Include="components\Launcher.cs" />
-    <Compile Include="components\XSplit.cs" />
+    <Compile Include="components\HQ\XSplit.cs" />
     <Compile Include="forms\ChangeProp\ChangePropDlg.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -130,7 +139,7 @@
     <Compile Include="forms\Form1\EventHandler.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="components\HQ.cs" />
+    <Compile Include="components\HQ\HQ.cs" />
     <Compile Include="forms\Form1\MenuHandler.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -177,7 +186,7 @@
       <DependentUpon>WakuDlg.cs</DependentUpon>
     </Compile>
     <Compile Include="lib\Bouyomi\Bouyomi.cs" />
-    <Compile Include="components\FMLE.cs" />
+    <Compile Include="components\HQ\FMLE.cs" />
     <Compile Include="forms\Form1\Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -195,9 +204,6 @@
     <Compile Include="lib\ImakokoNow\ImaDoko.cs" />
     <Compile Include="lib\ImakokoNow\ImakokoNow.cs" />
     <Compile Include="lib\Nico\Nico.cs" />
-    <Compile Include="lib\Twitter\oAuth.cs" />
-    <Compile Include="lib\Twitter\oAuthTwitter.cs" />
-    <Compile Include="lib\Twitter\TwitterUtils.cs" />
     <Compile Include="lib\Windows\Mouse.cs" />
     <Compile Include="lib\Windows\OSVersion.cs" />
     <Compile Include="forms\oAuthDialog\oAuthDialog.cs">
@@ -206,7 +212,7 @@
     <Compile Include="forms\oAuthDialog\oAuthDialog.Designer.cs">
       <DependentUpon>oAuthDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="components\NLE.cs" />
+    <Compile Include="components\HQ\NLE.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="forms\ChangeProp\ChangePropDlg.resx">

@@ -6,7 +6,7 @@
 //-------------------------------------------------------------------------
 using System;
 using System.Diagnostics;
-using iPentec.TwitterUtils;
+using TweetSharp;
 
 //-------------------------------------------------------------------------
 // クラス実装
@@ -17,15 +17,16 @@ namespace NicoLive
     {
 
 
-        string ConsumerKey = "";
-        string ConsumerSecret = "";
-        string Token = "";
-        string TokenSecret = "";
-        TwitterUtils tu;
+        string mConsumerKey = "WZwUqBVTPLOn6gRXNVW9Q";
+        string mConsumerSecret = "QUQS4nSTCCKRSFCAAQkCpgeo2wMaNM4GQ4FNuAr1FU";
+        string mToken = "";
+        string mTokenSecret = "";
+        TwitterService mTwitterService;
+        OAuthRequestToken mRequestToken;
 
         public Twitter()
         {
-            tu = new TwitterUtils();
+            mTwitterService = new TwitterService(mConsumerKey, mConsumerSecret);
         }
 
         //-------------------------------------------------------------------------
@@ -40,34 +41,32 @@ namespace NicoLive
         //-------------------------------------------------------------------------
 		public string GetOAuthToken()
 		{
-    
-            string url = tu.GetOAuthToken(ConsumerKey, ConsumerSecret);
 
-            return url;
+            mRequestToken = mTwitterService.GetRequestToken();
+            Uri uri = mTwitterService.GetAuthenticationUrl(mRequestToken);
+
+            return uri.ToString();
 
         }
 
 
-        public bool oAuth(string pin)
+        public bool oAuth(string iPIN)
         {
 
             try
             {
 
+                OAuthAccessToken access = mTwitterService.GetAccessToken(mRequestToken, iPIN);
+                mTwitterService.AuthenticateWith(access.Token, access.TokenSecret);
 
-                tu.GetOAuthAccessTokenWithPIN(
-                      pin,
-                      ConsumerKey, ConsumerSecret,
-                      out Token, out TokenSecret);
+                mToken = access.Token;
+                mTokenSecret = access.TokenSecret;
 
-                Debug.WriteLine(Token);
-                Debug.WriteLine(TokenSecret);
+                Utils.WriteLog(mToken);
+                Utils.WriteLog(mTokenSecret);
 
-                Properties.Settings.Default.tw_passwd = "";
-                Properties.Settings.Default.tw_user = "";
-
-                Properties.Settings.Default.tw_token = Token;
-                Properties.Settings.Default.tw_token_secret = TokenSecret;
+                Properties.Settings.Default.tw_token = mToken;
+                Properties.Settings.Default.tw_token_secret = mTokenSecret;
 
             }
             catch (Exception e)
@@ -92,18 +91,15 @@ namespace NicoLive
             if (iTopic.Length > 0)
                 iMessage += " " + iTopic;
 
-            TwitterUtils tu = new TwitterUtils();
+            
             try
             {
-                tu.UpdateStatusOAuth(
-                    iMessage,
-                      ConsumerKey, ConsumerSecret,
-                      Properties.Settings.Default.tw_token, Properties.Settings.Default.tw_token_secret);
+                mTwitterService.SendTweet(new SendTweetOptions { Status = iMessage });
             }
             catch (Exception)
             {
                // throw e;
-               // System.Diagnostics.Debug.WriteLine("twitter post :" + e.StackTrace.ToString());
+               // Utils.WriteLog("twitter post :" + e.StackTrace.ToString());
 
 
             }

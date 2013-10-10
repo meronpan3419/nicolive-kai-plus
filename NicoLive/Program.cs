@@ -19,7 +19,7 @@ namespace NicoLive
 {
     static class Program
     {
-        public static string VERSION_KAI_PLUS = "kai_p12noyounamono2";
+        public static string VERSION_KAI_PLUS = "kai_p12noyounamono3";
 
         /// <summary>
         /// アプリケーションのメイン エントリ ポイントです。

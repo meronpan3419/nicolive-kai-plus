@@ -377,5 +377,11 @@
     <Setting Name="nicolive_login_user_agent" Type="System.String" Scope="User">
       <Value Profile="(Default)">Mozilla/5.0 (Linux; U; Android 4.0.4; ja-jp; SC-06D Build/IMM76D) AppleWebKit/534.30 (KHTML, like Gecko)</Value>
     </Setting>
+    <Setting Name="comment_cut_len" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">20</Value>
+    </Setting>
+    <Setting Name="use_comment_cut" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
