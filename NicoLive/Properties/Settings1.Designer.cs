@@ -1454,18 +1454,6 @@ namespace NicoLive.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool use_new_flash_console {
-            get {
-                return ((bool)(this["use_new_flash_console"]));
-            }
-            set {
-                this["use_new_flash_console"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool use_flash_console {
             get {
                 return ((bool)(this["use_flash_console"]));

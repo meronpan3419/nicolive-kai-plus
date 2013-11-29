@@ -486,6 +486,14 @@ namespace NicoLive
             }
             return base.ProcessCmdKey(ref msg, keyData);
         }
+
+        private void mSwapDistBtn_Click(object sender, EventArgs e)
+        {
+            mTitle.Text = System.Text.RegularExpressions.Regex.Replace(
+                mTitle.Text,
+                @"(?<src>「.*?」)→(?<dst>「.*?」)",
+                "${dst}→${src}");
+        }
     }
 }
 //-------------------------------------------------------------------------

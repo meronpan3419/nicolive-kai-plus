@@ -2,7 +2,7 @@
 // 雑多な関数管理クラス
 //
 // Copyright (c) 金時豆(http://ch.nicovideo.jp/community/co48276)
-// $Id$
+// Copyright (c) meronpan(http://ch.nicovideo.jp/community/co274186)
 //-------------------------------------------------------------------------
 using System.Windows.Forms;
 using System.Text.RegularExpressions;
@@ -220,6 +220,8 @@ namespace NicoLive
             string info = "";
 
             // 情報設定
+
+
             if (iCmt.Premium.Equals("1"))
             {   
                 //プレミアム会員
@@ -263,6 +265,9 @@ namespace NicoLive
                 info += "docomo ";
                 iView.Rows[i].Cells[(int)CommentColumn.COLUMN_COMMENT].Style.ForeColor = Properties.Settings.Default.mobile_color;
             }
+
+            // NGスコア
+            info += iCmt.Score + " ";
 
 
             iView.Rows[i].Cells[(int)CommentColumn.COLUMN_INFO].Value = info;
@@ -434,6 +439,9 @@ namespace NicoLive
                 info += "docomo ";
                 row.Cells[(int)CommentColumn.COLUMN_COMMENT].Style.ForeColor = Properties.Settings.Default.mobile_color;
             }
+
+            // NGスコア
+            info += iCmt.Score + " ";
 
 
             row.Cells[(int)CommentColumn.COLUMN_INFO].Value = info;
@@ -620,7 +628,7 @@ namespace NicoLive
 
         public static void Tweet(string iTweetString)
         {
-            using (Twitter tw = new Twitter())
+            using (Twitter tw = new Twitter(Properties.Settings.Default.tw_token, Properties.Settings.Default.tw_token_secret)) 
             {
                 try
                 {
@@ -649,7 +657,7 @@ namespace NicoLive
         public static void WriteLog(string iStr)
         {
             WriteLog("DEBUG", iStr, true);
-            System.Diagnostics.Debug.WriteLine(iStr);
+            System.Diagnostics.Debug.WriteLine(DateTime.Now + " " + iStr);
         }
 
         //-------------------------------------------------------------------------
@@ -661,7 +669,7 @@ namespace NicoLive
 # if DEBUG
             if (iIsInfo)
             {
-                log_name = "info_log.txt";
+                log_name = "info_log_" + DateTime.Today.ToString("yyyy_MM_dd") + ".txt";
             }
 #else
             if (iIsInfo)
@@ -807,9 +815,3 @@ namespace NicoLive
 
     }
 }
-
-//-------------------------------------------------------------------------
-// 雑多な関数管理クラス
-//
-// Copyright (c) 金時豆(http://ch.nicovideo.jp/community/co48276)
-//-------------------------------------------------------------------------

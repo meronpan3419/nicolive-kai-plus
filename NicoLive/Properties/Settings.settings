@@ -359,9 +359,6 @@
     <Setting Name="use_welcome_cruise_message" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="use_new_flash_console" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
-    </Setting>
     <Setting Name="use_flash_console" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>

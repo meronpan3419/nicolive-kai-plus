@@ -228,7 +228,7 @@ namespace NicoLive
                 ts = DateTime.Now - this.mLastGenzaichiCommentTime;
                 if (ts.Minutes >= GENZAICHI_TIME)
                 {
-                    if (Properties.Settings.Default.imakoko_genzaichi_auto_comment)
+                    if (Properties.Settings.Default.imakoko_genzaichi_auto_comment && !mDoingGetNextWaku)
                     {
                         SendCurrentPosition();
                     }

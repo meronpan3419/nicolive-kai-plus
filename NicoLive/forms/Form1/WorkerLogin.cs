@@ -106,14 +106,14 @@ namespace NicoLive
                 // コメントサーバーに接続
                 NicoErr err = mNico.ConnectToCommentServer(live_id, Properties.Settings.Default.comment_max);
 
-                Utils.WriteLog("NicoErr:" + err.ToString());
+                Utils.WriteLog("ConnectToCommentServer Result = NicoErr:" + err.ToString());
                 switch (err)
                 {
                     case NicoErr.ERR_COULD_NOT_CONNECT_COMMENT_SERVER:
                         if (try_cnt < 30)
                         {
                             try_cnt++;
-                            Thread.Sleep(500);
+                            Thread.Sleep(100);
                             Utils.WriteLog("Retry: ERR_COULD_NOT_CONNECT_COMMENT_SERVER" + try_cnt);
                             goto GET_COMMENT;
                         }
@@ -187,14 +187,26 @@ namespace NicoLive
                             }
                             mViewer.Show();
                             mViewer.Activate();
+
+                        }
+
+                        // 配信コンソール自動表示
+                        if (Properties.Settings.Default.use_flash_console)
+                        {
+                            if (mLiveConsole == null || mLiveConsole.IsDisposed)
+                            {
+                                mLiveConsole = new LiveConsole(LiveID);
+                            }
+                            mLiveConsole.Show();
+                            mLiveConsole.Activate();
+
                         }
 
                         mNico.WakutoriMode = false;
 
                         mCommentList.Rows.Clear();
 
-                        // プレイヤーロード
-                        //GetPlayer();
+
 
 
 
@@ -210,6 +222,7 @@ namespace NicoLive
                         {
                             // 開演5分待ちスキップ
                             mNico.LiveStart(live_id, mLiveInfo.Token);
+                            Utils.WriteLog("LiveStart skip 5 min");
                         }
 
                         // ロガー起動
@@ -225,10 +238,19 @@ namespace NicoLive
                                 Utils.WriteLog("LoginWorker_DoWork:" + ex.Message);
                             }
                         }
+
+
                         if (mViewer != null && !mViewer.IsDisposed)
                         {
                             mViewer.SetLiveID(LiveID);
                         }
+
+                        if (mLiveConsole != null && !mLiveConsole.IsDisposed)
+                        {
+                            mLiveConsole.LoadMovie(LiveID);
+                        }
+
+
 
                         // らんちゃー
                         if (Properties.Settings.Default.use_launcher)
@@ -256,7 +278,7 @@ namespace NicoLive
             {
                 mAutoReconnectOnGoing = false;
             }
-            mLogin_cancel = false;            
+            mLogin_cancel = false;
             this.Invoke((Action)delegate()
             {
                 this.mConnectBtn.Enabled = true;

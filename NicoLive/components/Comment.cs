@@ -65,6 +65,7 @@ namespace NicoLive
         private string mText;
         private bool mBackStage;
         private string mElapsedTime;
+        private string mScore;
 
         // アクセッサ
         public string Xml
@@ -134,6 +135,15 @@ namespace NicoLive
 
         }
 
+
+        public string Score
+        {
+            get { return mScore; }
+            set { mScore = value; }
+
+        }
+
+
         //-------------------------------------------------------------------------
         // 初期化
         //-------------------------------------------------------------------------
@@ -165,7 +175,7 @@ namespace NicoLive
                             // ステータス取得
                             if (reader.LocalName.Equals("chat"))
                             {
-                                string no = "", date = "", text = "", id = "", premium = "0", mail = "";
+                                string no = "", date = "", text = "", id = "", premium = "0", mail = "", score="0";
 
                                 for (int i = 0; i < reader.AttributeCount; i++)
                                 {
@@ -190,6 +200,10 @@ namespace NicoLive
                                     {
                                         mail = reader.Value;
                                     }
+                                    else if (reader.Name == "score")
+                                    {
+                                        score = reader.Value;
+                                    }
                                 }
                                 text = reader.ReadString();
 
@@ -201,6 +215,7 @@ namespace NicoLive
                                 Mail = mail;
                                 Text = text;
                                 BackStage = false;
+                                Score = score;
 
                                 //// バックステージを通常コメント化する
                                 //if (text.StartsWith("/press "))
@@ -298,7 +313,7 @@ namespace NicoLive
             if (mText.StartsWith("/vote start "))
             {
 
-                string[]  mVoteList = new string[9];
+                string[] mVoteList = new string[9];
                 for (int j = 0; j < 9; j++)
                 {
                     mVoteList[j] = "";

@@ -42,6 +42,15 @@ namespace NicoLive
             mViewer.Activate();
         }
 
+        private void LiveConsoleStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (mLiveConsole == null || mLiveConsole.IsDisposed)
+            {
+                mLiveConsole = new LiveConsole(LiveID);
+            }
+            mLiveConsole.Show();
+            mLiveConsole.Activate();
+        }
     }
 }
 //-------------------------------------------------------------------------

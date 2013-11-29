@@ -78,9 +78,6 @@ namespace NicoLive
         [DllImport("ieframe.dll", CharSet = CharSet.Auto, SetLastError = true)]
         private static extern bool IESetProtectedModeCookie(string url, string name, string data, int flags);
 
-
-
-
         [DllImport("kernel32.dll")]
         public static extern Int32 GetLastError();
 
@@ -100,7 +97,7 @@ namespace NicoLive
 
         // getpublishstatus uri
         private readonly string URI_GETPUBLISHSTATUS = "http://live.nicovideo.jp/api/getpublishstatus?version=2&v=";
-        private readonly string URI_GETPUBLISHSTATUS2 = "http://live.nicovideo.jp/api/getpublishstatus?version=2&a=";
+
 
         // profile uri
         private readonly string URI_GETFMEPROFILE = "http://live.nicovideo.jp/api/getfmeprofile?v=";
@@ -310,9 +307,13 @@ namespace NicoLive
             this.mCookieLogin = new CookieContainer();
 
             string ret = "ログインエラー";
+
             // ブラウザのクッキーを用いてログインを試みる
             if (Properties.Settings.Default.UseBrowserCookie)
             {
+
+                Utils.WriteLog("Nico: Login() Login by Cookie");
+
                 ICookieGetter[] cookieGetters = CookieGetter.CreateInstances(true);
 
                 ICookieGetter s = null;
@@ -326,44 +327,69 @@ namespace NicoLive
                 }
                 if (s != null)
                 {
+                    Utils.WriteLog("Nico: Login() has Cookie");
                     try
                     {
                         //System.Net.Cookie cookie = s.GetCookie(new Uri("http://live.nicovideo.jp/"), "user_session");
 
                         System.Net.CookieCollection collection = s.GetCookieCollection(new Uri("http://live.nicovideo.jp/"));
+
+                        Utils.WriteLog("Nico: Login() user_session: " + collection["user_session"].Value);
+
                         if (collection["user_session"] != null)
                         {
                             this.mCookieLogin.Add(new Cookie("user_session", collection["user_session"].Value, "/", ".nicovideo.jp"));
                             if (LoginTest(collection["user_session"].Value))
                             {
-                                ret = "ログイン成功";
+                                Utils.WriteLog("Nico: Login() LoginTest() OK");
 
-                            };
+                                // IEのCookieを書き換える
+                                OverrideIECookie(GetSessionidFromCookie(collection["user_session"].Value));
+
+                                mIsLogin = true;
+                                return true;
+
+                            }
+                            else
+                            {
+                                Utils.WriteLog("Nico: Login() has Cookie, user_session null");
+                            }
                         }
+                        else
+                        {
+                            Utils.WriteLog("Nico: Login() LoginTest() NG");
+                        }
+
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
                         //System.Windows.Forms.MessageBox.Show(ex.Message);
+                        Utils.WriteLog("Nico: Login() has Cookie: " + ex.Message);
                     }
                 }
-
-            }
-            else   // 通常のログインを試みる
-            {
-
-                // send POST request
-                ret = HttpPost(URI_LOGIN, post_arg, ref this.mCookieLogin, Properties.Settings.Default.nicolive_login_user_agent);
-                if (ret == null)
+                else
                 {
-                    this.mCookieLogin = null;
-                    mIsLogin = false;
-                    return false;
+                    Utils.WriteLog("Nico: Login() not has Cookie");
                 }
             }
+
+            Utils.WriteLog("Nico: Login() Login by ID-PASS");
+
+            // send POST request
+            ret = HttpPost(URI_LOGIN, post_arg, ref this.mCookieLogin /*, Properties.Settings.Default.nicolive_login_user_agent*/);
+            if (ret == null)
+            {
+                Utils.WriteLog("Nico: Login() Login by ID-PASS, ret == null");
+                this.mCookieLogin = null;
+                mIsLogin = false;
+                return false;
+            }
+            
 
             // check if result contains "ログインエラー"
             if (ret.IndexOf("ログインエラー") != -1)
             {
+                Utils.WriteLog("Nico: Login() Login by ID-PASS, ログインエラー");
                 this.mCookieLogin = null;
                 mIsLogin = false;
                 return false;
@@ -375,6 +401,7 @@ namespace NicoLive
             user_session = GetSessionidFromCookie(user_session);
             if (user_session.Equals(""))
             {
+                Utils.WriteLog("Nico: Login()  Login by ID-PASS, user_session is null ");
                 mIsLogin = false;
                 return false;
             }
@@ -383,6 +410,7 @@ namespace NicoLive
             OverrideIECookie(user_session);
 
             // ログイン済みフラグを立てる
+            Utils.WriteLog("Nico: Login()  Login by ID-PASS, piiiiii");
             mIsLogin = true;
             return true;
         }
@@ -397,10 +425,10 @@ namespace NicoLive
                 return "";
             }
             user_session = cc["user_session"].ToString();
-            DateTime expires = DateTime.Now.AddDays(3);
-            //Thu, 1-Jan-2030 00:00:00 GMT
+            DateTime expires = DateTime.Now.AddDays(30);
 
-            user_session += "; path=/; domain=.nicovideo.jp; expires=" + expires.ToString("ddd, d-MMM-yyyy HH:mm:ss GMT") + ";";
+            System.Globalization.CultureInfo culture = new System.Globalization.CultureInfo("en-US");
+            user_session += "; path=/; domain=.nicovideo.jp; expires=" + expires.ToString("ddd, d-MMM-yyyy HH:mm:ss ", culture) + "GMT;";
             return user_session;
         }
 
@@ -535,7 +563,7 @@ namespace NicoLive
             Dictionary<string, string> ret = new Dictionary<string, string>();
 
             // send request (GET)
-            string uri = URI_GETPUBLISHSTATUS2 + iLiveID;
+            string uri = URI_GETPUBLISHSTATUS + iLiveID;
             string response = HttpGet(uri, ref this.mCookieLogin);
 
             if (response == null)
@@ -1101,6 +1129,7 @@ namespace NicoLive
             if (so.Socket.Available == 0)
             {
                 string str = System.Text.Encoding.UTF8.GetString(mTmpBuffer, 0, mTmpBuffer.Length);
+                //Utils.WriteLog("ReceiveDataCallback(): " + str );
 
                 if (str.Contains("<thread"))
                 {
@@ -1133,7 +1162,7 @@ namespace NicoLive
 
                 }
 
-                if (str.EndsWith("</chat>\0"))
+                if (str.EndsWith("</chat>\0") || str.EndsWith("/>\0") || str.EndsWith("</ping>\0"))
                 {
                     Array.Resize<byte>(ref mTmpBuffer, 0);
                     mComment += str;
@@ -1162,10 +1191,17 @@ namespace NicoLive
         {
             // Convert the string data to byte data using ASCII encoding.
             byte[] byteData = Encoding.UTF8.GetBytes(data);
+            try
+            {
+                // Begin sending the data to the remote device.
+                client.BeginSend(byteData, 0, byteData.Length, SocketFlags.None,
+                    new AsyncCallback(SendCallback), client);
+            }
+            catch (Exception e)
+            {
+                Utils.WriteLog(e.ToString());
+            }
 
-            // Begin sending the data to the remote device.
-            client.BeginSend(byteData, 0, byteData.Length, SocketFlags.None,
-                new AsyncCallback(SendCallback), client);
         }
 
         //-------------------------------------------------------------------------

@@ -43,7 +43,10 @@ namespace NicoLive
             }
             if ((int)keyData == (int)(Keys.F2 | Keys.Control))
             {
-                GetNextWaku();
+                if (!mDoingGetNextWaku)
+                {
+                    GetNextWaku();
+                }
                 return true;
             }
             if ((int)keyData == (int)Keys.F2)

@@ -49,6 +49,7 @@
             this.mTag = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.mLock = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.mLiveTagLockAll = new System.Windows.Forms.CheckBox();
+            this.mSwapDistBtn = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -70,19 +71,20 @@
             // 
             // mDesc
             // 
-            this.mDesc.Location = new System.Drawing.Point(43, 94);
+            this.mDesc.Location = new System.Drawing.Point(17, 15);
             this.mDesc.MaxLength = 1000;
             this.mDesc.Multiline = true;
             this.mDesc.Name = "mDesc";
-            this.mDesc.Size = new System.Drawing.Size(318, 91);
+            this.mDesc.Size = new System.Drawing.Size(318, 77);
             this.mDesc.TabIndex = 2;
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.mSwapDistBtn);
             this.groupBox1.Controls.Add(this.mTitle);
             this.groupBox1.Location = new System.Drawing.Point(26, 13);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(350, 55);
+            this.groupBox1.Size = new System.Drawing.Size(350, 71);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "タイトル";
@@ -100,9 +102,10 @@
             // groupBox2
             // 
             this.groupBox2.Controls.Add(this.label1);
-            this.groupBox2.Location = new System.Drawing.Point(26, 71);
+            this.groupBox2.Controls.Add(this.mDesc);
+            this.groupBox2.Location = new System.Drawing.Point(26, 90);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(350, 138);
+            this.groupBox2.Size = new System.Drawing.Size(350, 115);
             this.groupBox2.TabIndex = 1;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "詳細";
@@ -110,7 +113,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(128, 103);
+            this.label1.Location = new System.Drawing.Point(128, 95);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(207, 12);
             this.label1.TabIndex = 0;
@@ -272,6 +275,16 @@
             this.mLiveTagLockAll.Text = "視聴者にタグ編集をさせない";
             this.mLiveTagLockAll.UseVisualStyleBackColor = true;
             // 
+            // mSwapDistBtn
+            // 
+            this.mSwapDistBtn.Location = new System.Drawing.Point(232, 44);
+            this.mSwapDistBtn.Name = "mSwapDistBtn";
+            this.mSwapDistBtn.Size = new System.Drawing.Size(103, 23);
+            this.mSwapDistBtn.TabIndex = 6;
+            this.mSwapDistBtn.Text = "目的地入れ替え";
+            this.mSwapDistBtn.UseVisualStyleBackColor = true;
+            this.mSwapDistBtn.Click += new System.EventHandler(this.mSwapDistBtn_Click);
+            // 
             // ChangeProp
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -281,7 +294,6 @@
             this.Controls.Add(this.groupBox5);
             this.Controls.Add(this.mCancel);
             this.Controls.Add(this.groupBox3);
-            this.Controls.Add(this.mDesc);
             this.Controls.Add(this.mOK);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.groupBox2);
@@ -302,7 +314,6 @@
             this.groupBox5.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.mLivetags)).EndInit();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -329,5 +340,6 @@
         private System.Windows.Forms.DataGridViewCheckBoxColumn mLock;
         private System.Windows.Forms.CheckBox mAd;
         private System.Windows.Forms.CheckBox mCruise;
+        private System.Windows.Forms.Button mSwapDistBtn;
     }
 }

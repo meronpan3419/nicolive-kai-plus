@@ -36,6 +36,8 @@ namespace NicoLive
             {
                 if (s.Length <= 0) continue;
 
+                Utils.WriteLog("ParseComment(): " + s);
+
                 //最終レス番号取得
                 if (s.StartsWith("<thread "))
                 {
@@ -55,6 +57,8 @@ namespace NicoLive
                     }
                     continue;
                 }
+
+                
 
                 //コメント処理
                 if (s.StartsWith("<chat "))
@@ -153,7 +157,7 @@ namespace NicoLive
 
             //過去コメントじゃない時だけ
             if (mLastChatNo < int.Parse(iCmt.No))
-            { 
+            {
 
                 // 投票チェック
                 if (iCmt.IsVote && iCmt.IsOwner)
@@ -169,8 +173,6 @@ namespace NicoLive
                     return;
 
                 }
-
-                // use_welcome_cruise_message
 
                 // 棒読みちゃん読み上げリストにコメントを追加
                 AddSpeakText(iCmt);
@@ -220,7 +222,7 @@ namespace NicoLive
         //-------------------------------------------------------------------------
         public bool IsIgnoreComment(Comment iCmt)
         {
-            // 運営系スラコメはスルー
+            // 運営系スラコメはOK
             if (iCmt.Text.StartsWith("/telop ") ||
                 iCmt.Text.StartsWith("/press ") ||
                 iCmt.Text.StartsWith("/info ") ||
@@ -597,6 +599,7 @@ namespace NicoLive
         {
             if (mNico == null) return;
             if (!mNico.IsLogin) return;
+            if (mDoingGetNextWaku) return;
 
 
             // 現在地機能が使用可能な状態か？
@@ -689,10 +692,27 @@ namespace NicoLive
         private void WelcomeMessage(Comment iCmt)
         {
             if (iCmt.IsOwner) return;
+            
+            // クルーズいらっしゃい
+            if (Properties.Settings.Default.use_welcome_cruise_message &&
+                iCmt.Text.StartsWith("/telop show ") && iCmt.Text.Contains("到着しました"))
+            {
+                Thread t = new Thread(delegate()
+                    {
+                        string post_msg = "";
+                        post_msg = Properties.Settings.Default.welcome_cruise_message;
+                        Thread.Sleep(1000 /* ms */);
+                        this.Invoke((Action)delegate()
+                        {
+                            this.SendComment(post_msg, true);
+                        });
+                    });
+                t.Start();
+            }
+            
             if (!Properties.Settings.Default.use_welcome_message) return;
 
             string uid = iCmt.Uid;
-
 
             if (!mWelcomeList.Contains(uid))
             {
@@ -701,120 +721,109 @@ namespace NicoLive
                 {
                     string post_msg = "";
 
-                    // クルーズいらっしゃい
-                    if (Properties.Settings.Default.use_welcome_cruise_message &&
-                        iCmt.Text.StartsWith("/telop show ") && iCmt.Text.Contains("到着しました"))
+                    mWelcomeList.Add(iCmt.Uid);
+
+                    string msg = Properties.Settings.Default.welcome_message;
+                    string msg184 = Properties.Settings.Default.welcome_message184;
+
+
+                    string nick = null;
+                    int wait = 5;
+
+
+                    // 184は勝手に名前をつける
+                    int id;
+                    if (!int.TryParse(iCmt.Uid, out id))
                     {
-                        post_msg = Properties.Settings.Default.welcome_cruise_message;
-                        Thread.Sleep(1000 /* ms */);
-                    }
-                    else
-                    {
+                        string name = "";
 
-
-                        mWelcomeList.Add(iCmt.Uid);
-
-                        string msg = Properties.Settings.Default.welcome_message;
-                        string msg184 = Properties.Settings.Default.welcome_message184;
-
-
-                        string nick = null;
-                        int wait = 5;
-
-
-                        // 184は勝手に名前をつける
-                        int id;
-                        if (!int.TryParse(iCmt.Uid, out id))
+                        // コテハンついてない時
+                        if (Properties.Settings.Default.auto_nick_184 && !mUid.Contains(iCmt.Uid))
                         {
-                            string name = "";
 
-                            // コテハンついてない時
-                            if (Properties.Settings.Default.auto_nick_184 && !mUid.Contains(iCmt.Uid))
+                            string file = System.Windows.Forms.Application.StartupPath + "\\name.db";
+
+                            // 名前DBがあったら勝手に名前をつける
+                            if (File.Exists(file))
                             {
-
-                                string file = System.Windows.Forms.Application.StartupPath + "\\name.db";
-
-                                // 名前DBがあったら勝手に名前をつける
-                                if (File.Exists(file))
+                                try
                                 {
-                                    try
+                                    using (var conn = new SQLiteConnection("Data Source=name.db"))
                                     {
-                                        using (var conn = new SQLiteConnection("Data Source=name.db"))
+                                        using (SQLiteCommand cmd = conn.CreateCommand())
                                         {
-                                            using (SQLiteCommand cmd = conn.CreateCommand())
+                                            conn.Open();
+                                            // SELECT文の実行
+                                            cmd.CommandText = "select * from name  order by random() limit 1;";
+                                            using (SQLiteDataReader reader = cmd.ExecuteReader())
                                             {
-                                                conn.Open();
-                                                // SELECT文の実行
-                                                cmd.CommandText = "select * from name  order by random() limit 1;";
-                                                using (SQLiteDataReader reader = cmd.ExecuteReader())
+                                                while (reader.Read())
                                                 {
-                                                    while (reader.Read())
-                                                    {
-                                                        Utils.WriteLog((string)reader[0]);
-                                                        name = "." + (string)reader[0];
-                                                    }
+                                                    Utils.WriteLog((string)reader[0]);
+                                                    name = "." + (string)reader[0];
                                                 }
-                                                conn.Close();
                                             }
+                                            conn.Close();
                                         }
                                     }
-                                    catch (Exception ex)
-                                    {
-                                        Utils.WriteLog("WelcomeMessage(): SQLite error " + ex.Message);
-                                    }
-
-                                    // コテハン上書き
-                                    this.Invoke((Action)delegate()
-                                    {
-                                        SetNickname(iCmt.Uid, name);
-                                        iCmt.Handle = nick;
-                                    });
-
-
                                 }
-                                else
+                                catch (Exception ex)
                                 {
-                                    Utils.WriteLog("WelcomeMessage(): " + file + "not found");
+                                    Utils.WriteLog("WelcomeMessage(): SQLite error " + ex.Message);
                                 }
+
+                                // コテハン上書き
+                                this.Invoke((Action)delegate()
+                                {
+                                    SetNickname(iCmt.Uid, name);
+                                    iCmt.Handle = nick;
+                                });
+
+
                             }
                             else
-                            {   //コテハンついてる時
-                                name = mUid.CheckNickname(iCmt.Uid);
-                            }
-
-                            msg = msg184.Replace("@name", name);
-                            msg = msg.Replace("@id", iCmt.Uid.Substring(0, 4));
-                            msg = msg.Replace("@no", iCmt.No);
-                        }
-                        else    //生ID
-                        {
-
-                            // コテハン自動取得の為にwait秒間待ってみる
-                            while (wait > 0)
                             {
-                                nick = mUid.CheckNickname(iCmt.Uid);
-                                if (nick != null)
-                                {
-                                    // 取得できたら抜ける
-                                    break;
-                                }
-                                Thread.Sleep(1000);
-                                wait--;
+                                Utils.WriteLog("WelcomeMessage(): " + file + "not found");
                             }
+                        }
+                        else
+                        {   //コテハンついてる時
+                            name = mUid.CheckNickname(iCmt.Uid);
+                        }
 
+                        msg = msg184.Replace("@name", name);
+                        msg = msg.Replace("@id", iCmt.Uid.Substring(0, 4));
+                        msg = msg.Replace("@no", iCmt.No);
+                    }
+                    else    //生ID
+                    {
+
+                        // コテハン自動取得の為にwait秒間待ってみる
+                        while (wait > 0)
+                        {
+                            nick = mUid.CheckNickname(iCmt.Uid);
                             if (nick != null)
                             {
-                                msg = msg.Replace("@name", nick);
+                                // 取得できたら抜ける
+                                break;
                             }
-                            else
-                            {
-                                msg = msg.Replace("@name", iCmt.No);
-                            }
+                            Thread.Sleep(500);
+                            wait--;
                         }
 
-                        post_msg = msg;
-
+                        if (nick != null)
+                        {
+                            msg = msg.Replace("@name", nick);
+                        }
+                        else
+                        {
+                            msg = msg.Replace("@name", iCmt.No);
+                        }
                     }
+
+                    post_msg = msg;
+
+
 
                     this.Invoke((Action)delegate()
                     {
@@ -924,7 +933,7 @@ namespace NicoLive
             mDisconnect = true;
 
             // 枠取り画面へ 
-            if (mOwnLive && mContWaku.Checked)
+            if (mOwnLive && mContWaku.Checked && !mDoingGetNextWaku)
             {
                 Thread.Sleep(500);
 
@@ -990,6 +999,8 @@ namespace NicoLive
             {
                 //MakeWakutori(true);
 
+                mNico.SendOwnerComment(LiveID, "/cls", "", mLiveInfo.Token);
+
                 WakuDlg dlg = new WakuDlg(LiveID, false);
                 dlg.ShowDialog();
 
@@ -1002,10 +1013,11 @@ namespace NicoLive
 
                     this.Invoke((Action)delegate()
                     {
+                        mNico.SendOwnerComment(LiveID, "/cls", "", mLiveInfo.Token);
                         this.LiveID = dlg.mLv;
                         if (!this.mDisconnect)
                         {
-                            mNico.SendOwnerComment(LiveID, "次枠こちら：http://nico.ms/" + dlg.mLv, "", mLiveInfo.Token);
+                            mNico.SendOwnerComment(LiveID, "/perm 次枠こちら：http://nico.ms/" + dlg.mLv, "", mLiveInfo.Token);
                         }
                         mNico.SendOwnerComment(LiveID, "/disconnect", "", mLiveInfo.Token);
 

@@ -6,6 +6,7 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <DefineConstants>TRACE;DEBUG</DefineConstants>
     <Optimize>true</Optimize>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -70,15 +71,12 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AxInterop.ShockwaveFlashObjects, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>.\AxInterop.ShockwaveFlashObjects.dll</HintPath>
-    </Reference>
     <Reference Include="CookieGetterSharp, Version=2.0.0.11, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\デスクトップ\nicolive-kaiplus5\CookieGetterSharp.dll</HintPath>
     </Reference>
-    <Reference Include="Hammock.ClientProfile">
+    <Reference Include="Hammock.ClientProfile, Version=1.0.0.0, Culture=neutral, PublicKeyToken=c148cfba29ed1a4d, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>.\Hammock.ClientProfile.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualBasic" />
@@ -120,12 +118,6 @@
     </Compile>
     <Compile Include="forms\ChangeProp\ChangePropDlg.Designer.cs">
       <DependentUpon>ChangePropDlg.cs</DependentUpon>
-    </Compile>
-    <Compile Include="forms\Eunquete\Eunquete.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="forms\Eunquete\Eunquete.Designer.cs">
-      <DependentUpon>Eunquete.cs</DependentUpon>
     </Compile>
     <Compile Include="forms\Form1\BtnHandler.cs">
       <SubType>Form</SubType>
@@ -173,6 +165,12 @@
     <Compile Include="forms\Form1\WorkerUpdateInfo.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="forms\LiveConsole\LiveConsole.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="forms\LiveConsole\LiveConsole.Designer.cs">
+      <DependentUpon>LiveConsole.cs</DependentUpon>
+    </Compile>
     <Compile Include="forms\Viewer\Viewer.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -206,20 +204,17 @@
     <Compile Include="lib\Nico\Nico.cs" />
     <Compile Include="lib\Windows\Mouse.cs" />
     <Compile Include="lib\Windows\OSVersion.cs" />
-    <Compile Include="forms\oAuthDialog\oAuthDialog.cs">
+    <Compile Include="forms\TwitterOAuthDialog\TwitterOAuthDialog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="forms\oAuthDialog\oAuthDialog.Designer.cs">
-      <DependentUpon>oAuthDialog.cs</DependentUpon>
+    <Compile Include="forms\TwitterOAuthDialog\TwitterOAuthDialog.Designer.cs">
+      <DependentUpon>TwitterOAuthDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="components\HQ\NLE.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="forms\ChangeProp\ChangePropDlg.resx">
       <DependentUpon>ChangePropDlg.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="forms\Eunquete\Eunquete.resx">
-      <DependentUpon>Eunquete.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="forms\Form1\Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
@@ -229,8 +224,11 @@
       <DependentUpon>Imakoko.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="forms\oAuthDialog\oAuthDialog.resx">
-      <DependentUpon>oAuthDialog.cs</DependentUpon>
+    <EmbeddedResource Include="forms\LiveConsole\LiveConsole.resx">
+      <DependentUpon>LiveConsole.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="forms\TwitterOAuthDialog\TwitterOAuthDialog.resx">
+      <DependentUpon>TwitterOAuthDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="forms\Viewer\Viewer.resx">
       <DependentUpon>Viewer.cs</DependentUpon>
@@ -396,6 +394,14 @@
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
+    <COMReference Include="AxShockwaveFlashObjects">
+      <Guid>{D27CDB6B-AE6D-11CF-96B8-444553540000}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>aximp</WrapperTool>
+      <Isolated>False</Isolated>
+    </COMReference>
     <COMReference Include="ShockwaveFlashObjects">
       <Guid>{D27CDB6B-AE6D-11CF-96B8-444553540000}</Guid>
       <VersionMajor>1</VersionMajor>

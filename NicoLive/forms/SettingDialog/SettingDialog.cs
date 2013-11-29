@@ -188,8 +188,6 @@ namespace NicoLive
         private Label mLoginResult;
         private TabPage mTabGeneral2;
         private GroupBox groupBox16;
-        private CheckBox mUseFlashConlse;
-        private CheckBox mUseNewConsole;
         private GroupBox groupBox17;
         private TextBox mUserNameRegex;
         private Label lUserNameRegex;
@@ -222,6 +220,8 @@ namespace NicoLive
         private CheckBox mUseFlashCommentGenerator;
         private CheckBox mCommentCut;
         private NumericUpDown mCommentCutLen;
+        private Button mTweetBtn;
+        private CheckBox mUseNewConsole;
 
 
         private IContainer components;
@@ -276,6 +276,7 @@ namespace NicoLive
             this.mPassLabel = new System.Windows.Forms.Label();
             this.mPasswdBox = new System.Windows.Forms.TextBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.mUseNewConsole = new System.Windows.Forms.CheckBox();
             this.label24 = new System.Windows.Forms.Label();
             this.tbResetMessage = new System.Windows.Forms.TextBox();
             this.mContWakuNotice = new System.Windows.Forms.CheckBox();
@@ -296,8 +297,6 @@ namespace NicoLive
             this.groupBox16 = new System.Windows.Forms.GroupBox();
             this.mUseNextLvNotice = new System.Windows.Forms.CheckBox();
             this.mUseLossTime = new System.Windows.Forms.CheckBox();
-            this.mUseFlashConlse = new System.Windows.Forms.CheckBox();
-            this.mUseNewConsole = new System.Windows.Forms.CheckBox();
             this.mTabCommentList = new System.Windows.Forms.TabPage();
             this.groupBox17 = new System.Windows.Forms.GroupBox();
             this.mUseFlashCommentGenerator = new System.Windows.Forms.CheckBox();
@@ -382,6 +381,7 @@ namespace NicoLive
             this.cbSpeed = new System.Windows.Forms.CheckBox();
             this.cbGenzaichi = new System.Windows.Forms.CheckBox();
             this.mTabTwitter = new System.Windows.Forms.TabPage();
+            this.mTweetBtn = new System.Windows.Forms.Button();
             this.mTwHash = new System.Windows.Forms.TextBox();
             this.label23 = new System.Windows.Forms.Label();
             this.mTwEndEnable = new System.Windows.Forms.CheckBox();
@@ -572,7 +572,6 @@ namespace NicoLive
             // 
             // mLoginTest
             // 
-            this.mLoginTest.Enabled = false;
             this.mLoginTest.Location = new System.Drawing.Point(334, 64);
             this.mLoginTest.Name = "mLoginTest";
             this.mLoginTest.Size = new System.Drawing.Size(76, 19);
@@ -619,9 +618,9 @@ namespace NicoLive
             // mBrowser
             // 
             this.mBrowser.FormattingEnabled = true;
-            this.mBrowser.Location = new System.Drawing.Point(165, 62);
+            this.mBrowser.Location = new System.Drawing.Point(181, 62);
             this.mBrowser.Name = "mBrowser";
-            this.mBrowser.Size = new System.Drawing.Size(163, 20);
+            this.mBrowser.Size = new System.Drawing.Size(147, 20);
             this.mBrowser.TabIndex = 5;
             this.mBrowser.SelectedIndexChanged += new System.EventHandler(this.mBrowser_SelectedIndexChanged);
             // 
@@ -630,9 +629,9 @@ namespace NicoLive
             this.mUseBrowserCookie.AutoSize = true;
             this.mUseBrowserCookie.Location = new System.Drawing.Point(19, 66);
             this.mUseBrowserCookie.Name = "mUseBrowserCookie";
-            this.mUseBrowserCookie.Size = new System.Drawing.Size(138, 16);
+            this.mUseBrowserCookie.Size = new System.Drawing.Size(162, 16);
             this.mUseBrowserCookie.TabIndex = 4;
-            this.mUseBrowserCookie.Text = "ブラウザのクッキーを利用";
+            this.mUseBrowserCookie.Text = "ブラウザのクッキーを優先利用";
             this.mUseBrowserCookie.UseVisualStyleBackColor = true;
             this.mUseBrowserCookie.CheckedChanged += new System.EventHandler(this.mUseBrowserCookie_CheckedChanged);
             // 
@@ -657,6 +656,7 @@ namespace NicoLive
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.mUseNewConsole);
             this.groupBox2.Controls.Add(this.label24);
             this.groupBox2.Controls.Add(this.tbResetMessage);
             this.groupBox2.Controls.Add(this.mContWakuNotice);
@@ -679,6 +679,17 @@ namespace NicoLive
             this.groupBox2.TabIndex = 5;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "その他";
+            // 
+            // mUseNewConsole
+            // 
+            this.mUseNewConsole.AutoSize = true;
+            this.mUseNewConsole.Location = new System.Drawing.Point(17, 279);
+            this.mUseNewConsole.Name = "mUseNewConsole";
+            this.mUseNewConsole.Size = new System.Drawing.Size(285, 16);
+            this.mUseNewConsole.TabIndex = 34;
+            this.mUseNewConsole.Text = "配信接続時に配信コンソール（GINZA）を自動起動する";
+            this.toolTip1.SetToolTip(this.mUseNewConsole, "フラッシュコンソール");
+            this.mUseNewConsole.UseVisualStyleBackColor = true;
             // 
             // label24
             // 
@@ -714,7 +725,7 @@ namespace NicoLive
             this.mViewerAutoBoot.Size = new System.Drawing.Size(228, 16);
             this.mViewerAutoBoot.TabIndex = 30;
             this.mViewerAutoBoot.Text = "配信接続時に簡易ビュアーを自動起動する";
-            this.toolTip1.SetToolTip(this.mViewerAutoBoot, ">>n番さんNGです！的な");
+            this.toolTip1.SetToolTip(this.mViewerAutoBoot, "配信状況確認");
             this.mViewerAutoBoot.UseVisualStyleBackColor = true;
             // 
             // mKeepalive
@@ -891,20 +902,17 @@ namespace NicoLive
             // 
             this.groupBox16.Controls.Add(this.mUseNextLvNotice);
             this.groupBox16.Controls.Add(this.mUseLossTime);
-            this.groupBox16.Controls.Add(this.mUseFlashConlse);
-            this.groupBox16.Controls.Add(this.mUseNewConsole);
             this.groupBox16.Location = new System.Drawing.Point(7, 6);
             this.groupBox16.Name = "groupBox16";
             this.groupBox16.Size = new System.Drawing.Size(461, 237);
             this.groupBox16.TabIndex = 0;
             this.groupBox16.TabStop = false;
             this.groupBox16.Text = "その他";
-            this.groupBox16.Enter += new System.EventHandler(this.groupBox16_Enter);
             // 
             // mUseNextLvNotice
             // 
             this.mUseNextLvNotice.AutoSize = true;
-            this.mUseNextLvNotice.Location = new System.Drawing.Point(9, 83);
+            this.mUseNextLvNotice.Location = new System.Drawing.Point(6, 40);
             this.mUseNextLvNotice.Name = "mUseNextLvNotice";
             this.mUseNextLvNotice.Size = new System.Drawing.Size(125, 16);
             this.mUseNextLvNotice.TabIndex = 3;
@@ -914,35 +922,12 @@ namespace NicoLive
             // mUseLossTime
             // 
             this.mUseLossTime.AutoSize = true;
-            this.mUseLossTime.Location = new System.Drawing.Point(9, 61);
+            this.mUseLossTime.Location = new System.Drawing.Point(6, 18);
             this.mUseLossTime.Name = "mUseLossTime";
             this.mUseLossTime.Size = new System.Drawing.Size(190, 16);
             this.mUseLossTime.TabIndex = 2;
             this.mUseLossTime.Text = "外部配信時にロスタイムを利用する";
             this.mUseLossTime.UseVisualStyleBackColor = true;
-            // 
-            // mUseFlashConlse
-            // 
-            this.mUseFlashConlse.AutoSize = true;
-            this.mUseFlashConlse.Enabled = false;
-            this.mUseFlashConlse.Location = new System.Drawing.Point(9, 39);
-            this.mUseFlashConlse.Name = "mUseFlashConlse";
-            this.mUseFlashConlse.Size = new System.Drawing.Size(276, 16);
-            this.mUseFlashConlse.TabIndex = 1;
-            this.mUseFlashConlse.Text = "外部配信の時も配信コンソールのフラッシュを利用する";
-            this.mUseFlashConlse.UseVisualStyleBackColor = true;
-            this.mUseFlashConlse.CheckedChanged += new System.EventHandler(this.mUseFlashConlse_CheckedChanged);
-            // 
-            // mUseNewConsole
-            // 
-            this.mUseNewConsole.AutoSize = true;
-            this.mUseNewConsole.Enabled = false;
-            this.mUseNewConsole.Location = new System.Drawing.Point(9, 17);
-            this.mUseNewConsole.Name = "mUseNewConsole";
-            this.mUseNewConsole.Size = new System.Drawing.Size(158, 16);
-            this.mUseNewConsole.TabIndex = 0;
-            this.mUseNewConsole.Text = "新配信コンソールを利用する";
-            this.mUseNewConsole.UseVisualStyleBackColor = true;
             // 
             // mTabCommentList
             // 
@@ -1013,7 +998,8 @@ namespace NicoLive
             // mUseCruiseWelcomeMessage
             // 
             this.mUseCruiseWelcomeMessage.AutoSize = true;
-            this.mUseCruiseWelcomeMessage.Enabled = false;
+            this.mUseCruiseWelcomeMessage.Checked = true;
+            this.mUseCruiseWelcomeMessage.CheckState = System.Windows.Forms.CheckState.Checked;
             this.mUseCruiseWelcomeMessage.Location = new System.Drawing.Point(10, 200);
             this.mUseCruiseWelcomeMessage.Name = "mUseCruiseWelcomeMessage";
             this.mUseCruiseWelcomeMessage.Size = new System.Drawing.Size(172, 16);
@@ -1815,6 +1801,7 @@ namespace NicoLive
             // 
             // mTabTwitter
             // 
+            this.mTabTwitter.Controls.Add(this.mTweetBtn);
             this.mTabTwitter.Controls.Add(this.mTwHash);
             this.mTabTwitter.Controls.Add(this.label23);
             this.mTabTwitter.Controls.Add(this.mTwEndEnable);
@@ -1835,26 +1822,37 @@ namespace NicoLive
             this.mTabTwitter.Text = "Twitter";
             this.mTabTwitter.UseVisualStyleBackColor = true;
             // 
+            // mTweetBtn
+            // 
+            this.mTweetBtn.Enabled = false;
+            this.mTweetBtn.Location = new System.Drawing.Point(241, 15);
+            this.mTweetBtn.Name = "mTweetBtn";
+            this.mTweetBtn.Size = new System.Drawing.Size(75, 23);
+            this.mTweetBtn.TabIndex = 12;
+            this.mTweetBtn.Text = "ツイートテスト";
+            this.mTweetBtn.UseVisualStyleBackColor = true;
+            this.mTweetBtn.Click += new System.EventHandler(this.mTweetBtn_Click);
+            // 
             // mTwHash
             // 
-            this.mTwHash.Location = new System.Drawing.Point(152, 345);
+            this.mTwHash.Location = new System.Drawing.Point(150, 289);
             this.mTwHash.Name = "mTwHash";
-            this.mTwHash.Size = new System.Drawing.Size(279, 19);
+            this.mTwHash.Size = new System.Drawing.Size(281, 19);
             this.mTwHash.TabIndex = 11;
             // 
             // label23
             // 
             this.label23.AutoSize = true;
-            this.label23.Location = new System.Drawing.Point(35, 352);
+            this.label23.Location = new System.Drawing.Point(35, 292);
             this.label23.Name = "label23";
-            this.label23.Size = new System.Drawing.Size(64, 12);
+            this.label23.Size = new System.Drawing.Size(60, 12);
             this.label23.TabIndex = 10;
-            this.label23.Text = "ハッシュダグ：";
+            this.label23.Text = "ハッシュダグ:";
             // 
             // mTwEndEnable
             // 
             this.mTwEndEnable.AutoSize = true;
-            this.mTwEndEnable.Location = new System.Drawing.Point(37, 148);
+            this.mTwEndEnable.Location = new System.Drawing.Point(37, 127);
             this.mTwEndEnable.Name = "mTwEndEnable";
             this.mTwEndEnable.Size = new System.Drawing.Size(143, 16);
             this.mTwEndEnable.TabIndex = 5;
@@ -1874,7 +1872,7 @@ namespace NicoLive
             // mWakuTweet
             // 
             this.mWakuTweet.AutoSize = true;
-            this.mWakuTweet.Location = new System.Drawing.Point(37, 297);
+            this.mWakuTweet.Location = new System.Drawing.Point(37, 255);
             this.mWakuTweet.Name = "mWakuTweet";
             this.mWakuTweet.Size = new System.Drawing.Size(259, 16);
             this.mWakuTweet.TabIndex = 9;
@@ -1912,7 +1910,7 @@ namespace NicoLive
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(149, 256);
+            this.label10.Location = new System.Drawing.Point(53, 231);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(318, 12);
             this.label10.TabIndex = 8;
@@ -1921,16 +1919,16 @@ namespace NicoLive
             // mTwEnd
             // 
             this.mTwEnd.AcceptsReturn = true;
-            this.mTwEnd.Location = new System.Drawing.Point(150, 170);
+            this.mTwEnd.Location = new System.Drawing.Point(56, 149);
             this.mTwEnd.Multiline = true;
             this.mTwEnd.Name = "mTwEnd";
-            this.mTwEnd.Size = new System.Drawing.Size(281, 58);
+            this.mTwEnd.Size = new System.Drawing.Size(375, 58);
             this.mTwEnd.TabIndex = 6;
             // 
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(150, 235);
+            this.label9.Location = new System.Drawing.Point(54, 210);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(248, 12);
             this.label9.TabIndex = 7;
@@ -1939,10 +1937,10 @@ namespace NicoLive
             // mTwStart
             // 
             this.mTwStart.AcceptsReturn = true;
-            this.mTwStart.Location = new System.Drawing.Point(150, 77);
+            this.mTwStart.Location = new System.Drawing.Point(56, 77);
             this.mTwStart.Multiline = true;
             this.mTwStart.Name = "mTwStart";
-            this.mTwStart.Size = new System.Drawing.Size(281, 58);
+            this.mTwStart.Size = new System.Drawing.Size(375, 44);
             this.mTwStart.TabIndex = 4;
             // 
             // mTabHQ
@@ -1959,7 +1957,6 @@ namespace NicoLive
             this.mTabHQ.TabIndex = 5;
             this.mTabHQ.Text = "外部配信";
             this.mTabHQ.UseVisualStyleBackColor = true;
-            this.mTabHQ.Click += new System.EventHandler(this.mTabHQ_Click);
             // 
             // mUseNLE
             // 
@@ -1987,7 +1984,6 @@ namespace NicoLive
             this.mUseHQ.AutoSize = true;
             this.mUseHQ.Checked = true;
             this.mUseHQ.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.mUseHQ.Enabled = false;
             this.mUseHQ.Location = new System.Drawing.Point(19, 12);
             this.mUseHQ.Name = "mUseHQ";
             this.mUseHQ.Size = new System.Drawing.Size(155, 16);
@@ -2742,8 +2738,7 @@ namespace NicoLive
 
 
 
-            this.mUseNewConsole.Checked = Properties.Settings.Default.use_new_flash_console;
-            this.mUseFlashConlse.Checked = Properties.Settings.Default.use_flash_console;
+            this.mUseNewConsole.Checked = Properties.Settings.Default.use_flash_console;
             this.mUseLossTime.Checked = Properties.Settings.Default.use_loss_time;
             this.mUseNextLvNotice.Checked = Properties.Settings.Default.use_next_lv_notice;
 
@@ -2777,8 +2772,8 @@ namespace NicoLive
             mUseBrowserCookie.Checked = Properties.Settings.Default.UseBrowserCookie;
             mLoginTest.Enabled = Properties.Settings.Default.UseBrowserCookie;
             mBrowser.Enabled = mUseBrowserCookie.Checked;
-            mMailBox.Enabled = !mUseBrowserCookie.Checked;
-            mPasswdBox.Enabled = !mUseBrowserCookie.Checked;
+            //mMailBox.Enabled = !mUseBrowserCookie.Checked;
+            //mPasswdBox.Enabled = !mUseBrowserCookie.Checked;
 
             // 棒読みちゃん
             this.mBouyomiPort.Text = Properties.Settings.Default.bouyomi_port.ToString();
@@ -2822,6 +2817,10 @@ namespace NicoLive
             this.mTwEnd.Text = Properties.Settings.Default.tw_end;
             this.mTwEndEnable.Checked = Properties.Settings.Default.tw_end_enable;
             this.mAuthResult.Text = (Properties.Settings.Default.tw_token.Length == 0) ? "未認証" : "認証済み";
+            this.mAuthResult.BackColor = (Properties.Settings.Default.tw_token.Length == 0) ? mAuthResult.ForeColor = System.Drawing.Color.Red : System.Drawing.Color.Transparent;
+            this.mTweetBtn.Enabled = !(Properties.Settings.Default.tw_token.Length == 0);
+
+
             this.mTwHash.Text = Properties.Settings.Default.tw_hash;
 
             // 色
@@ -2832,8 +2831,7 @@ namespace NicoLive
             this.mMobileColor.BackColor = Properties.Settings.Default.mobile_color;
 
             // 外部配信
-            // TODO mUseHQ.Checked = Properties.Settings.Default.use_hq;
-            mUseHQ.Checked = true;
+            mUseHQ.Checked = Properties.Settings.Default.use_hq;
             mUseFME.Checked = Properties.Settings.Default.use_fme;
             mUseXSplit.Checked = Properties.Settings.Default.use_xsplit;
             mUseNLE.Checked = Properties.Settings.Default.use_nle;
@@ -2912,8 +2910,7 @@ namespace NicoLive
 
             Properties.Settings.Default.use_welcome_message = this.mUseWelcomeMessage.Checked;
 
-            Properties.Settings.Default.use_new_flash_console = this.mUseNewConsole.Checked;
-            Properties.Settings.Default.use_flash_console = this.mUseFlashConlse.Checked;
+            Properties.Settings.Default.use_flash_console = this.mUseNewConsole.Checked;
             Properties.Settings.Default.use_loss_time = this.mUseLossTime.Checked;
             Properties.Settings.Default.use_next_lv_notice = this.mUseNextLvNotice.Checked;
 
@@ -3068,13 +3065,23 @@ namespace NicoLive
         {
             if (Properties.Settings.Default.tw_token.Length == 0)
             {
-                oAuthDialog dlg = new oAuthDialog();
-                dlg.ShowDialog();
+                TwitterOAuthDialog dlg = new TwitterOAuthDialog();
+                if (DialogResult.OK == dlg.ShowDialog())
+                {
+                    mAuthBtn.Text = "再認証";
+                    mAuthResult.Text = "認証済み";
+                    mAuthResult.BackColor = System.Drawing.Color.Transparent;
+                    mTweetBtn.Enabled = true;
+                }
             }
             else
             {
                 Properties.Settings.Default.tw_token = "";
                 Properties.Settings.Default.tw_token_secret = "";
+                mAuthBtn.Text = "認証する";
+                mAuthResult.Text = "未認証";
+                mAuthResult.BackColor = System.Drawing.Color.Red;
+                mTweetBtn.Enabled = false;
             }
         }
 
@@ -3336,10 +3343,10 @@ namespace NicoLive
 
         private void mUseBrowserCookie_CheckedChanged(object sender, EventArgs e)
         {
-            mBrowser.Enabled = mUseBrowserCookie.Checked;
-            mMailBox.Enabled = !mUseBrowserCookie.Checked;
-            mPasswdBox.Enabled = !mUseBrowserCookie.Checked;
-            mLoginTest.Enabled = mUseBrowserCookie.Checked;
+            //mBrowser.Enabled = mUseBrowserCookie.Checked;
+            //mMailBox.Enabled = !mUseBrowserCookie.Checked;
+            //mPasswdBox.Enabled = !mUseBrowserCookie.Checked;
+            //mLoginTest.Enabled = mUseBrowserCookie.Checked;
             mLoginResult.Text = "-";
 
         }
@@ -3554,7 +3561,7 @@ namespace NicoLive
                     this.mLoginResult.Text = "ログイン中…";
                 });
                 string msg = "ログイン失敗";
-                if (Nico.Instance.LoginTest(mUserSessionBox.Text))
+                if (Nico.Instance.Login(mMailBox.Text,mPasswdBox.Text))
                 {
                     msg = "ログイン成功";
                 }
@@ -3616,30 +3623,15 @@ namespace NicoLive
 
         }
 
-        private void mUseFlashConlse_CheckedChanged(object sender, EventArgs e)
+        private void mTweetBtn_Click(object sender, EventArgs e)
         {
-            if (!mUseFlashConlse.Checked)
+            System.Threading.Thread th = new System.Threading.Thread(delegate()
             {
-                mUseLossTime.Enabled = true;
-                mUseNextLvNotice.Enabled = true;
-            }
-            else
-            {
-                mUseLossTime.Enabled = false;
-                mUseLossTime.Checked = false;
-                mUseNextLvNotice.Enabled = false;
-                mUseNextLvNotice.Checked = false;
-            }
-        }
-
-        private void mTabHQ_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void groupBox16_Enter(object sender, EventArgs e)
-        {
-
+                Utils.Tweet("ツイートテスト " + DateTime.Now);
+                MessageBox.Show("ツイートテストを行いました自分のTLを確認して下さい");
+            });
+            th.Name = "ShortcutKey: tweet comment";
+            th.Start();
         }
 
 

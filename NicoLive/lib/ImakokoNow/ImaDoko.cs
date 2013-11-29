@@ -70,6 +70,9 @@ namespace NicoLive
         //-------------------------------------------------------------------------
         public static string ReverseGeocode(double lat, double lon)
         {
+            // http://nicolive_wakusu.b72.in/getAddressNicolive.php
+            // http://geocode.didit.jp/reverse/
+
             try
             {
                 // HTTP用WebRequestの作成
@@ -79,6 +82,8 @@ namespace NicoLive
                 req.Method = WebRequestMethods.Http.Get;
                 req.Timeout = 6000;
                 req.ContentType = "application/x-www-form-urlencoded";
+
+                Utils.WriteLog(url);
 
                 // レスポンスを取得
                 WebResponse res = req.GetResponse();
@@ -96,7 +101,7 @@ namespace NicoLive
                                 if (reader.NodeType == XmlNodeType.Text)
                                 {
                                     string result = reader.Value;
-                                    //Utils.WriteLog(result);
+                                    Utils.WriteLog(result);
                                     return result;
                                 }
                                 else

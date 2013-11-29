@@ -314,9 +314,9 @@ namespace NicoLive
 		}
 
         //-------------------------------------------------------------------------
-        // 自動放送開始チェック
+        // 自動放送開始チェック (window handle, GINZA版)
         //-------------------------------------------------------------------------
-        public int AutoStart(IntPtr hWnd, int iX, int iY)
+        public int AutoStartGINZA(IntPtr hWnd, int iX, int iY)
         {
             const int padding = 10;
             const int padding2 = 10;

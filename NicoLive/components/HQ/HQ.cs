@@ -1,4 +1,11 @@
-﻿using System.Collections.Generic;
+﻿//-------------------------------------------------------------------------
+// 高画質配信クラス
+//
+// Copyright (c) 金時豆(http://ch.nicovideo.jp/community/co48276)
+// Copyright (c) meronpan(http://ch.nicovideo.jp/community/co274186)
+//-------------------------------------------------------------------------
+
+using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Windows.Forms;
@@ -126,7 +133,3 @@ namespace NicoLive
 
     }
 }
-//-------------------------------------------------------------------------
-// Copyright (c) 金時豆(http://ch.nicovideo.jp/community/co48276)
-// $Id$
-//-------------------------------------------------------------------------

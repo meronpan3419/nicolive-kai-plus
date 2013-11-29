@@ -112,16 +112,18 @@ namespace NicoLive
                 //次枠通知
                 if (Properties.Settings.Default.use_loss_time && Properties.Settings.Default.use_next_lv_notice)
                 {
-                    if ((time_sec - btime_sec > 30 * 60) && !mDoingGetNextWaku2)
+                    if ((time_sec - btime_sec > 30 * 60) && !mDoingGetNextWaku)
                     {
                         // 枠取り画面へ 
                         if (mOwnLive && mContWaku.Checked)
                         {
-                            mDoingGetNextWaku2 = true;
+                            mDoingGetNextWaku = true;
                             Thread.Sleep(500);
 
                             // 棒読みちゃんで自動枠取り通知
                             this.mBouyomi.Talk(mMsg.GetMessage("枠取りを開始します"));
+
+                            mNico.LiveStop(LiveID, mLiveInfo.Token);
 
                             this.Invoke((Action)delegate()
                             {

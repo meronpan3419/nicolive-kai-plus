@@ -41,7 +41,8 @@ namespace NicoLive
 
             //string url = "http://live.nicovideo.jp/liveplayer.swf?110519134121&allowscale=FALSE&v=" + mLiveID.Text + "&watchVideoID" + mLiveID.Text;
             //string url = "http://live.nicovideo.jp/liveplayer.swf?v=" + mLiveID.Text + "&watchVideoID" + mLiveID.Text;
-            string url = "http://nl.nimg.jp/public/swf/liveplayer11.swf?v=" + mLiveID.Text + "&watchVideoID" + mLiveID.Text;
+            //string url = "http://nl.nimg.jp/public/swf/liveplayer11.swf?v=" + mLiveID.Text + "&watchVideoID" + mLiveID.Text;
+            string url = "http://live.nicovideo.jp/nicoliveplayer.swf?v=" + mLiveID.Text;
 
             //mFlash.Size = new System.Drawing.Size(950, 520);
             mFlash.LoadMovie(0, url);
@@ -137,7 +138,7 @@ namespace NicoLive
             {
                 mBigBtn.BackColor = System.Drawing.Color.Orange;
                 mSmallBtn.BackColor = System.Drawing.SystemColors.Control;
-                this.Size = new System.Drawing.Size(560, 537);
+                this.Size = new System.Drawing.Size(680, 537);
                 mFlash.Size = new System.Drawing.Size(960, 520);
                 mTop.Text = "最前面";
                 mAutoBoot.Text = "自動起動";
@@ -146,7 +147,7 @@ namespace NicoLive
             {
                 mBigBtn.BackColor = System.Drawing.SystemColors.Control;
                 mSmallBtn.BackColor = System.Drawing.Color.Orange;
-                this.Size = new System.Drawing.Size(284, 293);
+                this.Size = new System.Drawing.Size(340, 293);
                 mFlash.Size = new System.Drawing.Size(480, 260);
                 mTop.Text = "最";
                 mAutoBoot.Text = "自";

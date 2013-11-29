@@ -128,8 +128,8 @@
             // 
             // mFlash
             // 
-            this.mFlash.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.mFlash.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.mFlash.Enabled = true;
             this.mFlash.Location = new System.Drawing.Point(0, 25);
             this.mFlash.Margin = new System.Windows.Forms.Padding(0);
@@ -150,7 +150,7 @@
             this.ClientSize = new System.Drawing.Size(552, 511);
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.mFlash);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Viewer";
             this.Text = "簡易ビューアー";

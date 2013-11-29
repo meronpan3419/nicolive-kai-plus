@@ -40,10 +40,11 @@
             this.mConnectBtn = new System.Windows.Forms.ToolStripButton();
             this.toolStripDropDownButton1 = new System.Windows.Forms.ToolStripDropDownButton();
             this.ViewerMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.LiveConsoleStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
-            this.初期設定ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.SettingMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
-            this.nicoLiveについてToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.AboutpMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
             this.mBouyomiBtn = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
@@ -188,10 +189,11 @@
             this.toolStripDropDownButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.None;
             this.toolStripDropDownButton1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.ViewerMenuItem,
+            this.LiveConsoleStripMenuItem,
             this.toolStripSeparator5,
-            this.初期設定ToolStripMenuItem,
+            this.SettingMenuItem,
             this.toolStripMenuItem1,
-            this.nicoLiveについてToolStripMenuItem1});
+            this.AboutpMenuItem});
             this.toolStripDropDownButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripDropDownButton1.Image")));
             this.toolStripDropDownButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripDropDownButton1.Name = "toolStripDropDownButton1";
@@ -205,29 +207,36 @@
             this.ViewerMenuItem.Text = "簡易ビューアー";
             this.ViewerMenuItem.Click += new System.EventHandler(this.ViewerMenuItem_Click);
             // 
+            // LiveConsoleStripMenuItem
+            // 
+            this.LiveConsoleStripMenuItem.Name = "LiveConsoleStripMenuItem";
+            this.LiveConsoleStripMenuItem.Size = new System.Drawing.Size(193, 22);
+            this.LiveConsoleStripMenuItem.Text = "配信コンソール";
+            this.LiveConsoleStripMenuItem.Click += new System.EventHandler(this.LiveConsoleStripMenuItem_Click);
+            // 
             // toolStripSeparator5
             // 
             this.toolStripSeparator5.Name = "toolStripSeparator5";
             this.toolStripSeparator5.Size = new System.Drawing.Size(190, 6);
             // 
-            // 初期設定ToolStripMenuItem
+            // SettingMenuItem
             // 
-            this.初期設定ToolStripMenuItem.Name = "初期設定ToolStripMenuItem";
-            this.初期設定ToolStripMenuItem.Size = new System.Drawing.Size(193, 22);
-            this.初期設定ToolStripMenuItem.Text = "設定";
-            this.初期設定ToolStripMenuItem.Click += new System.EventHandler(this.SettingMenu_Click);
+            this.SettingMenuItem.Name = "SettingMenuItem";
+            this.SettingMenuItem.Size = new System.Drawing.Size(193, 22);
+            this.SettingMenuItem.Text = "設定";
+            this.SettingMenuItem.Click += new System.EventHandler(this.SettingMenu_Click);
             // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
             this.toolStripMenuItem1.Size = new System.Drawing.Size(190, 6);
             // 
-            // nicoLiveについてToolStripMenuItem1
+            // AboutpMenuItem
             // 
-            this.nicoLiveについてToolStripMenuItem1.Name = "nicoLiveについてToolStripMenuItem1";
-            this.nicoLiveについてToolStripMenuItem1.Size = new System.Drawing.Size(193, 22);
-            this.nicoLiveについてToolStripMenuItem1.Text = "NicoLiveのバージョン情報";
-            this.nicoLiveについてToolStripMenuItem1.Click += new System.EventHandler(this.AboutNicoLiveMenu_Click);
+            this.AboutpMenuItem.Name = "AboutpMenuItem";
+            this.AboutpMenuItem.Size = new System.Drawing.Size(193, 22);
+            this.AboutpMenuItem.Text = "NicoLiveのバージョン情報";
+            this.AboutpMenuItem.Click += new System.EventHandler(this.AboutNicoLiveMenu_Click);
             // 
             // toolStripSeparator8
             // 
@@ -384,9 +393,9 @@
             // mLoginLabel
             // 
             this.mLoginLabel.AutoToolTip = true;
-            this.mLoginLabel.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
-                        | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
-                        | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
+            this.mLoginLabel.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
             this.mLoginLabel.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
             this.mLoginLabel.Font = new System.Drawing.Font("ＭＳ Ｐゴシック", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.mLoginLabel.Name = "mLoginLabel";
@@ -397,9 +406,9 @@
             // mTotalCnt
             // 
             this.mTotalCnt.AutoToolTip = true;
-            this.mTotalCnt.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
-                        | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
-                        | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
+            this.mTotalCnt.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
             this.mTotalCnt.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
             this.mTotalCnt.Font = new System.Drawing.Font("ＭＳ Ｐゴシック", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.mTotalCnt.Name = "mTotalCnt";
@@ -410,9 +419,9 @@
             // mActiveCnt
             // 
             this.mActiveCnt.AutoToolTip = true;
-            this.mActiveCnt.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
-                        | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
-                        | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
+            this.mActiveCnt.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
             this.mActiveCnt.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
             this.mActiveCnt.Font = new System.Drawing.Font("ＭＳ Ｐゴシック", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.mActiveCnt.Name = "mActiveCnt";
@@ -423,9 +432,9 @@
             // mUniqCnt
             // 
             this.mUniqCnt.AutoToolTip = true;
-            this.mUniqCnt.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
-                        | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
-                        | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
+            this.mUniqCnt.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
             this.mUniqCnt.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
             this.mUniqCnt.Font = new System.Drawing.Font("ＭＳ Ｐゴシック", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.mUniqCnt.Name = "mUniqCnt";
@@ -435,9 +444,9 @@
             // 
             // mCpuInfo
             // 
-            this.mCpuInfo.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
-                        | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
-                        | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
+            this.mCpuInfo.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
             this.mCpuInfo.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
             this.mCpuInfo.Font = new System.Drawing.Font("ＭＳ Ｐゴシック", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.mCpuInfo.Name = "mCpuInfo";
@@ -452,9 +461,9 @@
             // 
             // mBattery
             // 
-            this.mBattery.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
-                        | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
-                        | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
+            this.mBattery.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
             this.mBattery.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
             this.mBattery.Font = new System.Drawing.Font("ＭＳ Ｐゴシック", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.mBattery.Name = "mBattery";
@@ -463,9 +472,9 @@
             // 
             // mWakumachi
             // 
-            this.mWakumachi.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
-                        | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
-                        | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
+            this.mWakumachi.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
             this.mWakumachi.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
             this.mWakumachi.Font = new System.Drawing.Font("MS UI Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.mWakumachi.Name = "mWakumachi";
@@ -475,9 +484,9 @@
             // 
             // mUpLink
             // 
-            this.mUpLink.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
-                        | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
-                        | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
+            this.mUpLink.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
             this.mUpLink.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
             this.mUpLink.Font = new System.Drawing.Font("ＭＳ Ｐゴシック", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.mUpLink.Name = "mUpLink";
@@ -486,9 +495,9 @@
             // 
             // mDownLink
             // 
-            this.mDownLink.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
-                        | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
-                        | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
+            this.mDownLink.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
+            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
             this.mDownLink.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
             this.mDownLink.Font = new System.Drawing.Font("MS UI Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.mDownLink.Name = "mDownLink";
@@ -496,9 +505,9 @@
             // 
             // tableLayoutPanel1
             // 
-            this.tableLayoutPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.tableLayoutPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.tableLayoutPanel1.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Outset;
             this.tableLayoutPanel1.ColumnCount = 1;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
@@ -859,6 +868,7 @@
             this.mRemainingTime.Size = new System.Drawing.Size(233, 41);
             this.mRemainingTime.TabIndex = 16;
             this.mRemainingTime.Text = "残り時間　00:00";
+            this.mRemainingTime.Click += new System.EventHandler(this.mRemainingTime_Click);
             // 
             // mCommandBox
             // 
@@ -913,8 +923,8 @@
             // 
             // mCommentBox
             // 
-            this.mCommentBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.mCommentBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.mCommentBox.Location = new System.Drawing.Point(275, 49);
             this.mCommentBox.Multiline = true;
             this.mCommentBox.Name = "mCommentBox";
@@ -1044,9 +1054,9 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.ToolStripDropDownButton toolStripDropDownButton1;
-        private System.Windows.Forms.ToolStripMenuItem 初期設定ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem SettingMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
-        private System.Windows.Forms.ToolStripMenuItem nicoLiveについてToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem AboutpMenuItem;
         private System.Windows.Forms.ContextMenuStrip mCmtCxtMenu;
         private System.Windows.Forms.ToolStripMenuItem mCopyComment;
         private System.Windows.Forms.ToolStripButton mImakokoBtn;
@@ -1113,6 +1123,7 @@
         private System.Windows.Forms.Button mUpdateFMLEProfileListBtn;
         private System.Windows.Forms.ComboBox mFMLEProfileList;
         private System.Windows.Forms.Label mHQStatus;
+        private System.Windows.Forms.ToolStripMenuItem LiveConsoleStripMenuItem;
     }
 }
 

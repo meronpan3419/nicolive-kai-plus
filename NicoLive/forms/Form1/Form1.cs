@@ -88,7 +88,7 @@ namespace NicoLive
         //private DateTime mSpeakTime;
 
         // 次枠取得中か
-        private bool mDoingGetNextWaku2 = false;
+        private bool mDoingGetNextWaku = false;
 
         // 残り3分通知したかどうか
         private bool mTalkLimit = false;
@@ -153,6 +153,7 @@ namespace NicoLive
         private UInt32 mNextGC;
 
         private Viewer mViewer = null;
+        private LiveConsole mLiveConsole = null;
 
         private bool mSkipBouyomi = true;
 
@@ -284,7 +285,7 @@ namespace NicoLive
             mOwnLive = false;
             mDisconnect = true;
             mTalkLimit = false;
-            mDoingGetNextWaku2 = false;
+            mDoingGetNextWaku = false;
             mNextGC = 0;
             mNico.Comment = "";
             mTargetVisitorCnt = 10;
@@ -391,7 +392,7 @@ namespace NicoLive
             //mFlash.Anchor = (AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top);
             //mFlash.Size = new System.Drawing.Size(958, 205);
             //mFlash.LoadMovie(0, uri);
-            
+
 
         }
 
@@ -458,7 +459,7 @@ namespace NicoLive
             {
 
 
-                Twitter t = new Twitter();
+                Twitter t = new Twitter(Properties.Settings.Default.tw_token, Properties.Settings.Default.tw_token_secret);
                 string comment = mCommentBox.Text;
                 string msg = comment + " (" + mLiveInfo.Title + " http://nico.ms/" + LiveID + " ) " + Properties.Settings.Default.tw_hash;
                 Utils.WriteLog("msg:" + msg);
@@ -566,12 +567,12 @@ namespace NicoLive
             //次枠通知
             if (Properties.Settings.Default.use_loss_time && Properties.Settings.Default.use_next_lv_notice)
             {
-                if (!mDoingGetNextWaku2)
+                if (!mDoingGetNextWaku)
                 {
                     // 枠取り画面へ 
                     if (mOwnLive)
                     {
-                        mDoingGetNextWaku2 = true;
+                        mDoingGetNextWaku = true;
                         Thread.Sleep(500);
 
                         // 棒読みちゃんで自動枠取り通知
@@ -606,6 +607,20 @@ namespace NicoLive
         {
             HQ.Stop();
         }
+
+
+
+        private void mRemainingTime_Click(object sender, EventArgs e)
+        {
+            if (LiveID.Length != 0)
+            {
+                System.Diagnostics.Process.Start("http://live.nicovideo.jp/watch/" + LiveID);
+            }
+        }
+
+
+
+
 
 
 

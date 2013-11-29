@@ -7,6 +7,7 @@
 using System;
 using System.Windows.Forms;
 
+
 //-------------------------------------------------------------------------
 // クラス実装
 //-------------------------------------------------------------------------
@@ -16,6 +17,7 @@ namespace NicoLive
     {
         // オーナーフォーム
         private Form mOwner = null;
+        bool IsIE8Fixed = false;
 
         public Form MyOwner
         {
@@ -36,18 +38,29 @@ namespace NicoLive
         //-------------------------------------------------------------------------
         private void Imakoko_Load(object sender, EventArgs e)
         {
-            string uri = String.Format("http://imakoko-gps.appspot.com/view?trace={0}&hide_userlist=1",
+            string uri = String.Format("http://proxy.imacoconow.com/v3/view?trace={0}",
                                         Properties.Settings.Default.imakoko_user);
 
             if (mOwner != null)
             {
                 this.Left = mOwner.Left + 400;
-                this.Top = mOwner.Top+60;
+                this.Top = mOwner.Top + 60;
             }
             mBrowser.Navigate(uri);
+            //System.Diagnostics.Process.Start(uri);
         }
 
-        
+        private void mBrowser_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
+        {
+            //if (!IsIE8Fixed)
+            //{
+            //    string html = mBrowser.DocumentText.Replace("<head>", "<head><meta http-equiv=\"X-UA-Compatible\" content=\"IE=7\">");
+            //    html = html.Replace("script src=\"/static/", "script src=\"http://imakoko-gps.appspot.com/static/");
+            //    mBrowser.DocumentText = html;
+            //    IsIE8Fixed = true;
+            // }
+        }
+
     }
 }
 //-------------------------------------------------------------------------

@@ -31,7 +31,7 @@ namespace NicoLive
                         
             Thread th = new Thread(delegate()
             {
-                using (Twitter tw = new Twitter())
+                using (Twitter tw = new Twitter(Properties.Settings.Default.tw_token, Properties.Settings.Default.tw_token_secret))
                 {
                     bool start = iStart;
 

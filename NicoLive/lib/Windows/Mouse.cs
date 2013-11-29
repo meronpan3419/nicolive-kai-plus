@@ -75,14 +75,16 @@ namespace NicoLive
         //-------------------------------------------------------------------------
         // 指定位置をマウスでクリック(send message)
         //-------------------------------------------------------------------------
-        public static void MouseClick2(int iX, int iY)
+        public static void MouseClickHWnd(IntPtr hWnd, int iX, int iY)
         {
-            IntPtr hWnd = System.Diagnostics.Process.GetCurrentProcess().MainWindowHandle;
+            //IntPtr hWnd = System.Diagnostics.Process.GetCurrentProcess().MainWindowHandle;
             uint WM_LBUTTONDOWN = 0x201;
             uint WM_LBUTTONUP = 0x202;
-            int _lParam = (10 & 0xffff) | (10 << 16);
-            SendMessage(hWnd, WM_LBUTTONDOWN, _lParam, _lParam);
-            SendMessage(hWnd, WM_LBUTTONUP, 0, _lParam);
+            int MK_LBUTTON = 0x1;
+            int _lParam = (iX & 0xffff) | (iY << 16);
+
+            SendMessage(hWnd, WM_LBUTTONDOWN, MK_LBUTTON, _lParam);
+            SendMessage(hWnd, WM_LBUTTONUP, MK_LBUTTON, _lParam);
         }
     }
 }

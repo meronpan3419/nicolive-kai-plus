@@ -41,7 +41,7 @@
             this.mBrowser.ScriptErrorsSuppressed = true;
             this.mBrowser.Size = new System.Drawing.Size(349, 235);
             this.mBrowser.TabIndex = 0;
-            this.mBrowser.Url = new System.Uri("http://imakoko-gps.appspot.com/static/view_hokkaido.html", System.UriKind.Absolute);
+            this.mBrowser.DocumentCompleted += new System.Windows.Forms.WebBrowserDocumentCompletedEventHandler(this.mBrowser_DocumentCompleted);
             // 
             // Imakoko
             // 

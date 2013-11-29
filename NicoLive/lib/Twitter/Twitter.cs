@@ -16,9 +16,10 @@ namespace NicoLive
     class Twitter :IDisposable
     {
 
-
+        // nicolive 
         string mConsumerKey = "WZwUqBVTPLOn6gRXNVW9Q";
         string mConsumerSecret = "QUQS4nSTCCKRSFCAAQkCpgeo2wMaNM4GQ4FNuAr1FU";
+
         string mToken = "";
         string mTokenSecret = "";
         TwitterService mTwitterService;
@@ -27,6 +28,11 @@ namespace NicoLive
         public Twitter()
         {
             mTwitterService = new TwitterService(mConsumerKey, mConsumerSecret);
+        }
+
+        public Twitter(String iToken,  String iTokenSecret)
+        {
+            mTwitterService = new TwitterService(mConsumerKey, mConsumerSecret, iToken, iTokenSecret);
         }
 
         //-------------------------------------------------------------------------
@@ -39,7 +45,7 @@ namespace NicoLive
         //-------------------------------------------------------------------------
         // oAuth認証
         //-------------------------------------------------------------------------
-		public string GetOAuthToken()
+		public string GetOAuthTokenURL()
 		{
 
             mRequestToken = mTwitterService.GetRequestToken();
@@ -50,7 +56,7 @@ namespace NicoLive
         }
 
 
-        public bool oAuth(string iPIN)
+        public bool GetOAuthToken(string iPIN)
         {
 
             try
@@ -96,10 +102,10 @@ namespace NicoLive
             {
                 mTwitterService.SendTweet(new SendTweetOptions { Status = iMessage });
             }
-            catch (Exception)
+            catch (Exception e)
             {
                // throw e;
-               // Utils.WriteLog("twitter post :" + e.StackTrace.ToString());
+               Utils.WriteLog("twitter post :" + e.StackTrace.ToString());
 
 
             }
