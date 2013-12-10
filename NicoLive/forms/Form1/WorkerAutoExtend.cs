@@ -9,6 +9,9 @@ using System.ComponentModel;
 using System.Threading;
 using System.Windows.Forms;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.Diagnostics;
 
 namespace NicoLive
 {
@@ -89,6 +92,7 @@ namespace NicoLive
                 //--------------------- 無料延長開始 -----------------------
                 if (mAutoExtendBtn.Checked && min <= 4 && !NEED_FREE_EXTEND_0)  // 25分経過
                 {
+                    Utils.WriteLog("AutoExtend(): 無料延長開始");
                     NEED_FREE_EXTEND_0 = true;
                     NEED_FREE_EXTEND_1 = true;
                 }
@@ -119,8 +123,8 @@ namespace NicoLive
                         {
                             if (sale.mItem != null && sale.mItem.Equals("freeextend"))
                             {
+                                Utils.WriteLog("AutoExtend(): 無料延長あった");
                                 mFreeExtendItem = sale;
-                                mPushExtend = true;
                                 NEED_FREE_EXTEND_2 = true;
                                 NEED_FREE_EXTEND_1 = false;
                             }
@@ -133,10 +137,10 @@ namespace NicoLive
                         {
                             if (mNico.Purchase(id, mLiveInfo.Token, mFreeExtendItem))
                             {
+                                Utils.WriteLog("AutoExtend(): 無料延長完了");
                                 NEED_FREE_EXTEND_2 = false;
 
                                 //this.SendComment(mMsg.GetMessage("延長完了"), true);
-                                mPushExtend = false;
                                 mAutoExtendWorker_extend_wait = true;
                                 mIsExtend = true;
                             }
@@ -161,7 +165,7 @@ namespace NicoLive
             if (!mNico.IsLogin) return;
             if (mDisconnect) return;
 
-
+            Utils.WriteLog("AutoLiveStartHQ(): HQ.Restart(): " + LiveID);
             HQ.Restart(LiveID);
             mStartHQ = true;
 
@@ -174,8 +178,8 @@ namespace NicoLive
         private void AutoLiveStartConsole()
         {
             // 通常配信
-            if (!Properties.Settings.Default.use_flash_console) return;
-            if (Properties.Settings.Default.use_hq) return;     // 高画質配信の時はスタート幼い
+            //if (!Properties.Settings.Default.use_flash_console) return;
+            //if (Properties.Settings.Default.use_hq) return;     // 高画質配信の時はスタート幼い
             if (!Properties.Settings.Default.auto_connect) return;
             if (mPushStart) return;    // 配信開始ボタン押す前か
             if (!mNico.IsLogin) return;
@@ -190,24 +194,46 @@ namespace NicoLive
 
             });
 
-            Mouse.MouseClickHWnd(hWnd, 300, 30);    //簡単配信
+            Utils.WriteLog("AutoLiveStartConsole(): hWnd = " + hWnd.ToString());
+
+            using (ScreenCapture scr = new ScreenCapture())
+            {
+                Bitmap bmp = scr.Capture2(hWnd);
+                Color color = bmp.GetPixel(45, 150);
+                if (color.Name.Equals("ff323232"))     //フラッシュが読み込み完了してない
+                {                   
+                    Utils.WriteLog("AutoLiveStartConsole(): フラッシュが読み込み完了してない: " + color.Name);
+                    return;　
+                }
+            }
+
+            if (!Properties.Settings.Default.use_hq)
+            {
+                Mouse.MouseClickHWnd(hWnd, 300, 20);    //簡単配信
+            }
+            else
+            {
+                Mouse.MouseClickHWnd(hWnd, 400, 20);    //外部配信
+            }
             Thread.Sleep(1000);
-            Mouse.MouseClickHWnd(hWnd, 400, 145);    //はいボタン
+            Mouse.MouseClickHWnd(hWnd, 400, 145);   //はいボタン
             Thread.Sleep(1000);
             Mouse.MouseClickHWnd(hWnd, 180, 150);    //配信開始
             Thread.Sleep(1000);
             Mouse.MouseClickHWnd(hWnd, 400, 145);    //はいボタン
 
-
             mPushStart = true;  //配信開始ボタン押したよフラグ
             if (mPushStart)
             {
                 mBouyomi.Talk(mMsg.GetMessage("配信を開始しました"));
+                Utils.WriteLog("AutoLiveStartConsole(): 配信開始");
                 this.mLastChatTime = DateTime.Now;
                 this.mLastCompctTime = DateTime.Now;
                 this.mCompactForcast = false;
             }
         }
+
+
 
     }
 }

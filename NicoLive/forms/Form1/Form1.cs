@@ -71,9 +71,6 @@ namespace NicoLive
         // 接続中か
         public bool mLogin_cancel = false;
 
-        // console.swfのuri
-        private readonly string mConsoleUri = "http://live.nicovideo.jp/console.swf?v=";
-
         // Twitterで放送開始をポストしたかどうか
         private bool mTwPost = false;
         private string mTwPostedLv = "";
@@ -98,9 +95,6 @@ namespace NicoLive
 
         // 配信開始ボタンがおされた
         private bool mPushStart = false;
-
-        // 延長ボタンがおされた
-        private bool mPushExtend = false;
 
         // 延長されたかどうか
         private bool mIsExtend = false;
@@ -154,6 +148,7 @@ namespace NicoLive
 
         private Viewer mViewer = null;
         private LiveConsole mLiveConsole = null;
+        private Imakoko mImakoko = null;
 
         private bool mSkipBouyomi = true;
 
@@ -277,7 +272,7 @@ namespace NicoLive
             mSkipBouyomi = true;
             mSkipLogin = iSkipLogin;
             mPushStart = false;
-            mPushExtend = false;
+
             mIsExtend = false;
             mStartHQ = false;
             mPrevLogin = false;
@@ -379,22 +374,7 @@ namespace NicoLive
             nico = null;
             return result;
         }
-        //-------------------------------------------------------------------------
-        // 配信プレイヤー取得
-        //-------------------------------------------------------------------------
-        private void GetPlayer()
-        {
-            //string uri = mConsoleUri + LiveID + "&_ut=" + Utils.GetUnixTime(DateTime.Now);
-            ////if (uri.Equals(mFlash.Movie))
-            ////{
-            ////    mFlash.LoadMovie(0, mConsoleUri);
-            ////}
-            //mFlash.Anchor = (AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top);
-            //mFlash.Size = new System.Drawing.Size(958, 205);
-            //mFlash.LoadMovie(0, uri);
 
-
-        }
 
         //-------------------------------------------------------------------------
         // 来場者数通知
@@ -436,55 +416,55 @@ namespace NicoLive
 
         private void CommentPost()
         {
+
+            string comment = mCommentBox.Text;
+            mCommentBox.Text = "";
+
             if (cbCommentOwner.Checked)
             {
                 //運営コメント
-                SendComment(mCommentBox.Text, mCommandBox.Text, true, true);
+                SendComment(comment, mCommandBox.Text, true, true);
             }
             else
             {
-                if (cbComment184.Checked)
-                {
-                    SendComment(mCommentBox.Text, false, true);
-                }
-                else
-                {
-                    SendComment(mCommentBox.Text, false, false);
-                }
+                SendComment(comment, false, cbComment184.Checked);
+
 
             }
 
-            if (cbCommentTwitter.Checked || Properties.Settings.Default.tw_token.Length == 0 ||
-              Properties.Settings.Default.tw_token_secret.Length == 0)
+            // twitterツイート
+            if (!cbCommentTwitter.Checked) return;
+            if (Properties.Settings.Default.tw_token.Length == 0) return;
+            if (Properties.Settings.Default.tw_token_secret.Length == 0) return;
+
+
+
+            Twitter t = new Twitter(Properties.Settings.Default.tw_token, Properties.Settings.Default.tw_token_secret);
+            string tweet = comment;
+            string msg = tweet + " (" + mLiveInfo.Title + " http://nico.ms/" + LiveID + " ) " + Properties.Settings.Default.tw_hash;
+            Utils.WriteLog("msg:" + msg);
+            Utils.WriteLog("msg length:" + msg.Length);
+
+            try
+            {
+                Thread th = new Thread(delegate()
+                {
+
+                    t.Post(msg, "");
+                });
+                th.Name = "NivoLive.Form1.CommentPost()";
+                th.Start();
+
+
+
+            }
+            catch (Exception)
             {
 
-
-                Twitter t = new Twitter(Properties.Settings.Default.tw_token, Properties.Settings.Default.tw_token_secret);
-                string comment = mCommentBox.Text;
-                string msg = comment + " (" + mLiveInfo.Title + " http://nico.ms/" + LiveID + " ) " + Properties.Settings.Default.tw_hash;
-                Utils.WriteLog("msg:" + msg);
-                Utils.WriteLog("msg length:" + msg.Length);
-
-                try
-                {
-                    Thread th = new Thread(delegate()
-                    {
-
-                        t.Post(msg, "");
-                    });
-                    th.Name = "NivoLive.Form1.CommentPost()";
-                    th.Start();
-
-
-
-                }
-                catch (Exception)
-                {
-
-                }
             }
 
-            mCommentBox.Text = "";
+
+            
         }
 
 
@@ -492,17 +472,18 @@ namespace NicoLive
         private void updateFMLEProfileList()
         {
             string path = Properties.Settings.Default.fmle_profile_path;
-            if (Directory.Exists(path))
+
+            if (!Directory.Exists(path)) return;
+
+            string[] xmls = System.IO.Directory.GetFiles(path);
+            mFMLEProfileList.Items.Clear();
+            foreach (string xml in xmls)
             {
-                string[] xmls = System.IO.Directory.GetFiles(path);
-                mFMLEProfileList.Items.Clear();
-                foreach (string xml in xmls)
-                {
-                    mFMLEProfileList.Items.Add(System.IO.Path.GetFileName(xml));
-                }
-                mFMLEProfileList.SelectedItem = Properties.Settings.Default.fmle_default_profile;
-                _boot = false;
+                mFMLEProfileList.Items.Add(System.IO.Path.GetFileName(xml));
             }
+            mFMLEProfileList.SelectedItem = Properties.Settings.Default.fmle_default_profile;
+            _boot = false;
+
         }
 
         private void updateBroadcastType()
@@ -528,10 +509,11 @@ namespace NicoLive
             Properties.Settings.Default.use_fme = true;
             Properties.Settings.Default.use_xsplit = false;
             Properties.Settings.Default.use_nle = false;
-            if (Properties.Settings.Default.use_hq && mNico.IsLogin)
-            {
-                HQ.Restart(LiveID);
-            }
+
+            if (!Properties.Settings.Default.use_hq) return;
+            if (!mNico.IsLogin) return;
+
+            HQ.Restart(LiveID);
 
 
         }
@@ -541,10 +523,11 @@ namespace NicoLive
             Properties.Settings.Default.use_fme = false;
             Properties.Settings.Default.use_xsplit = true;
             Properties.Settings.Default.use_nle = false;
-            if (Properties.Settings.Default.use_hq && mNico.IsLogin)
-            {
-                HQ.Restart(LiveID);
-            }
+
+            if (!Properties.Settings.Default.use_hq) return;
+            if (!mNico.IsLogin) return;
+
+            HQ.Restart(LiveID);
 
         }
 
@@ -553,40 +536,41 @@ namespace NicoLive
             Properties.Settings.Default.use_fme = false;
             Properties.Settings.Default.use_xsplit = false;
             Properties.Settings.Default.use_nle = true;
-            if (Properties.Settings.Default.use_hq && mNico.IsLogin)
-            {
-                HQ.Restart(LiveID);
-            }
+
+            if (!Properties.Settings.Default.use_hq) return;
+            if (!mNico.IsLogin) return;
+
+            HQ.Restart(LiveID);
+
 
         }
 
         private void mNextWakuFastBtn_Click(object sender, EventArgs e)
         {
 
-
             //次枠通知
-            if (Properties.Settings.Default.use_loss_time && Properties.Settings.Default.use_next_lv_notice)
+            if (!Properties.Settings.Default.use_loss_time) return;
+            if (!Properties.Settings.Default.use_next_lv_notice) return;
+            if (mDoingGetNextWaku) return;
+
+            //if (!mOwnLive) return;
+
+            // 枠取り画面へ 
+            mDoingGetNextWaku = true;
+            Thread.Sleep(500);
+
+            // 棒読みちゃんで自動枠取り通知
+            this.mBouyomi.Talk(mMsg.GetMessage("枠取りを開始します"));
+
+            mNico.LiveStop(LiveID, mLiveInfo.Token);
+
+            this.Invoke((Action)delegate()
             {
-                if (!mDoingGetNextWaku)
-                {
-                    // 枠取り画面へ 
-                    if (mOwnLive)
-                    {
-                        mDoingGetNextWaku = true;
-                        Thread.Sleep(500);
+                GetNextWaku2();
+            });
 
-                        // 棒読みちゃんで自動枠取り通知
-                        this.mBouyomi.Talk(mMsg.GetMessage("枠取りを開始します"));
 
-                        mNico.LiveStop(LiveID, mLiveInfo.Token);
 
-                        this.Invoke((Action)delegate()
-                        {
-                            GetNextWaku2();
-                        });
-                    }
-                }
-            }
         }
 
 
@@ -612,10 +596,15 @@ namespace NicoLive
 
         private void mRemainingTime_Click(object sender, EventArgs e)
         {
-            if (LiveID.Length != 0)
-            {
-                System.Diagnostics.Process.Start("http://live.nicovideo.jp/watch/" + LiveID);
-            }
+            if (LiveID.Length == 0) return;
+
+            System.Diagnostics.Process.Start("http://live.nicovideo.jp/watch/" + LiveID);
+
+        }
+
+        private void cbUseHQ_CheckedChanged(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.use_hq = cbUseHQ.Checked;
         }
 
 

@@ -71,9 +71,8 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CookieGetterSharp, Version=2.0.0.11, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\デスクトップ\nicolive-kaiplus5\CookieGetterSharp.dll</HintPath>
+    <Reference Include="CookieGetterSharp">
+      <HintPath>.\CookieGetterSharp.dll</HintPath>
     </Reference>
     <Reference Include="Hammock.ClientProfile, Version=1.0.0.0, Culture=neutral, PublicKeyToken=c148cfba29ed1a4d, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -108,7 +107,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="components\AutoExtend.cs" />
     <Compile Include="components\Comment.cs" />
     <Compile Include="components\HQ\FMEGUI.cs" />
     <Compile Include="components\Launcher.cs" />
@@ -345,14 +343,11 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="ankoSQLite3.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="app.ico" />
     <None Include="Resources\err.bmp" />
     <None Include="Resources\bro_ok2.bmp" />
-    <Content Include="CookieGetterSharp.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="Resources\extend_fail.bmp" />
     <None Include="Resources\FMEng.bmp" />
     <None Include="Resources\FMEstart.bmp" />
@@ -401,15 +396,6 @@
       <Lcid>0</Lcid>
       <WrapperTool>aximp</WrapperTool>
       <Isolated>False</Isolated>
-    </COMReference>
-    <COMReference Include="ShockwaveFlashObjects">
-      <Guid>{D27CDB6B-AE6D-11CF-96B8-444553540000}</Guid>
-      <VersionMajor>1</VersionMajor>
-      <VersionMinor>0</VersionMinor>
-      <Lcid>0</Lcid>
-      <WrapperTool>tlbimp</WrapperTool>
-      <Isolated>False</Isolated>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

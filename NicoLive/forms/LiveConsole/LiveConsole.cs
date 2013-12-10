@@ -26,7 +26,7 @@ namespace NicoLive
 
         public void LoadMovie(string iLv)
         {
-            string url = "http://live.nicovideo.jp/nicolivebroadcaster.swf?dicfilename=NicoliveBroadcasterDictionaryJAJP.swf&v=" + iLv;
+            string url = "http://live.nicovideo.jp/nicolivebroadcaster.swf?dicfilename=NicoliveBroadcasterDictionaryJAJP.swf&v=" + iLv + "&_utime=" + Utils.GetUnixTime(DateTime.Now);
             mFlash.LoadMovie(0, url);
         }
 

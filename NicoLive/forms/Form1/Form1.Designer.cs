@@ -122,6 +122,7 @@
             this.mGatherUserIDWorker = new System.ComponentModel.BackgroundWorker();
             this.mXSplitTimer = new System.Windows.Forms.Timer(this.components);
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.cbUseHQ = new System.Windows.Forms.CheckBox();
             this.mToolStrip.SuspendLayout();
             this.mStatusStrip.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
@@ -718,6 +719,7 @@
             // groupBox1
             // 
             this.groupBox1.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.groupBox1.Controls.Add(this.cbUseHQ);
             this.groupBox1.Controls.Add(this.mHQStatus);
             this.groupBox1.Controls.Add(this.mHQStopBtn);
             this.groupBox1.Controls.Add(this.mHQStartBtn);
@@ -732,7 +734,6 @@
             this.groupBox1.Size = new System.Drawing.Size(311, 70);
             this.groupBox1.TabIndex = 22;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "外部配信";
             // 
             // mHQStatus
             // 
@@ -1004,6 +1005,17 @@
             this.mXSplitTimer.Interval = 1000;
             this.mXSplitTimer.Tick += new System.EventHandler(this.mXSplitTimer_Tick);
             // 
+            // cbUseHQ
+            // 
+            this.cbUseHQ.AutoSize = true;
+            this.cbUseHQ.Location = new System.Drawing.Point(7, -1);
+            this.cbUseHQ.Name = "cbUseHQ";
+            this.cbUseHQ.Size = new System.Drawing.Size(72, 16);
+            this.cbUseHQ.TabIndex = 31;
+            this.cbUseHQ.Text = "外部配信";
+            this.cbUseHQ.UseVisualStyleBackColor = true;
+            this.cbUseHQ.CheckedChanged += new System.EventHandler(this.cbUseHQ_CheckedChanged);
+            // 
             // Form1
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -1124,6 +1136,7 @@
         private System.Windows.Forms.ComboBox mFMLEProfileList;
         private System.Windows.Forms.Label mHQStatus;
         private System.Windows.Forms.ToolStripMenuItem LiveConsoleStripMenuItem;
+        private System.Windows.Forms.CheckBox cbUseHQ;
     }
 }
 

@@ -58,7 +58,7 @@ namespace NicoLive
                     continue;
                 }
 
-                
+
 
                 //コメント処理
                 if (s.StartsWith("<chat "))
@@ -124,7 +124,6 @@ namespace NicoLive
             // 最終コメント受信時間設定
             mLastChatTime = DateTime.Now;
 
-
             CheckDisconnect(iCmt);
 
             // アクティブ数設定
@@ -148,59 +147,19 @@ namespace NicoLive
             // コテハン登録
             SaveHandle(iCmt);
 
+
+            // NGユーザーを無視
+            if (this.mUid.IsNGUser(iCmt.Uid))
+            {
+                SetLastChatNo(int.Parse(iCmt.Uid));
+                iCmt = null;
+                return;
+            }
+
             // NGコメント通知
             if (int.Parse(iCmt.No) < mLastChatNo - Properties.Settings.Default.comment_max + 1)
             {
                 ShowNGCommentNotice(int.Parse(iCmt.No));
-            }
-
-
-            //過去コメントじゃない時だけ
-            if (mLastChatNo < int.Parse(iCmt.No))
-            {
-
-                // 投票チェック
-                if (iCmt.IsVote && iCmt.IsOwner)
-                {
-                    iCmt.ToVote(ref mVote);
-                }
-
-                // NGユーザーを無視
-                if (this.mUid.IsNGUser(iCmt.Uid))
-                {
-                    SetLastChatNo(int.Parse(iCmt.Uid));
-                    iCmt = null;
-                    return;
-
-                }
-
-                // 棒読みちゃん読み上げリストにコメントを追加
-                AddSpeakText(iCmt);
-
-                // XSplitメッセージ
-                if (Properties.Settings.Default.enable_xsplit_scene_change)
-                {
-                    XSplitSceneControl(iCmt);
-                }
-
-                // 現在地・速度応答
-                SendCurrentPosition(iCmt);
-                SendCurrentSpeed(iCmt);
-
-                // 返信メッセージ
-                AutoResponse(iCmt);
-
-                // ようこそ！
-                WelcomeMessage(iCmt);
-
-                // NGコメント通知
-                SendNGCommentNotice(int.Parse(iCmt.No));
-
-                // フラッシュコメントジェネレータ
-                if (Properties.Settings.Default.use_flash_comment_generator)
-                {
-                    SendFCG(iCmt);
-                }
             }
 
             // コメントをリストに追加
@@ -208,6 +167,44 @@ namespace NicoLive
             {
                 this.AddComment(iCmt);
             });
+
+
+            //過去コメント
+            if (mLastChatNo >= int.Parse(iCmt.No)) return;
+
+            // 投票チェック
+            if (iCmt.IsVote && iCmt.IsOwner)
+            {
+                iCmt.ToVote(ref mVote);
+            }
+
+            // 棒読みちゃん読み上げリストにコメントを追加
+            AddSpeakText(iCmt);
+
+            // XSplitメッセージ
+            if (Properties.Settings.Default.enable_xsplit_scene_change)
+            {
+                XSplitSceneControl(iCmt);
+            }
+
+            // 現在地・速度応答
+            SendCurrentPosition(iCmt);
+            SendCurrentSpeed(iCmt);
+
+            // 返信メッセージ
+            AutoResponse(iCmt);
+
+            // ようこそ！
+            WelcomeMessage(iCmt);
+
+            // NGコメント通知
+            SendNGCommentNotice(int.Parse(iCmt.No));
+
+            // フラッシュコメントジェネレータ
+            if (Properties.Settings.Default.use_flash_comment_generator)
+            {
+                SendFCG(iCmt);
+            }
 
             // 最終コメントNo設定
             SetLastChatNo(int.Parse(iCmt.No));
@@ -692,7 +689,7 @@ namespace NicoLive
         private void WelcomeMessage(Comment iCmt)
         {
             if (iCmt.IsOwner) return;
-            
+
             // クルーズいらっしゃい
             if (Properties.Settings.Default.use_welcome_cruise_message &&
                 iCmt.Text.StartsWith("/telop show ") && iCmt.Text.Contains("到着しました"))
@@ -709,7 +706,7 @@ namespace NicoLive
                     });
                 t.Start();
             }
-            
+
             if (!Properties.Settings.Default.use_welcome_message) return;
 
             string uid = iCmt.Uid;
@@ -935,6 +932,8 @@ namespace NicoLive
             // 枠取り画面へ 
             if (mOwnLive && mContWaku.Checked && !mDoingGetNextWaku)
             {
+                mDoingGetNextWaku = true;
+
                 Thread.Sleep(500);
 
                 // 棒読みちゃんで自動枠取り通知

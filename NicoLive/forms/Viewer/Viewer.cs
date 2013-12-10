@@ -42,7 +42,7 @@ namespace NicoLive
             //string url = "http://live.nicovideo.jp/liveplayer.swf?110519134121&allowscale=FALSE&v=" + mLiveID.Text + "&watchVideoID" + mLiveID.Text;
             //string url = "http://live.nicovideo.jp/liveplayer.swf?v=" + mLiveID.Text + "&watchVideoID" + mLiveID.Text;
             //string url = "http://nl.nimg.jp/public/swf/liveplayer11.swf?v=" + mLiveID.Text + "&watchVideoID" + mLiveID.Text;
-            string url = "http://live.nicovideo.jp/nicoliveplayer.swf?v=" + mLiveID.Text;
+            string url = "http://live.nicovideo.jp/nicoliveplayer.swf?v=" + mLiveID.Text + "&_utime=" + Utils.GetUnixTime(DateTime.Now); ;
 
             //mFlash.Size = new System.Drawing.Size(950, 520);
             mFlash.LoadMovie(0, url);

@@ -110,11 +110,13 @@ namespace NicoLive
 
 
             SetLabelFromThread("放送履歴取得中", Color.Black, false);
+            Utils.WriteLog("WakuDlg: mWorker_DoWork(): 放送履歴取得中");
 
             if (mLv.Length <= 2)
                 mLv = mNico.GetRecentLive();
 
             SetLabelFromThread("前枠番組情報の取得中", Color.Black, false);
+            Utils.WriteLog("WakuDlg: mWorker_DoWork(): 前枠番組情報の取得中");
 
             // Utils.WriteLog(mLv);
 
@@ -130,11 +132,13 @@ namespace NicoLive
                 try_cnt++;
                 if (try_cnt < 10)
                 {
+                    Utils.WriteLog("WakuDlg: mWorker_DoWork(): 前枠番組情報の取得中: " + try_cnt);
                     Thread.Sleep(100);
                     goto GET_OLD_INFO;
                 }
 
                 SetLabelFromThread("ERR:前枠番組情報の取得に失敗", Color.Red, false);
+                Utils.WriteLog("WakuDlg: mWorker_DoWork(): ERR:前枠番組情報の取得に失敗");
                 return;
             }
 
@@ -149,6 +153,7 @@ namespace NicoLive
             // 放送情報変更
             if (mChangeProp)
             {
+                Utils.WriteLog("WakuDlg: mWorker_DoWork(): ChangeProp()");
                 ChangeProp dlg = new ChangeProp();
 
                 dlg.Title = arr["title"];
@@ -200,6 +205,7 @@ namespace NicoLive
 
             // 枠取り開始
             SetLabelFromThread("枠取り中", Color.Black, false);
+            Utils.WriteLog("WakuDlg: mWorker_DoWork(): 枠取り中");
 
 
             // taglockのロック内容が無いものを削除
@@ -239,6 +245,7 @@ namespace NicoLive
                 mState = WakuResult.NO_ERR;
 
                 SetLabelFromThread("枠取り完了", Color.Black, true);
+                Utils.WriteLog("WakuDlg: mWorker_DoWork(): 枠取り完了");
             }
             else if (err == WakuErr.ERR_MAINTE)
             {
@@ -247,6 +254,7 @@ namespace NicoLive
             else if (err == WakuErr.ERR_KIYAKU)
             {
                 SetLabelFromThread("枠取り中（規約確認中）", Color.Black, false);
+                Utils.WriteLog("WakuDlg: mWorker_DoWork(): WakuErr.ERR_KIYAKU: 枠取り中（規約確認中）");
                 arr["kiyaku"] = "true";
                 if (!base64_encoded)
                 {
@@ -258,6 +266,7 @@ namespace NicoLive
             else if (err == WakuErr.ERR_LOGIN)
             {
                 SetLabelFromThread("ログイン中", Color.Black, false);
+                Utils.WriteLog("WakuDlg: mWorker_DoWork(): WakuErr.ERR_LOGIN: ログイン中");
 
                 mNico.Login(Properties.Settings.Default.user_id,
                                            Properties.Settings.Default.password);
@@ -266,18 +275,21 @@ namespace NicoLive
             else if (err == WakuErr.ERR_TAJU)
             {
                 SetLabelFromThread("枠取り中（多重投稿)", Color.Black, false);
+                Utils.WriteLog("WakuDlg: mWorker_DoWork(): WakuErr.ERR_TAJU: 枠取り中（多重投稿)");
                 arr.Remove("confirm");
                 goto RETRY;
             }
             else if (err == WakuErr.ERR_KONZATU)
             {
                 SetLabelFromThread("枠取り中（混雑中）", Color.Black, false);
+                Utils.WriteLog("WakuDlg: mWorker_DoWork(): WakuErr.ERR_KONZATU: 枠取り中（混雑中）");
                 arr.Remove("confirm");
                 goto RETRY;
             }
             else if (err == WakuErr.ERR_JUNBAN_WAIT)
             {
                 SetLabelFromThread("順番待ちに並びます", Color.Black, false);
+                Utils.WriteLog("WakuDlg: mWorker_DoWork(): WakuErr.ERR_JUNBAN_WAIT: 順番待ちに並びます");
                 arr["is_wait"] = "wait";
                 goto RETRY;
             }
@@ -285,6 +297,7 @@ namespace NicoLive
             {
                 mState = WakuResult.NO_ERR;
                 SetLabelFromThread("順番待ち", Color.Black, false);
+                Utils.WriteLog("WakuDlg: mWorker_DoWork(): WakuErr.ERR_JUNBAN: 順番待ち");
                 if (lv.Length <= 2)
                     goto RETRY;
                 do
@@ -294,6 +307,7 @@ namespace NicoLive
                     if (waitInfo.ContainsKey("stream_status") && waitInfo["stream_status"].Equals("3"))
                     {
                         SetLabelFromThread("ERR:別の放送が開始されています。", Color.Red, false);
+                        Utils.WriteLog("WakuDlg: mWorker_DoWork(): 別の放送が開始されています");
                         break;
                     }
 
@@ -306,6 +320,7 @@ namespace NicoLive
                     {
                         mLv = lv;
                         SetLabelFromThread("枠取り完了", Color.Black, true);
+                        Utils.WriteLog("WakuDlg: mWorker_DoWork(): 枠取り完了");
                         mState = WakuResult.NO_ERR;
                         break;
                     }
@@ -313,6 +328,7 @@ namespace NicoLive
                     {
                         Match match = Regex.Match(waitInfo["start_time"], "日(.*?)時(.*?)分");
                         SetLabelFromThread("順番待ち: " + waitInfo["count"] + "人 （" + match.Groups[1].Value + "時" + match.Groups[2].Value + "分）", Color.Black, false);
+                        Utils.WriteLog("WakuDlg: mWorker_DoWork(): 順番待ち: " + waitInfo["count"] + "人 （" + match.Groups[1].Value + "時" + match.Groups[2].Value + "分）");
 
                         // 100人以上順番待ちの時はTweet
                         if (cnt >= 102)
@@ -327,16 +343,18 @@ namespace NicoLive
                             mPostTweet = false;
                         }
                     }
-                    Thread.Sleep(1000);
+                    Thread.Sleep(2000);
                 } while (true);
             }
             else if (err == WakuErr.ERR_JUNBAN_ALREADY)
             {
                 SetLabelFromThread("ERR:既に順番待ちの放送があります", Color.Red, false);
+                Utils.WriteLog("WakuDlg: mWorker_DoWork(): WakuErr.ERR_JUNBAN_ALREADY");
             }
             else if (err == WakuErr.ERR_TAG)
             {
                 SetLabelFromThread("ERR:18文字以上のタグは利用できません", Color.Red, false);
+                Utils.WriteLog("WakuDlg: mWorker_DoWork(): WakuErr.ERR_TAG");
             }
             else if (err == WakuErr.ERR_ALREADY_LIVE)
             {
@@ -354,10 +372,12 @@ namespace NicoLive
                 mState = WakuResult.ERR;
                 mLv = "";
                 SetLabelFromThread("ERR:既に放送中です。", Color.Red, true);
+                Utils.WriteLog("WakuDlg: mWorker_DoWork(): WakuErr.ERR_ALREADY_LIVE");
             }
             else if (err == WakuErr.ERR_MOJI)
             {
                 SetLabelFromThread("ERR:文字数制限エラー。", Color.Red, false);
+                Utils.WriteLog("WakuDlg: mWorker_DoWork(): WakuErr.ERR_MOJI");
             }
             else if (err == WakuErr.ERR_UNKOWN)
             {
@@ -368,6 +388,7 @@ namespace NicoLive
                     goto RETRY;
                 }
                 SetLabelFromThread("ERR:予期せぬエラーです。", Color.Red, false);
+                Utils.WriteLog("WakuDlg: mWorker_DoWork(): WakuErr.ERR_UNKOWN");
             }
             arr = null;
         }

@@ -129,7 +129,7 @@
       <Value Profile="(Default)">C:\Program Files (x86)\Adobe\Flash Media Live Encoder 3.2\FMLECmd.exe</Value>
     </Setting>
     <Setting Name="comment_max" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">500</Value>
+      <Value Profile="(Default)">50</Value>
     </Setting>
     <Setting Name="fme_dos" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>

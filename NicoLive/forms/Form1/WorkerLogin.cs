@@ -106,7 +106,7 @@ namespace NicoLive
                 // コメントサーバーに接続
                 NicoErr err = mNico.ConnectToCommentServer(live_id, Properties.Settings.Default.comment_max);
 
-                Utils.WriteLog("ConnectToCommentServer Result = NicoErr:" + err.ToString());
+                Utils.WriteLog("ConnectToCommentServer(): Result = NicoErr:" + err.ToString());
                 switch (err)
                 {
                     case NicoErr.ERR_COULD_NOT_CONNECT_COMMENT_SERVER:
@@ -205,13 +205,6 @@ namespace NicoLive
                         mNico.WakutoriMode = false;
 
                         mCommentList.Rows.Clear();
-
-
-
-
-
-
-
 
                         // 情報を取得
                         mLiveInfo.GetInfo(live_id);

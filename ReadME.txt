@@ -3,7 +3,7 @@
 配布者：    meronpan
 ツイッター： @meronpan3419
 コミュ：   http://nico.ms/co274186
-配布先：   http://nicolive_wakusu.b72.in/nicolive_kai_plus/	←公式サイトじゃないです
+配布先：   http://nicolive_wakusu.b72.in/nicolive_kai_plus/	
 github:	https://github.com/meronpan3419/nicolive-kai-plus/
 
 ベース：
@@ -24,7 +24,7 @@ github:	https://github.com/meronpan3419/nicolive-kai-plus/
 ■動作環境
 -.net framework3.5以降でいいはず
 -Flah Player ブラウザで通常のニコ生配信が出来るバージョンならたぶんいけるはず
--InternetExplorer7以降(保護モードなんたらでieframe.dllが必要なのでIE6以前は利用不可。IE9はちょっとあれかも)
+-InternetExplorer7以降(保護モードなんたらでieframe.dllが必要なのでIE6以前は利用不可)
 -OS Windows XP SP3以降
 -CPU Intel Atom N270相当以上
 -メモリ 1GB以上
@@ -33,7 +33,7 @@ github:	https://github.com/meronpan3419/nicolive-kai-plus/
 
 
 ■インストール
-nicolive-kai-p*.zipを解凍しするだけ。NicoLive.exeが本体の実行ファイルです。
+nicolive-kai-p*.rarを解凍しするだけ。NicoLive.exeが本体の実行ファイルです。
 
 
 ■アンインストール
@@ -98,7 +98,7 @@ Vista/7もそれ相当のファルダに保存されてます。
 - 引数に＠LVで放送IDに置換
 
 ■更新履歴
-#2013/11/29 nicolive kai p12noyounamono3 配信コンソール追加(GINZA)。簡易ビュアーGINZA版更新(GINZA)。今ココ地図更新。ツイッターライブラリ更新(id 64bit)。ログインクッキー使い回しのバグ修正、ブラウザクッキー優先利用。60分以降の無料延長出来ないバグ修正。延長処理配信開始処理リファクタリング。
+#2013/12/10 nicolive kai p12noyounamono3alpha エヌフ＋配信たんの様な感じになった。配信コンソール追加(GINZA)。簡易ビュアーGINZA版更新(GINZA)。今ココ地図更新、シングルトン化。ツイッターライブラリ更新(id 64bit)。ログインクッキー使い回しのバグ修正、ブラウザクッキー優先利用。60分以降の無料延長出来ないバグ修正。延長処理配信開始処理リファクタリング。その他、バグ追加。DEBUGビルドなのでinfoログのテキストが大量に出来る。
 #2012/12/17 nicolive kai p12noyounamono2 連続枠取りバグってたので。
 #2012/12/16 nicolive kai p12noyounamono コマンドラインの起動オプションにfastliveを指定しておくと起動したらすぐ枠取はじめるようにした。いらっしゃい！のメッセージを編集できるように。184のいらっしゃい！を迅速に返すようにした。184の人に勝手にコテハンをつけうようにした(name.db)。コミュ限だったのを修正。放送開始終了ツイートのバグ修正。外部配信でフラッシュの配信コンソール読み込まないモード追加。枠待ち1人を飛ばすように。フラッシュコメントジェネレーターに対応（\NicoLiveComment.dat）。残り3分くらいってのを2回読まないように。急にpublishstatusのstart_timeが遅延してて旧配信コンソールが1分間ダメなので通常配信やめて、とりあえず外部配信用にフラッシュコンソール使わないようにした。その他いろいろ機能改変中。
 #2012/10/01 nicolive kai p11фti 現在地住所デバックコードがバグってた。  

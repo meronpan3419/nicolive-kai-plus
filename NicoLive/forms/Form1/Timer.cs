@@ -41,6 +41,7 @@ namespace NicoLive
 
             // 配信方法更新
             mUseHQBtn.Text = Properties.Settings.Default.use_hq ? "外部配信" : "通常配信";
+            cbUseHQ.Checked = Properties.Settings.Default.use_hq;
             updateBroadcastType();
 
 

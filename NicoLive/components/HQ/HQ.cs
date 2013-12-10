@@ -92,7 +92,7 @@ namespace NicoLive
 
         public static void Stop()
         {
-            // 非同期に by meronpan
+
             Thread th = new Thread(delegate()
             {
                 FMLE.Stop();

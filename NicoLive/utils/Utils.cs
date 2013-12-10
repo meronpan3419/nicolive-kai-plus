@@ -658,6 +658,7 @@ namespace NicoLive
         {
             WriteLog("DEBUG", iStr, true);
             System.Diagnostics.Debug.WriteLine(DateTime.Now + " " + iStr);
+
         }
 
         //-------------------------------------------------------------------------

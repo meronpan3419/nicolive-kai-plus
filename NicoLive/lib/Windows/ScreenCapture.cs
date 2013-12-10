@@ -115,7 +115,7 @@ namespace NicoLive
             //--------------- DEBUG --------------------
             string filePath = @"C:\screen.bmp";
             bmp.Save(filePath, ImageFormat.Bmp);
-            Process.Start(filePath);
+            //Process.Start(filePath);
             //------------------------------------------
 
             return bmp;

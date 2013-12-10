@@ -222,6 +222,8 @@ namespace NicoLive
         private NumericUpDown mCommentCutLen;
         private Button mTweetBtn;
         private CheckBox mUseNewConsole;
+        private NumericUpDown mCommentMax;
+        private Label label30;
 
 
         private IContainer components;
@@ -457,6 +459,8 @@ namespace NicoLive
             this.mOpenFileDlg = new System.Windows.Forms.OpenFileDialog();
             this.mSessionFileDlg = new System.Windows.Forms.OpenFileDialog();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.mCommentMax = new System.Windows.Forms.NumericUpDown();
+            this.label30 = new System.Windows.Forms.Label();
             this.mTabPage8.SuspendLayout();
             this.mTabGeneral.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -497,6 +501,7 @@ namespace NicoLive
             this.groupBox14.SuspendLayout();
             this.groupBox13.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.mLauncherList)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.mCommentMax)).BeginInit();
             this.SuspendLayout();
             // 
             // mCancelBtn
@@ -575,7 +580,7 @@ namespace NicoLive
             this.mLoginTest.Location = new System.Drawing.Point(334, 64);
             this.mLoginTest.Name = "mLoginTest";
             this.mLoginTest.Size = new System.Drawing.Size(76, 19);
-            this.mLoginTest.TabIndex = 9;
+            this.mLoginTest.TabIndex = 7;
             this.mLoginTest.Text = "ログインテスト";
             this.mLoginTest.UseVisualStyleBackColor = true;
             this.mLoginTest.Click += new System.EventHandler(this.mLoginTest_Click);
@@ -621,7 +626,7 @@ namespace NicoLive
             this.mBrowser.Location = new System.Drawing.Point(181, 62);
             this.mBrowser.Name = "mBrowser";
             this.mBrowser.Size = new System.Drawing.Size(147, 20);
-            this.mBrowser.TabIndex = 5;
+            this.mBrowser.TabIndex = 6;
             this.mBrowser.SelectedIndexChanged += new System.EventHandler(this.mBrowser_SelectedIndexChanged);
             // 
             // mUseBrowserCookie
@@ -630,7 +635,7 @@ namespace NicoLive
             this.mUseBrowserCookie.Location = new System.Drawing.Point(19, 66);
             this.mUseBrowserCookie.Name = "mUseBrowserCookie";
             this.mUseBrowserCookie.Size = new System.Drawing.Size(162, 16);
-            this.mUseBrowserCookie.TabIndex = 4;
+            this.mUseBrowserCookie.TabIndex = 5;
             this.mUseBrowserCookie.Text = "ブラウザのクッキーを優先利用";
             this.mUseBrowserCookie.UseVisualStyleBackColor = true;
             this.mUseBrowserCookie.CheckedChanged += new System.EventHandler(this.mUseBrowserCookie_CheckedChanged);
@@ -656,6 +661,8 @@ namespace NicoLive
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.label30);
+            this.groupBox2.Controls.Add(this.mCommentMax);
             this.groupBox2.Controls.Add(this.mUseNewConsole);
             this.groupBox2.Controls.Add(this.label24);
             this.groupBox2.Controls.Add(this.tbResetMessage);
@@ -683,7 +690,7 @@ namespace NicoLive
             // mUseNewConsole
             // 
             this.mUseNewConsole.AutoSize = true;
-            this.mUseNewConsole.Location = new System.Drawing.Point(17, 279);
+            this.mUseNewConsole.Location = new System.Drawing.Point(17, 302);
             this.mUseNewConsole.Name = "mUseNewConsole";
             this.mUseNewConsole.Size = new System.Drawing.Size(285, 16);
             this.mUseNewConsole.TabIndex = 34;
@@ -694,7 +701,7 @@ namespace NicoLive
             // label24
             // 
             this.label24.AutoSize = true;
-            this.label24.Location = new System.Drawing.Point(32, 213);
+            this.label24.Location = new System.Drawing.Point(33, 236);
             this.label24.Name = "label24";
             this.label24.Size = new System.Drawing.Size(80, 12);
             this.label24.TabIndex = 33;
@@ -702,7 +709,7 @@ namespace NicoLive
             // 
             // tbResetMessage
             // 
-            this.tbResetMessage.Location = new System.Drawing.Point(118, 210);
+            this.tbResetMessage.Location = new System.Drawing.Point(119, 233);
             this.tbResetMessage.Name = "tbResetMessage";
             this.tbResetMessage.Size = new System.Drawing.Size(235, 19);
             this.tbResetMessage.TabIndex = 32;
@@ -720,7 +727,7 @@ namespace NicoLive
             // mViewerAutoBoot
             // 
             this.mViewerAutoBoot.AutoSize = true;
-            this.mViewerAutoBoot.Location = new System.Drawing.Point(17, 257);
+            this.mViewerAutoBoot.Location = new System.Drawing.Point(18, 280);
             this.mViewerAutoBoot.Name = "mViewerAutoBoot";
             this.mViewerAutoBoot.Size = new System.Drawing.Size(228, 16);
             this.mViewerAutoBoot.TabIndex = 30;
@@ -731,7 +738,7 @@ namespace NicoLive
             // mKeepalive
             // 
             this.mKeepalive.AutoSize = true;
-            this.mKeepalive.Location = new System.Drawing.Point(17, 166);
+            this.mKeepalive.Location = new System.Drawing.Point(18, 189);
             this.mKeepalive.Name = "mKeepalive";
             this.mKeepalive.Size = new System.Drawing.Size(303, 16);
             this.mKeepalive.TabIndex = 22;
@@ -741,7 +748,7 @@ namespace NicoLive
             // mTitleInc
             // 
             this.mTitleInc.AutoSize = true;
-            this.mTitleInc.Location = new System.Drawing.Point(17, 235);
+            this.mTitleInc.Location = new System.Drawing.Point(18, 258);
             this.mTitleInc.Name = "mTitleInc";
             this.mTitleInc.Size = new System.Drawing.Size(177, 16);
             this.mTitleInc.TabIndex = 20;
@@ -774,7 +781,7 @@ namespace NicoLive
             // 
             // mSekigaeMinutes
             // 
-            this.mSekigaeMinutes.Location = new System.Drawing.Point(118, 186);
+            this.mSekigaeMinutes.Location = new System.Drawing.Point(119, 209);
             this.mSekigaeMinutes.Maximum = new decimal(new int[] {
             99,
             0,
@@ -798,7 +805,7 @@ namespace NicoLive
             // mFMEcompact
             // 
             this.mFMEcompact.AutoSize = true;
-            this.mFMEcompact.Location = new System.Drawing.Point(17, 188);
+            this.mFMEcompact.Location = new System.Drawing.Point(18, 211);
             this.mFMEcompact.Name = "mFMEcompact";
             this.mFMEcompact.Size = new System.Drawing.Size(247, 16);
             this.mFMEcompact.TabIndex = 18;
@@ -2573,6 +2580,38 @@ namespace NicoLive
             this.mSessionFileDlg.Filter = "fmesessions.dat|*.dat";
             this.mSessionFileDlg.Title = "fmesessions.dat";
             // 
+            // mCommentMax
+            // 
+            this.mCommentMax.ImeMode = System.Windows.Forms.ImeMode.Off;
+            this.mCommentMax.Location = new System.Drawing.Point(276, 164);
+            this.mCommentMax.Maximum = new decimal(new int[] {
+            500,
+            0,
+            0,
+            0});
+            this.mCommentMax.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.mCommentMax.Name = "mCommentMax";
+            this.mCommentMax.Size = new System.Drawing.Size(43, 19);
+            this.mCommentMax.TabIndex = 37;
+            this.mCommentMax.Value = new decimal(new int[] {
+            20,
+            0,
+            0,
+            0});
+            // 
+            // label30
+            // 
+            this.label30.AutoSize = true;
+            this.label30.Location = new System.Drawing.Point(33, 166);
+            this.label30.Name = "label30";
+            this.label30.Size = new System.Drawing.Size(237, 12);
+            this.label30.TabIndex = 38;
+            this.label30.Text = "コメントサーバー接続時に読み込む過去コメント数";
+            // 
             // SettingDialog
             // 
             this.AcceptButton = this.mCancelBtn;
@@ -2646,6 +2685,7 @@ namespace NicoLive
             this.groupBox13.ResumeLayout(false);
             this.groupBox13.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.mLauncherList)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.mCommentMax)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -2735,6 +2775,9 @@ namespace NicoLive
             this.mContWakuNotice.Enabled = Properties.Settings.Default.talk_3min;
 
             this.tbResetMessage.Text = Properties.Settings.Default.reset_message;
+
+            this.mCommentMax.Value = Properties.Settings.Default.comment_max;
+
 
 
 
@@ -2907,6 +2950,7 @@ namespace NicoLive
             Properties.Settings.Default.viewer_auto_boot = mViewerAutoBoot.Checked;
             Properties.Settings.Default.cont_waku_notice = this.mContWakuNotice.Checked;
             Properties.Settings.Default.reset_message = tbResetMessage.Text;
+            Properties.Settings.Default.comment_max = (int)mCommentMax.Value;
 
             Properties.Settings.Default.use_welcome_message = this.mUseWelcomeMessage.Checked;
 
@@ -3347,6 +3391,7 @@ namespace NicoLive
             //mMailBox.Enabled = !mUseBrowserCookie.Checked;
             //mPasswdBox.Enabled = !mUseBrowserCookie.Checked;
             //mLoginTest.Enabled = mUseBrowserCookie.Checked;
+            mBrowser.Enabled = mUseBrowserCookie.Checked;
             mLoginResult.Text = "-";
 
         }

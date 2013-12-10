@@ -529,7 +529,7 @@ namespace NicoLive.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("500")]
+        [global::System.Configuration.DefaultSettingValueAttribute("50")]
         public int comment_max {
             get {
                 return ((int)(this["comment_max"]));

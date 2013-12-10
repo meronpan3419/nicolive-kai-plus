@@ -117,58 +117,7 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="bro_ok" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\bro_ok.bmp;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="encho" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Encho.bmp;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="ending" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Ending.bmp;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="free2" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\free2.bmp;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="ok3" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\ok3.bmp;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="start" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\start.bmp;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="yes2" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\yes2.bmp;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="_500" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\500.bmp;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="_5002" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\5002.bmp;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="extend_fail" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\resources\extend_fail.bmp;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="err" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\err.bmp;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="pre_chat" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\pre_chat.bmp;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="open_chat" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\open_chat.bmp;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="bro_ok2" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\bro_ok2.bmp;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="fme" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\fme.bmp;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="start_fme" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\start_fme.bmp;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="stop_fme" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\resources\stop_fme.bmp;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="FMEng" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\FMEng.bmp;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -183,18 +132,5 @@
   </data>
   <data name="nico" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\nico.bmp;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="NLEkihon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\NLEkihon.bmp;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="NLEkihon2" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\NLEkihon2.bmp;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="NLEstart" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\NLEstart.bmp;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="NLEstop" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\NLEstop.bmp;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

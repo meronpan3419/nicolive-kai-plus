@@ -17,7 +17,6 @@ namespace NicoLive
     {
         // オーナーフォーム
         private Form mOwner = null;
-        bool IsIE8Fixed = false;
 
         public Form MyOwner
         {

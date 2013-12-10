@@ -129,19 +129,6 @@ namespace NicoLive
 		{
             Process[] ps;
 
-            //// NLE
-            //if (Properties.Settings.Default.use_nle)
-            //{
-            //    return NLE.IsBroadCast;
-
-            //}
-
-            //// XSplit
-            //if (Properties.Settings.Default.use_xsplit)
-            //{
-            //    return XSplit.IsBroadCast;
-            //}
-
             if (Properties.Settings.Default.fme_gui)
             {
                 return FMEGUI.hasFME();
@@ -183,20 +170,6 @@ namespace NicoLive
         //-------------------------------------------------------------------------
         public static void Stop()
         {
-
-            //// NLE
-            //if (Properties.Settings.Default.use_nle)
-            //{
-            //    NLE.Stop();
-            //    return;
-            //}
-
-            //// XSplit
-            //if (Properties.Settings.Default.use_xsplit)
-            //{
-            //    XSplit.Stop();
-            //    return;
-            //}
 
             if (Properties.Settings.Default.fme_gui)
             {

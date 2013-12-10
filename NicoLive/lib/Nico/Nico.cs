@@ -241,7 +241,9 @@ namespace NicoLive
                 if (mTcp != null)
                 {
                     if (mTcp.Connected)
+                    {
                         mTcp.Close();
+                    }
                 }
             }
             catch (Exception e)
@@ -966,6 +968,7 @@ namespace NicoLive
         //-------------------------------------------------------------------------
         public NicoErr ConnectToCommentServer(string iLiveID, int commentCount)
         {
+            Utils.WriteLog("ConnectToCommentServer(): GetPlayerStatus()");
             Dictionary<string, string> minfo = GetPlayerStatus(iLiveID);
 
             if (minfo == null)
@@ -1020,7 +1023,7 @@ namespace NicoLive
                 if (mTcp != null)
                     mTcp.Close();
                 mTcp = new TcpClient(uri, int.Parse(port));
-                Utils.WriteLog("サーバーと接続しました。");
+                Utils.WriteLog("ConnectToCommentServer(): サーバーと接続しました。");
 
                 //NetworkStreamを取得する
                 NetworkStream ns = mTcp.GetStream();
@@ -1092,18 +1095,21 @@ namespace NicoLive
             {
                 len = so.Socket.EndReceive(ar);
             }
-            catch (System.ObjectDisposedException)
+            catch (System.ObjectDisposedException e)
             {
                 //閉じた時
                 Utils.WriteLog("閉じました。");
+                Utils.WriteLog("ReceiveDataCallback()"+ e.Message);
+                Utils.WriteLog("ReceiveDataCallback()"+ e.StackTrace);
+                mIsLogin = false;
                 return;
             }
             catch (SocketException e)
             {
                 //閉じた時
                 Utils.WriteLog("閉じました。");
-                Utils.WriteLog("ReceiveDataCallback()", e.Message);
-                Utils.WriteLog("ReceiveDataCallback()", e.StackTrace);
+                Utils.WriteLog("ReceiveDataCallback()" + e.Message);
+                Utils.WriteLog("ReceiveDataCallback()" + e.StackTrace);
                 mIsLogin = false;
                 return;
             }
@@ -1199,7 +1205,7 @@ namespace NicoLive
             }
             catch (Exception e)
             {
-                Utils.WriteLog(e.ToString());
+                Utils.WriteLog("Send(): " + e.ToString());
             }
 
         }
@@ -1220,7 +1226,7 @@ namespace NicoLive
             }
             catch (Exception e)
             {
-                Utils.WriteLog(e.ToString());
+                Utils.WriteLog("SendCallback(): " + e.ToString());
             }
         }
 

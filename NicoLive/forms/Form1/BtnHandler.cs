@@ -161,9 +161,14 @@ namespace NicoLive
         //-------------------------------------------------------------------------
         private void ImakokoBtn_Click(object sender, EventArgs e)
         {
-            Imakoko imk = new Imakoko();
-            imk.MyOwner = this;
-            imk.Show();
+
+
+            if (mImakoko == null || mImakoko.IsDisposed)
+            {
+                mImakoko = new Imakoko();
+            }
+            mImakoko.Show();
+            mImakoko.Activate();
 
         }
 
