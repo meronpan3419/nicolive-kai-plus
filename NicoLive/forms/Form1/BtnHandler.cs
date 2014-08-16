@@ -172,6 +172,19 @@ namespace NicoLive
 
         }
 
+        // NGユーザー設定画面起動
+        private void NGUserStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (mNico == null) return;
+            //if (!mNico.IsLogin) return;
+            if (mNGUser == null || mNGUser.IsDisposed)
+            {
+                mNGUser = new NGUser(this.LiveID);
+            }
+            mNGUser.Show();
+            mNGUser.Activate();
+        }
+
     }
 }
 //-------------------------------------------------------------------------

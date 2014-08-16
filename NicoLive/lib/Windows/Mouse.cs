@@ -7,7 +7,7 @@ using System.Windows.Forms;
 
 namespace NicoLive
 {
-    class Mouse
+    class Input
     {
         //-------------------------------------------------------------------------
 

@@ -380,5 +380,11 @@
     <Setting Name="use_comment_cut" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
+    <Setting Name="user_session" Type="System.String" Scope="User">
+      <Value Profile="(Default)">zzz</Value>
+    </Setting>
+    <Setting Name="xsplit_shortcut_keys" Type="System.UInt32" Scope="User">
+      <Value Profile="(Default)">393281</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

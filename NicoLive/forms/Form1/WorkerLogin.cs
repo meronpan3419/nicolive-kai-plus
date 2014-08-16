@@ -170,6 +170,8 @@ namespace NicoLive
 
                     mPastChatList.Clear();
                     mWelcomeList.Clear();
+                    mOmikujiList.Clear();
+                    mAishouList.Clear();
                     // 過去コメ読み込みスタート
                     mPastChat = true;
 
@@ -206,17 +208,46 @@ namespace NicoLive
 
                         mCommentList.Rows.Clear();
 
-                        // 情報を取得
-                        mLiveInfo.GetInfo(live_id);
-                        mLiveInfo.GetMemberOnlyInfo(live_id);
 
-                        // 開演待ちスキップするか？
-                        if (Properties.Settings.Default.skip5min)
+
+                        // 情報を取得
+                        Thread th = new Thread(delegate()
                         {
-                            // 開演5分待ちスキップ
-                            mNico.LiveStart(live_id, mLiveInfo.Token);
-                            Utils.WriteLog("LiveStart skip 5 min");
-                        }
+                            Utils.WriteLog("Start: LoginWorker_DoWork(): GetInfo(),GetMemberOnlyInfo()");
+                            mLiveInfo.GetInfo(live_id);
+                            mLiveInfo.GetMemberOnlyInfo(live_id);
+                            Utils.WriteLog("Finish: LoginWorker_DoWork(): GetInfo(),GetMemberOnlyInfo()");
+
+                            // 開演待ちスキップするか？
+                            if (Properties.Settings.Default.skip5min)
+                            {
+                                // 開演5分待ちスキップ
+                                mNico.LiveStart(live_id, mLiveInfo.Token);
+                                Utils.WriteLog("LiveStart skip 5 min");
+                            }
+
+                            // らんちゃー
+                            if (Properties.Settings.Default.use_launcher)
+                            {
+                                mLauncher.Exec(this.LiveID);
+                            }
+
+                            //debug
+                            Nico nico = Nico.Instance;
+                            System.Collections.Generic.Dictionary<string, string> arr = nico.GetFMEProfile(this.LiveID);
+                            if (arr.Count <= 1) return;
+                            string url = arr["url"];
+                            string stream = arr["stream"];
+                            //Utils.WriteLog("LoginWorker_DoWork:url: " + url);
+                            //Utils.WriteLog("LoginWorker_DoWork:stream: " + stream);
+
+                            //Utils.WriteLog(@"ffmpeg  -f alsa -ac 1 -i pulse -acodec nellymoser  -f x11grab -s 1366x768 -i :0.0+1366,0 -r 10 -vcodec libx264 -crf 26 -keyint_min 0  -bufsize 600k  -r 10 -pix_fmt yuv420p -ar 44100 -b:a 96k -b:v 300k -f flv """ + url + "/" + stream + " flashVer=FMLE/3.0\\20(compatible;\\20FMSc/1.0) swfUrl=" + url + "/" + stream + "\"");
+
+                        });
+                        th.Name = "LoginWorker_DoWork(): GetInfo(),GetMemberOnlyInfo()";
+                        th.Start();
+
+
 
                         // ロガー起動
                         if (Properties.Settings.Default.save_log)
@@ -245,11 +276,7 @@ namespace NicoLive
 
 
 
-                        // らんちゃー
-                        if (Properties.Settings.Default.use_launcher)
-                        {
-                            mLauncher.Exec(this.LiveID);
-                        }
+
                     });
                 }
                 else

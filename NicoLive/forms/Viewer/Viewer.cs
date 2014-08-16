@@ -138,8 +138,8 @@ namespace NicoLive
             {
                 mBigBtn.BackColor = System.Drawing.Color.Orange;
                 mSmallBtn.BackColor = System.Drawing.SystemColors.Control;
-                this.Size = new System.Drawing.Size(680, 537);
-                mFlash.Size = new System.Drawing.Size(960, 520);
+                this.Size = new System.Drawing.Size(690, 555);
+                mFlash.Size = new System.Drawing.Size(960, 960);
                 mTop.Text = "最前面";
                 mAutoBoot.Text = "自動起動";
             }
@@ -147,8 +147,8 @@ namespace NicoLive
             {
                 mBigBtn.BackColor = System.Drawing.SystemColors.Control;
                 mSmallBtn.BackColor = System.Drawing.Color.Orange;
-                this.Size = new System.Drawing.Size(340, 293);
-                mFlash.Size = new System.Drawing.Size(480, 260);
+                this.Size = new System.Drawing.Size(350, 310);
+                mFlash.Size = new System.Drawing.Size(480, 480);
                 mTop.Text = "最";
                 mAutoBoot.Text = "自";
             }

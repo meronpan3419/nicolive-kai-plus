@@ -149,6 +149,7 @@ namespace NicoLive
         private Viewer mViewer = null;
         private LiveConsole mLiveConsole = null;
         private Imakoko mImakoko = null;
+        private NGUser mNGUser = null;
 
         private bool mSkipBouyomi = true;
 
@@ -171,6 +172,12 @@ namespace NicoLive
 
         // ようこそ
         private List<string> mWelcomeList = new List<string>();
+
+        // おみくじ
+        private List<string> mOmikujiList = new List<string>();
+
+        // 相性
+        private List<string> mAishouList = new List<string>();
 
         // アンケート用
         private Vote mVote;
@@ -549,8 +556,7 @@ namespace NicoLive
         {
 
             //次枠通知
-            if (!Properties.Settings.Default.use_loss_time) return;
-            if (!Properties.Settings.Default.use_next_lv_notice) return;
+
             if (mDoingGetNextWaku) return;
 
             //if (!mOwnLive) return;
@@ -606,6 +612,20 @@ namespace NicoLive
         {
             Properties.Settings.Default.use_hq = cbUseHQ.Checked;
         }
+
+
+
+        private void btnBouyomiClear_Click(object sender, EventArgs e)
+        {
+            using (Bouyomi bm = new Bouyomi())
+            {
+                bm.Clear();
+            }
+        }
+
+
+
+
 
 
 

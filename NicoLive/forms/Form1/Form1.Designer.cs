@@ -91,7 +91,9 @@
             this.mNgID = new System.Windows.Forms.ToolStripMenuItem();
             this.miCommentColor = new System.Windows.Forms.ToolStripMenuItem();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.btnBouyomiClear = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.cbUseHQ = new System.Windows.Forms.CheckBox();
             this.mHQStatus = new System.Windows.Forms.Label();
             this.mHQStopBtn = new System.Windows.Forms.Button();
             this.mHQStartBtn = new System.Windows.Forms.Button();
@@ -106,7 +108,6 @@
             this.mRemainingTime = new System.Windows.Forms.Label();
             this.mCommandBox = new System.Windows.Forms.TextBox();
             this.mResetBtn = new System.Windows.Forms.Button();
-            this.mUseHQBtn = new System.Windows.Forms.Button();
             this.mCommentPostBtn = new System.Windows.Forms.Button();
             this.cbCommentTwitter = new System.Windows.Forms.CheckBox();
             this.mCommentBox = new System.Windows.Forms.TextBox();
@@ -122,7 +123,7 @@
             this.mGatherUserIDWorker = new System.ComponentModel.BackgroundWorker();
             this.mXSplitTimer = new System.Windows.Forms.Timer(this.components);
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.cbUseHQ = new System.Windows.Forms.CheckBox();
+            this.NGUserStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mToolStrip.SuspendLayout();
             this.mStatusStrip.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
@@ -164,7 +165,7 @@
             // toolStripLabel1
             // 
             this.toolStripLabel1.Name = "toolStripLabel1";
-            this.toolStripLabel1.Size = new System.Drawing.Size(47, 22);
+            this.toolStripLabel1.Size = new System.Drawing.Size(68, 22);
             this.toolStripLabel1.Text = "放送ＩＤ：";
             // 
             // mLiveID
@@ -180,7 +181,7 @@
             this.mConnectBtn.Image = ((System.Drawing.Image)(resources.GetObject("mConnectBtn.Image")));
             this.mConnectBtn.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.mConnectBtn.Name = "mConnectBtn";
-            this.mConnectBtn.Size = new System.Drawing.Size(60, 22);
+            this.mConnectBtn.Size = new System.Drawing.Size(67, 22);
             this.mConnectBtn.Text = "接続(F12)";
             this.mConnectBtn.Click += new System.EventHandler(this.ConnectBtn_Click);
             // 
@@ -191,6 +192,7 @@
             this.toolStripDropDownButton1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.ViewerMenuItem,
             this.LiveConsoleStripMenuItem,
+            this.NGUserStripMenuItem,
             this.toolStripSeparator5,
             this.SettingMenuItem,
             this.toolStripMenuItem1,
@@ -204,38 +206,38 @@
             // ViewerMenuItem
             // 
             this.ViewerMenuItem.Name = "ViewerMenuItem";
-            this.ViewerMenuItem.Size = new System.Drawing.Size(193, 22);
+            this.ViewerMenuItem.Size = new System.Drawing.Size(221, 22);
             this.ViewerMenuItem.Text = "簡易ビューアー";
             this.ViewerMenuItem.Click += new System.EventHandler(this.ViewerMenuItem_Click);
             // 
             // LiveConsoleStripMenuItem
             // 
             this.LiveConsoleStripMenuItem.Name = "LiveConsoleStripMenuItem";
-            this.LiveConsoleStripMenuItem.Size = new System.Drawing.Size(193, 22);
+            this.LiveConsoleStripMenuItem.Size = new System.Drawing.Size(221, 22);
             this.LiveConsoleStripMenuItem.Text = "配信コンソール";
             this.LiveConsoleStripMenuItem.Click += new System.EventHandler(this.LiveConsoleStripMenuItem_Click);
             // 
             // toolStripSeparator5
             // 
             this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(190, 6);
+            this.toolStripSeparator5.Size = new System.Drawing.Size(218, 6);
             // 
             // SettingMenuItem
             // 
             this.SettingMenuItem.Name = "SettingMenuItem";
-            this.SettingMenuItem.Size = new System.Drawing.Size(193, 22);
+            this.SettingMenuItem.Size = new System.Drawing.Size(221, 22);
             this.SettingMenuItem.Text = "設定";
             this.SettingMenuItem.Click += new System.EventHandler(this.SettingMenu_Click);
             // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(190, 6);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(218, 6);
             // 
             // AboutpMenuItem
             // 
             this.AboutpMenuItem.Name = "AboutpMenuItem";
-            this.AboutpMenuItem.Size = new System.Drawing.Size(193, 22);
+            this.AboutpMenuItem.Size = new System.Drawing.Size(221, 22);
             this.AboutpMenuItem.Text = "NicoLiveのバージョン情報";
             this.AboutpMenuItem.Click += new System.EventHandler(this.AboutNicoLiveMenu_Click);
             // 
@@ -256,7 +258,7 @@
             this.mBouyomiBtn.Image = ((System.Drawing.Image)(resources.GetObject("mBouyomiBtn.Image")));
             this.mBouyomiBtn.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.mBouyomiBtn.Name = "mBouyomiBtn";
-            this.mBouyomiBtn.Size = new System.Drawing.Size(58, 22);
+            this.mBouyomiBtn.Size = new System.Drawing.Size(60, 22);
             this.mBouyomiBtn.Text = "ｺﾒﾝﾄ読上";
             this.mBouyomiBtn.CheckStateChanged += new System.EventHandler(this.mBouyomiBtn_CheckStateChanged);
             this.mBouyomiBtn.Click += new System.EventHandler(this.BouyomiBtn_Click);
@@ -275,7 +277,7 @@
             this.mVisitorBtn.Image = ((System.Drawing.Image)(resources.GetObject("mVisitorBtn.Image")));
             this.mVisitorBtn.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.mVisitorBtn.Name = "mVisitorBtn";
-            this.mVisitorBtn.Size = new System.Drawing.Size(81, 22);
+            this.mVisitorBtn.Size = new System.Drawing.Size(84, 22);
             this.mVisitorBtn.Text = "来場者数読上";
             this.mVisitorBtn.CheckStateChanged += new System.EventHandler(this.mVisitorBtn_CheckStateChanged);
             // 
@@ -293,7 +295,7 @@
             this.mContWaku.Image = ((System.Drawing.Image)(resources.GetObject("mContWaku.Image")));
             this.mContWaku.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.mContWaku.Name = "mContWaku";
-            this.mContWaku.Size = new System.Drawing.Size(57, 22);
+            this.mContWaku.Size = new System.Drawing.Size(60, 22);
             this.mContWaku.Text = "連続枠取";
             this.mContWaku.CheckStateChanged += new System.EventHandler(this.mContWaku_CheckStateChanged);
             // 
@@ -311,7 +313,7 @@
             this.mAutoExtendBtn.Image = ((System.Drawing.Image)(resources.GetObject("mAutoExtendBtn.Image")));
             this.mAutoExtendBtn.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.mAutoExtendBtn.Name = "mAutoExtendBtn";
-            this.mAutoExtendBtn.Size = new System.Drawing.Size(81, 22);
+            this.mAutoExtendBtn.Size = new System.Drawing.Size(84, 22);
             this.mAutoExtendBtn.Text = "自動無料延長";
             this.mAutoExtendBtn.CheckStateChanged += new System.EventHandler(this.mAutoExtendBtn_CheckStateChanged);
             this.mAutoExtendBtn.Click += new System.EventHandler(this.AutoExtendBtn_Click);
@@ -329,7 +331,7 @@
             this.mImakokoBtn.Image = ((System.Drawing.Image)(resources.GetObject("mImakokoBtn.Image")));
             this.mImakokoBtn.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.mImakokoBtn.Name = "mImakokoBtn";
-            this.mImakokoBtn.Size = new System.Drawing.Size(33, 22);
+            this.mImakokoBtn.Size = new System.Drawing.Size(36, 22);
             this.mImakokoBtn.Text = "今ｺｺ";
             this.mImakokoBtn.Click += new System.EventHandler(this.ImakokoBtn_Click);
             // 
@@ -346,7 +348,7 @@
             this.mCopyBtn.Image = ((System.Drawing.Image)(resources.GetObject("mCopyBtn.Image")));
             this.mCopyBtn.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.mCopyBtn.Name = "mCopyBtn";
-            this.mCopyBtn.Size = new System.Drawing.Size(54, 22);
+            this.mCopyBtn.Size = new System.Drawing.Size(60, 22);
             this.mCopyBtn.Text = "前枠続き";
             this.mCopyBtn.Click += new System.EventHandler(this.mCopyBtn_Click);
             // 
@@ -363,7 +365,7 @@
             this.mWakutoriBtn.Image = ((System.Drawing.Image)(resources.GetObject("mWakutoriBtn.Image")));
             this.mWakutoriBtn.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.mWakutoriBtn.Name = "mWakutoriBtn";
-            this.mWakutoriBtn.Size = new System.Drawing.Size(33, 22);
+            this.mWakutoriBtn.Size = new System.Drawing.Size(36, 22);
             this.mWakutoriBtn.Text = "枠取";
             this.mWakutoriBtn.Click += new System.EventHandler(this.WakutoriBtn_Click);
             // 
@@ -394,9 +396,9 @@
             // mLoginLabel
             // 
             this.mLoginLabel.AutoToolTip = true;
-            this.mLoginLabel.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
+            this.mLoginLabel.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
+                        | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
+                        | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
             this.mLoginLabel.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
             this.mLoginLabel.Font = new System.Drawing.Font("ＭＳ Ｐゴシック", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.mLoginLabel.Name = "mLoginLabel";
@@ -407,9 +409,9 @@
             // mTotalCnt
             // 
             this.mTotalCnt.AutoToolTip = true;
-            this.mTotalCnt.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
+            this.mTotalCnt.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
+                        | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
+                        | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
             this.mTotalCnt.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
             this.mTotalCnt.Font = new System.Drawing.Font("ＭＳ Ｐゴシック", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.mTotalCnt.Name = "mTotalCnt";
@@ -420,9 +422,9 @@
             // mActiveCnt
             // 
             this.mActiveCnt.AutoToolTip = true;
-            this.mActiveCnt.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
+            this.mActiveCnt.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
+                        | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
+                        | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
             this.mActiveCnt.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
             this.mActiveCnt.Font = new System.Drawing.Font("ＭＳ Ｐゴシック", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.mActiveCnt.Name = "mActiveCnt";
@@ -433,9 +435,9 @@
             // mUniqCnt
             // 
             this.mUniqCnt.AutoToolTip = true;
-            this.mUniqCnt.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
+            this.mUniqCnt.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
+                        | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
+                        | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
             this.mUniqCnt.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
             this.mUniqCnt.Font = new System.Drawing.Font("ＭＳ Ｐゴシック", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.mUniqCnt.Name = "mUniqCnt";
@@ -445,9 +447,9 @@
             // 
             // mCpuInfo
             // 
-            this.mCpuInfo.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
+            this.mCpuInfo.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
+                        | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
+                        | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
             this.mCpuInfo.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
             this.mCpuInfo.Font = new System.Drawing.Font("ＭＳ Ｐゴシック", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.mCpuInfo.Name = "mCpuInfo";
@@ -462,9 +464,9 @@
             // 
             // mBattery
             // 
-            this.mBattery.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
+            this.mBattery.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
+                        | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
+                        | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
             this.mBattery.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
             this.mBattery.Font = new System.Drawing.Font("ＭＳ Ｐゴシック", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.mBattery.Name = "mBattery";
@@ -473,9 +475,9 @@
             // 
             // mWakumachi
             // 
-            this.mWakumachi.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
+            this.mWakumachi.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
+                        | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
+                        | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
             this.mWakumachi.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
             this.mWakumachi.Font = new System.Drawing.Font("MS UI Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.mWakumachi.Name = "mWakumachi";
@@ -485,9 +487,9 @@
             // 
             // mUpLink
             // 
-            this.mUpLink.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
+            this.mUpLink.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
+                        | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
+                        | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
             this.mUpLink.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
             this.mUpLink.Font = new System.Drawing.Font("ＭＳ Ｐゴシック", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.mUpLink.Name = "mUpLink";
@@ -496,9 +498,9 @@
             // 
             // mDownLink
             // 
-            this.mDownLink.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
-            | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
+            this.mDownLink.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
+                        | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
+                        | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
             this.mDownLink.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
             this.mDownLink.Font = new System.Drawing.Font("MS UI Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.mDownLink.Name = "mDownLink";
@@ -506,9 +508,9 @@
             // 
             // tableLayoutPanel1
             // 
-            this.tableLayoutPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tableLayoutPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.tableLayoutPanel1.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Outset;
             this.tableLayoutPanel1.ColumnCount = 1;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
@@ -629,82 +631,82 @@
             this.mNgID,
             this.miCommentColor});
             this.mCmtCxtMenu.Name = "mCmtCxtMenu";
-            this.mCmtCxtMenu.Size = new System.Drawing.Size(178, 176);
+            this.mCmtCxtMenu.Size = new System.Drawing.Size(203, 176);
             this.mCmtCxtMenu.Opening += new System.ComponentModel.CancelEventHandler(this.CmtCxtMenu_Opening);
             // 
             // mCopyComment
             // 
             this.mCopyComment.Name = "mCopyComment";
-            this.mCopyComment.Size = new System.Drawing.Size(177, 22);
+            this.mCopyComment.Size = new System.Drawing.Size(202, 22);
             this.mCopyComment.Text = "コメントをコピー";
             this.mCopyComment.Click += new System.EventHandler(this.CopyComment_Click);
             // 
             // mCopyID
             // 
             this.mCopyID.Name = "mCopyID";
-            this.mCopyID.Size = new System.Drawing.Size(177, 22);
+            this.mCopyID.Size = new System.Drawing.Size(202, 22);
             this.mCopyID.Text = "ＩＤをコピー";
             this.mCopyID.Click += new System.EventHandler(this.CopyID_Click);
             // 
             // toolStripMenuItem3
             // 
             this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(174, 6);
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(199, 6);
             // 
             // mOpenURL
             // 
             this.mOpenURL.Name = "mOpenURL";
-            this.mOpenURL.Size = new System.Drawing.Size(177, 22);
+            this.mOpenURL.Size = new System.Drawing.Size(202, 22);
             this.mOpenURL.Text = "URLを開く";
             this.mOpenURL.Click += new System.EventHandler(this.CommentList_DoubleClick);
             // 
             // mShowUserPage
             // 
             this.mShowUserPage.Name = "mShowUserPage";
-            this.mShowUserPage.Size = new System.Drawing.Size(177, 22);
+            this.mShowUserPage.Size = new System.Drawing.Size(202, 22);
             this.mShowUserPage.Text = "ユーザーページを見る";
             this.mShowUserPage.Click += new System.EventHandler(this.ShowUserPage_Click);
             // 
             // toolStripMenuItem2
             // 
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(174, 6);
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(199, 6);
             // 
             // mRename
             // 
             this.mRename.Name = "mRename";
-            this.mRename.Size = new System.Drawing.Size(177, 22);
+            this.mRename.Size = new System.Drawing.Size(202, 22);
             this.mRename.Text = "コテハン入力・・・";
             this.mRename.Click += new System.EventHandler(this.Rename_Click);
             // 
             // toolStripSeparator10
             // 
             this.toolStripSeparator10.Name = "toolStripSeparator10";
-            this.toolStripSeparator10.Size = new System.Drawing.Size(174, 6);
+            this.toolStripSeparator10.Size = new System.Drawing.Size(199, 6);
             // 
             // mNgID
             // 
             this.mNgID.Name = "mNgID";
-            this.mNgID.Size = new System.Drawing.Size(177, 22);
+            this.mNgID.Size = new System.Drawing.Size(202, 22);
             this.mNgID.Text = "このユーザーをNG登録";
             this.mNgID.Click += new System.EventHandler(this.mNgID_Click);
             // 
             // miCommentColor
             // 
             this.miCommentColor.Name = "miCommentColor";
-            this.miCommentColor.Size = new System.Drawing.Size(177, 22);
+            this.miCommentColor.Size = new System.Drawing.Size(202, 22);
             this.miCommentColor.Text = "色つけまくる";
             this.miCommentColor.Click += new System.EventHandler(this.miCommentColor_Click);
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.btnBouyomiClear);
             this.panel1.Controls.Add(this.groupBox1);
             this.panel1.Controls.Add(this.mNextWakuFastBtn);
             this.panel1.Controls.Add(this.mDisconnectBtn);
             this.panel1.Controls.Add(this.mRemainingTime);
             this.panel1.Controls.Add(this.mCommandBox);
             this.panel1.Controls.Add(this.mResetBtn);
-            this.panel1.Controls.Add(this.mUseHQBtn);
             this.panel1.Controls.Add(this.mCommentPostBtn);
             this.panel1.Controls.Add(this.cbCommentTwitter);
             this.panel1.Controls.Add(this.mCommentBox);
@@ -715,6 +717,16 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(952, 79);
             this.panel1.TabIndex = 4;
+            // 
+            // btnBouyomiClear
+            // 
+            this.btnBouyomiClear.Location = new System.Drawing.Point(439, 12);
+            this.btnBouyomiClear.Name = "btnBouyomiClear";
+            this.btnBouyomiClear.Size = new System.Drawing.Size(76, 27);
+            this.btnBouyomiClear.TabIndex = 23;
+            this.btnBouyomiClear.Text = "棒読みクリア";
+            this.btnBouyomiClear.UseVisualStyleBackColor = true;
+            this.btnBouyomiClear.Click += new System.EventHandler(this.btnBouyomiClear_Click);
             // 
             // groupBox1
             // 
@@ -734,6 +746,17 @@
             this.groupBox1.Size = new System.Drawing.Size(311, 70);
             this.groupBox1.TabIndex = 22;
             this.groupBox1.TabStop = false;
+            // 
+            // cbUseHQ
+            // 
+            this.cbUseHQ.AutoSize = true;
+            this.cbUseHQ.Location = new System.Drawing.Point(7, -1);
+            this.cbUseHQ.Name = "cbUseHQ";
+            this.cbUseHQ.Size = new System.Drawing.Size(72, 16);
+            this.cbUseHQ.TabIndex = 31;
+            this.cbUseHQ.Text = "外部配信";
+            this.cbUseHQ.UseVisualStyleBackColor = true;
+            this.cbUseHQ.CheckedChanged += new System.EventHandler(this.cbUseHQ_CheckedChanged);
             // 
             // mHQStatus
             // 
@@ -842,7 +865,7 @@
             // 
             // mNextWakuFastBtn
             // 
-            this.mNextWakuFastBtn.Location = new System.Drawing.Point(328, 11);
+            this.mNextWakuFastBtn.Location = new System.Drawing.Point(275, 12);
             this.mNextWakuFastBtn.Name = "mNextWakuFastBtn";
             this.mNextWakuFastBtn.Size = new System.Drawing.Size(76, 27);
             this.mNextWakuFastBtn.TabIndex = 18;
@@ -852,7 +875,7 @@
             // 
             // mDisconnectBtn
             // 
-            this.mDisconnectBtn.Location = new System.Drawing.Point(410, 11);
+            this.mDisconnectBtn.Location = new System.Drawing.Point(357, 12);
             this.mDisconnectBtn.Name = "mDisconnectBtn";
             this.mDisconnectBtn.Size = new System.Drawing.Size(76, 27);
             this.mDisconnectBtn.TabIndex = 17;
@@ -889,18 +912,6 @@
             this.mResetBtn.UseVisualStyleBackColor = true;
             this.mResetBtn.Click += new System.EventHandler(this.mResetBtn_Click);
             // 
-            // mUseHQBtn
-            // 
-            this.mUseHQBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.mUseHQBtn.Location = new System.Drawing.Point(556, 14);
-            this.mUseHQBtn.Name = "mUseHQBtn";
-            this.mUseHQBtn.Size = new System.Drawing.Size(68, 23);
-            this.mUseHQBtn.TabIndex = 8;
-            this.mUseHQBtn.Text = "通常配信";
-            this.mUseHQBtn.UseVisualStyleBackColor = true;
-            this.mUseHQBtn.Visible = false;
-            this.mUseHQBtn.Click += new System.EventHandler(this.mUseHQBtn_Click);
-            // 
             // mCommentPostBtn
             // 
             this.mCommentPostBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
@@ -924,8 +935,8 @@
             // 
             // mCommentBox
             // 
-            this.mCommentBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.mCommentBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.mCommentBox.Location = new System.Drawing.Point(275, 49);
             this.mCommentBox.Multiline = true;
             this.mCommentBox.Name = "mCommentBox";
@@ -1005,16 +1016,12 @@
             this.mXSplitTimer.Interval = 1000;
             this.mXSplitTimer.Tick += new System.EventHandler(this.mXSplitTimer_Tick);
             // 
-            // cbUseHQ
+            // NGUserStripMenuItem
             // 
-            this.cbUseHQ.AutoSize = true;
-            this.cbUseHQ.Location = new System.Drawing.Point(7, -1);
-            this.cbUseHQ.Name = "cbUseHQ";
-            this.cbUseHQ.Size = new System.Drawing.Size(72, 16);
-            this.cbUseHQ.TabIndex = 31;
-            this.cbUseHQ.Text = "外部配信";
-            this.cbUseHQ.UseVisualStyleBackColor = true;
-            this.cbUseHQ.CheckedChanged += new System.EventHandler(this.cbUseHQ_CheckedChanged);
+            this.NGUserStripMenuItem.Name = "NGUserStripMenuItem";
+            this.NGUserStripMenuItem.Size = new System.Drawing.Size(221, 22);
+            this.NGUserStripMenuItem.Text = "NGユーザー";
+            this.NGUserStripMenuItem.Click += new System.EventHandler(this.NGUserStripMenuItem_Click);
             // 
             // Form1
             // 
@@ -1114,7 +1121,6 @@
         private System.Windows.Forms.ToolStripStatusLabel mWakumachi;
         private System.Windows.Forms.ToolStripMenuItem miCommentColor;
         private System.Windows.Forms.Button mResetBtn;
-        private System.Windows.Forms.Button mUseHQBtn;
         private System.Windows.Forms.DataGridViewTextBoxColumn mNo;
         private System.Windows.Forms.DataGridViewTextBoxColumn mID;
         private System.Windows.Forms.DataGridViewTextBoxColumn mHandle;
@@ -1137,6 +1143,8 @@
         private System.Windows.Forms.Label mHQStatus;
         private System.Windows.Forms.ToolStripMenuItem LiveConsoleStripMenuItem;
         private System.Windows.Forms.CheckBox cbUseHQ;
+        private System.Windows.Forms.Button btnBouyomiClear;
+        private System.Windows.Forms.ToolStripMenuItem NGUserStripMenuItem;
     }
 }
 

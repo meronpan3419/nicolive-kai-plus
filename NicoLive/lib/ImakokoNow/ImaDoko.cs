@@ -79,6 +79,7 @@ namespace NicoLive
                 string url = Properties.Settings.Default.geocode_address_url
                     + "?lat=" + lat.ToString("##0.000") + "&lon=" + lon.ToString("##0.000");
                 HttpWebRequest req = (HttpWebRequest)WebRequest.Create(url);
+                req.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
                 req.Method = WebRequestMethods.Http.Get;
                 req.Timeout = 6000;
                 req.ContentType = "application/x-www-form-urlencoded";
@@ -165,6 +166,7 @@ namespace NicoLive
 
                 // HTTP用WebRequestの作成
                 HttpWebRequest req = (HttpWebRequest)WebRequest.Create(GetPosURI);
+                req.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
                 req.Method = WebRequestMethods.Http.Post;
                 req.Timeout = 6000;
                 req.ContentType = "application/x-www-form-urlencoded";

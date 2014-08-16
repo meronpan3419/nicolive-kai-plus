@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Diagnostics;
@@ -337,7 +336,6 @@ namespace NicoLive
             }
         }
 
-        Regex regex = new System.Text.RegularExpressions.Regex("Streaming Live - NicoVideo - \\S+\\s+Bitrate:\\d+\\.\\d+Kbps");
 
         public static bool IsBroadCast
         {
@@ -658,7 +656,7 @@ namespace NicoLive
         //
         //  この関数を定期的に呼ぶ
         //
-        public static void HandlingStatus(string id, Form mf = null)
+		public static void HandlingStatus(string id, Form mf)
         {
             // 停止は、idなくても可能
             if (require_status != XSplit_Status.XS_NEED_STOP)
@@ -700,7 +698,7 @@ namespace NicoLive
                         // 配信開始
                         if (Properties.Settings.Default.use_xsplit_shortcut)
                         {
-                            SHIFT_CONTROL_A();
+                            PushShortcutKeys();
                         }
                         else
                         {
@@ -747,7 +745,7 @@ namespace NicoLive
                             // 配信停止
                             if (Properties.Settings.Default.use_xsplit_shortcut)
                             {
-                                SHIFT_CONTROL_A();
+                                PushShortcutKeys();
                             }
                             else
                             {
@@ -775,7 +773,7 @@ namespace NicoLive
                             // 配信停止
                             if (Properties.Settings.Default.use_xsplit_shortcut)
                             {
-                                SHIFT_CONTROL_A();
+                                PushShortcutKeys();
                             }
                             else
                             {
@@ -841,8 +839,9 @@ namespace NicoLive
         //
         // ウインドウのキャプションをウインドウハンドルから取得
         //
-        private static string GetWindowText(IntPtr hWnd, int size = 1024)
+		private static string GetWindowText(IntPtr hWnd)
         {
+			int size = 1024;
             StringBuilder sb = new StringBuilder(size + 1);
             GetWindowText(hWnd, sb, sb.Capacity);
             return sb.ToString();
@@ -862,7 +861,7 @@ namespace NicoLive
         //
         //  SHIFT+CONTROL+A
         //
-        private static void SHIFT_CONTROL_A()
+        private static void PushShortcutKeys()
         {
             INPUT[] input = new INPUT[6];
 
@@ -975,10 +974,9 @@ namespace NicoLive
             SendInput(4, input, Marshal.SizeOf(input[0]));
         }
 
-
-
-        private static string GetClassName(IntPtr hWnd, int length = 256)
+		private static string GetClassName(IntPtr hWnd)
         {
+			int length = 1024;
             StringBuilder sb = new StringBuilder(length + 1);
             GetClassName(hWnd, sb, length);
             return sb.ToString();

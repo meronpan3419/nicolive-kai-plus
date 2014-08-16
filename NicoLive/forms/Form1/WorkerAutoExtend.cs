@@ -20,6 +20,7 @@ namespace NicoLive
 
         int mAutoExtendWorker_WAIT = 1000 * 2;
         bool mAutoExtendWorker_extend_wait = false;
+        DateTime mExtendedTime;
 
         bool NEED_FREE_EXTEND_0 = false;
         bool NEED_FREE_EXTEND_1 = false;
@@ -62,35 +63,36 @@ namespace NicoLive
             //    continue;
             //}
 
-            if (this.Bounds.Width < 50 || this.Bounds.Height < 50)
-            {
-                //Thread.Sleep(wait);
-                return;
-            }
+            //if (this.Bounds.Width < 50 || this.Bounds.Height < 50)
+            //{
+            //    //Thread.Sleep(wait);
+            //    return;
+            //}
 
             // 延長が完了したらしばらく休憩
             if (mAutoExtendWorker_extend_wait)
             {
-                Thread.Sleep(1000 * 60 * 5);    // 5分
+                if ((DateTime.Now - mExtendedTime).Minutes < 5) return;
+
                 mAutoExtendWorker_extend_wait = false;
                 NEED_FREE_EXTEND_0 = false;
                 NEED_FREE_EXTEND_1 = false;
                 NEED_FREE_EXTEND_2 = false;
-                return;
+
             }
 
-            mIsExtend = false;
+            //mIsExtend = false;
 
             UInt32 time = mLiveInfo.Time;
             UInt32 btime = mLiveInfo.StartTime;
 
             if (btime < time)
             {
-                int sub = Utils.CalcTime(); // 残り時間
-                int min = sub / 60;
+                int remaining_sec = Utils.CalcRemainingTime(); // 残り時間
+                int remaining_min = remaining_sec / 60;
 
                 //--------------------- 無料延長開始 -----------------------
-                if (mAutoExtendBtn.Checked && min <= 4 && !NEED_FREE_EXTEND_0)  // 25分経過
+                if (mAutoExtendBtn.Checked && remaining_min <= 4 && !NEED_FREE_EXTEND_0)  // 25分経過
                 {
                     Utils.WriteLog("AutoExtend(): 無料延長開始");
                     NEED_FREE_EXTEND_0 = true;
@@ -140,18 +142,40 @@ namespace NicoLive
                                 Utils.WriteLog("AutoExtend(): 無料延長完了");
                                 NEED_FREE_EXTEND_2 = false;
 
-                                //this.SendComment(mMsg.GetMessage("延長完了"), true);
+
+
+                                mNico.LiveStart(LiveID, mLiveInfo.Token);
+
+
                                 mAutoExtendWorker_extend_wait = true;
                                 mIsExtend = true;
+                                mExtendedTime = DateTime.Now;
+
+                                this.SendComment(mMsg.GetMessage("15秒後に再接続します"), true);
+                                Thread.Sleep(15 * 1000);
+
+                                Thread th = new Thread(delegate()
+                                {
+                                    Connect(false);
+                                });
+                                th.Name = "AutoExtend(): 再接続";
+                                th.Start();
+
+
+
+
                             }
                         }
                     }
 
-                    if (sub > (20 * 60))
-                    {
-                        mIsExtend = false;
-                        NEED_FREE_EXTEND_0 = false;
-                    }
+
+                }
+
+
+                if (remaining_sec > (20 * 60))
+                {
+                    mIsExtend = false;
+                    NEED_FREE_EXTEND_0 = false;
                 }
             }
         }
@@ -162,6 +186,7 @@ namespace NicoLive
             if (!Properties.Settings.Default.use_hq) return;
             if (!Properties.Settings.Default.auto_connect) return;
             if (mStartHQ) return;
+            if (mNico == null) return;
             if (!mNico.IsLogin) return;
             if (mDisconnect) return;
 
@@ -182,17 +207,27 @@ namespace NicoLive
             //if (Properties.Settings.Default.use_hq) return;     // 高画質配信の時はスタート幼い
             if (!Properties.Settings.Default.auto_connect) return;
             if (mPushStart) return;    // 配信開始ボタン押す前か
+            if (mNico == null) return;
             if (!mNico.IsLogin) return;
             if (mDisconnect) return;
             if (mLiveConsole == null) return; // 配信コンソールがあるか
             if (mLiveConsole.IsDisposed) return;
 
-            IntPtr hWnd = (IntPtr)0;
-            this.Invoke((Action)delegate()
+            IntPtr hWnd = IntPtr.Zero;
+            try
             {
-                hWnd = mLiveConsole.getFlashHandle();
+                this.Invoke((Action)delegate()
+                {
+                    hWnd = mLiveConsole.getFlashHandle();
 
-            });
+                });
+            }
+            catch (Exception e)
+            {
+                Utils.WriteLog("AutoLiveStartConsole(): フラッシュウィンドウハンドル取得失敗: " + e.Message);
+            }
+
+            if (hWnd == IntPtr.Zero) return;
 
             Utils.WriteLog("AutoLiveStartConsole(): hWnd = " + hWnd.ToString());
 
@@ -200,27 +235,27 @@ namespace NicoLive
             {
                 Bitmap bmp = scr.Capture2(hWnd);
                 Color color = bmp.GetPixel(45, 150);
-                if (color.Name.Equals("ff323232"))     //フラッシュが読み込み完了してない
-                {                   
+                if (color.Name.Equals("ff323232") || color.Name.Equals("ffffffff"))     //フラッシュが読み込み完了してない
+                {
                     Utils.WriteLog("AutoLiveStartConsole(): フラッシュが読み込み完了してない: " + color.Name);
-                    return;　
+                    return;
                 }
             }
 
             if (!Properties.Settings.Default.use_hq)
             {
-                Mouse.MouseClickHWnd(hWnd, 300, 20);    //簡単配信
+                Input.MouseClickHWnd(hWnd, 300, 20);    //簡単配信
             }
             else
             {
-                Mouse.MouseClickHWnd(hWnd, 400, 20);    //外部配信
+                Input.MouseClickHWnd(hWnd, 400, 20);    //外部配信
             }
             Thread.Sleep(1000);
-            Mouse.MouseClickHWnd(hWnd, 400, 145);   //はいボタン
+            Input.MouseClickHWnd(hWnd, 400, 145);   //はいボタン
             Thread.Sleep(1000);
-            Mouse.MouseClickHWnd(hWnd, 180, 150);    //配信開始
+            Input.MouseClickHWnd(hWnd, 180, 150);    //配信開始
             Thread.Sleep(1000);
-            Mouse.MouseClickHWnd(hWnd, 400, 145);    //はいボタン
+            Input.MouseClickHWnd(hWnd, 400, 145);    //はいボタン
 
             mPushStart = true;  //配信開始ボタン押したよフラグ
             if (mPushStart)

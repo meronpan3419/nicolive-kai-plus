@@ -28,7 +28,7 @@ namespace NicoLive
             const Int16 iVolume = -1;		// 音量(0-100)、 -1で棒読みちゃん画面上の設定
             const Int16 iSpeed = -1;		// 速度(50-300)、 -1で棒読みちゃん画面上の設定
             const Int16 iTone = -1;		// 音程(50-200)、 -1で棒読みちゃん画面上の設定
-            
+
             Thread th = new Thread(delegate()
             {
                 TalkByTCP(FormatText(iStr), iSpeed, iTone, iVolume, iVoice);
@@ -36,12 +36,58 @@ namespace NicoLive
             th.Name = "bouyomi talk";
             th.Start();
         }
+
+        //-------------------------------------------------------------------------
+        // 読み上げクリア
+        //-------------------------------------------------------------------------
+        public void Clear()
+        {
+            Thread th = new Thread(delegate()
+            {
+                const Int16 iCommand = 0x0040;
+
+                //棒読みちゃんのTCPサーバへ接続
+                const string sHost = "127.0.0.1"; //棒読みちゃんが動いているホスト
+                int iPort = Properties.Settings.Default.bouyomi_port;       //棒読みちゃんのTCPサーバのポート番号(デフォルト値)
+
+                TcpClient tc = null;
+                try
+                {
+                    tc = new TcpClient(sHost, iPort);
+                }
+                catch (Exception)
+                {
+                    Utils.WriteLog("接続失敗");
+                }
+
+                if (tc != null)
+                {
+                    //メッセージ送信
+                    using (NetworkStream ns = tc.GetStream())
+                    {
+                        using (BinaryWriter bw = new BinaryWriter(ns))
+                        {
+                            bw.Write(iCommand); //コマンド（ 0x40:読み上げクリア）
+
+                        }
+                    }
+
+                    //切断
+                    tc.Close();
+                }
+            });
+            th.Name = "bouyomi talk　clear";
+            th.Start();
+        }
+
         //-------------------------------------------------------------------------
         // 解放
         //-------------------------------------------------------------------------
         public void Dispose()
         {
         }
+
+
 
         //-------------------------------------------------------------------------
         // TCP/IPでおしゃべり
@@ -92,9 +138,9 @@ namespace NicoLive
                 tc.Close();
             }
 
-			bMessage = null;
+            bMessage = null;
         }
-        
+
         //-------------------------------------------------------------------------
         // 起動
         //-------------------------------------------------------------------------
@@ -102,7 +148,7 @@ namespace NicoLive
         {
             if (!Properties.Settings.Default.launch_bouyomi) return;
             Process[] ps = Process.GetProcessesByName("BouyomiChan");
-            if(ps.Length > 0) return;
+            if (ps.Length > 0) return;
 
             Thread th = new Thread(delegate()
             {
@@ -118,7 +164,7 @@ namespace NicoLive
             th.Name = "bouyomi launch";
             th.Start();
         }
-        
+
         //-------------------------------------------------------------------------
         // 終了
         //-------------------------------------------------------------------------

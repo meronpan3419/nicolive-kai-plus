@@ -37,28 +37,40 @@ namespace NicoLive
         //-------------------------------------------------------------------------
         private void Imakoko_Load(object sender, EventArgs e)
         {
-            string uri = String.Format("http://proxy.imacoconow.com/v3/view?trace={0}",
-                                        Properties.Settings.Default.imakoko_user);
-
+            
             if (mOwner != null)
             {
                 this.Left = mOwner.Left + 400;
                 this.Top = mOwner.Top + 60;
             }
-            mBrowser.Navigate(uri);
+            
+            navigateMap(Properties.Settings.Default.imakoko_user);
+            
+            mImakokoID.Text = Properties.Settings.Default.imakoko_user;
+
             //System.Diagnostics.Process.Start(uri);
         }
 
-        private void mBrowser_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
+        private void navigateMap(string id)
         {
-            //if (!IsIE8Fixed)
-            //{
-            //    string html = mBrowser.DocumentText.Replace("<head>", "<head><meta http-equiv=\"X-UA-Compatible\" content=\"IE=7\">");
-            //    html = html.Replace("script src=\"/static/", "script src=\"http://imakoko-gps.appspot.com/static/");
-            //    mBrowser.DocumentText = html;
-            //    IsIE8Fixed = true;
-            // }
+            string uri = String.Format("http://proxy.imacoconow.com/v3/view?trace={0}",
+                            id);
+            mBrowser.Navigate(uri);
         }
+
+        private void mImakokoID_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)Keys.Enter)
+            {
+                navigateMap(mImakokoID.Text);
+                e.Handled = true;
+            }
+        }
+
+
+
+
+
 
     }
 }

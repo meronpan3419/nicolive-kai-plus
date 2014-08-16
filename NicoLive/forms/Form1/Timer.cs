@@ -27,20 +27,19 @@ namespace NicoLive
                 Utils.SetCommentFont(ref mCommentList);
             }
 
-            // 色設定
-            if (mCommentList.RowsDefaultCellStyle.BackColor != Properties.Settings.Default.back_color)
-            {
-                mCommentList.RowsDefaultCellStyle.BackColor = Properties.Settings.Default.back_color;
-                mCommentList.BackgroundColor = Properties.Settings.Default.back_color;
-            }
+            //// 色設定
+            //if (mCommentList.RowsDefaultCellStyle.BackColor != Properties.Settings.Default.back_color)
+            //{
+            //    mCommentList.RowsDefaultCellStyle.BackColor = Properties.Settings.Default.back_color;
+            //    mCommentList.BackgroundColor = Properties.Settings.Default.back_color;
+            //}
 
-            if (mCommentList.RowsDefaultCellStyle.ForeColor != Properties.Settings.Default.text_color)
-            {
-                mCommentList.RowsDefaultCellStyle.ForeColor = Properties.Settings.Default.text_color;
-            }
+            //if (mCommentList.RowsDefaultCellStyle.ForeColor != Properties.Settings.Default.text_color)
+            //{
+            //    mCommentList.RowsDefaultCellStyle.ForeColor = Properties.Settings.Default.text_color;
+            //}
 
             // 配信方法更新
-            mUseHQBtn.Text = Properties.Settings.Default.use_hq ? "外部配信" : "通常配信";
             cbUseHQ.Checked = Properties.Settings.Default.use_hq;
             updateBroadcastType();
 
@@ -115,16 +114,18 @@ namespace NicoLive
             {
 
                 string remaining_time = "残り時間　00:00";
-                int remaining_sec = Utils.CalcTime();
+                int remaining_sec = Utils.CalcRemainingTime();
                 if (remaining_sec >= 0)
                 {
                     remaining_time = String.Format("残り時間  {0:D2}:{1:D2}", (int)remaining_sec / 60, (int)remaining_sec % 60);
                 }
                 else
                 {
+ 
 
                     remaining_time = String.Format("残り時間 -{0:D2}:{1:D2}", (int)((remaining_sec * -1) / 60), (int)((remaining_sec * -1) % 60));
                 }
+ 
 
                 this.Invoke((Action)delegate()
                 {
@@ -140,6 +141,23 @@ namespace NicoLive
                     
                     mRemainingTime.Text = remaining_time;
                 });
+
+
+                //３０分で終了
+                if (!Properties.Settings.Default.use_loss_time)
+                {
+                    if (mLiveInfo.StartTime != 0 && !mIsExtend)
+                    {
+                        uint now = Utils.GetUnixTime(DateTime.Now);
+                        uint end_time = mLiveInfo.EndTime;
+
+                        if (now > end_time) // 30分経過
+                        {
+                            mNico.SendOwnerComment(LiveID, "/disconnect", "", mLiveInfo.Token);
+                            mNico.LiveStop(LiveID, mLiveInfo.Token);
+                        }
+                    }
+                }
             }
 
             // コメントサーバーとの接続キープ用
@@ -182,7 +200,6 @@ namespace NicoLive
                     if (ts.Seconds >= 1)
                     {
                         mPastChat = false;
-                        //mPastChatList.Reverse();
                         this.mCommentList.Rows.AddRange(mPastChatList.ToArray());
                     }
                 }

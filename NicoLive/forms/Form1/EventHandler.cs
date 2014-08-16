@@ -38,9 +38,6 @@ namespace NicoLive
             mRes = Response.Instance;
             mLauncher = Launcher.Instance;
 
-
-
-            mUseHQBtn.Text = Properties.Settings.Default.use_hq ? "外部配信" : "通常配信";
             updateFMLEProfileList();
             updateBroadcastType();
 
@@ -197,40 +194,6 @@ namespace NicoLive
             // 自動接続
             if (mAutoConnect)
                 Connect(false);
-        }
-
-        private void mUseHQBtn_Click(object sender, EventArgs e)
-        {
-            if (Properties.Settings.Default.use_hq)
-            {
-                Properties.Settings.Default.use_hq = false;
-                mUseHQBtn.Text = "通常配信";
-                Thread th = new Thread(delegate()
-                {
-                    HQ.Stop();
-                });
-                th.Name = "NivoLive.Form1.EventHandler.mUseHQBtn_Click()";
-                th.Start();
-
-                //this.Invoke((Action)delegate()
-                //{
-                //    GetPlayer();
-                //});
-                
-
-            }
-            else
-            {
-                Properties.Settings.Default.use_hq = true;
-                mUseHQBtn.Text = "外部配信";
-
-
-
-
-
-            }
-
-
         }
 
         private void mResetBtn_Click(object sender, EventArgs e)

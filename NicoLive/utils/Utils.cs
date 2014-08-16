@@ -775,7 +775,7 @@ namespace NicoLive
         //-------------------------------------------------------------------------
         // 残り時間計算
         //-------------------------------------------------------------------------
-        public static int CalcTime()
+        public static int CalcRemainingTime()
         {
             int sub;
             LiveInfo info = LiveInfo.Instance;

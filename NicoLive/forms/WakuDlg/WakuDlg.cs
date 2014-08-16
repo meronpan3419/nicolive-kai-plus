@@ -113,7 +113,8 @@ namespace NicoLive
             Utils.WriteLog("WakuDlg: mWorker_DoWork(): 放送履歴取得中");
 
             if (mLv.Length <= 2)
-                mLv = mNico.GetRecentLive();
+                mLv = mNico.GetRecentLive(Properties.Settings.Default.user_id,
+                                Properties.Settings.Default.password);
 
             SetLabelFromThread("前枠番組情報の取得中", Color.Black, false);
             Utils.WriteLog("WakuDlg: mWorker_DoWork(): 前枠番組情報の取得中");

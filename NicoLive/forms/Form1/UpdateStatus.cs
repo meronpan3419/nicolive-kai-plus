@@ -180,6 +180,8 @@ namespace NicoLive
                             this.mTalkLimit = false;
                         }
                         Utils.WriteLog("Time: " + sub_sec.ToString());
+                        Utils.WriteLog("StartTime: " + mLiveInfo.StartTime);
+                        Utils.WriteLog("EndTime: " + mLiveInfo.EndTime);
                     }
                 }
 
@@ -369,6 +371,7 @@ namespace NicoLive
             {
                 string url = "http://nicolive-wakusu.b72.in/getwakusu.php?ver=" + Program.VERSION_KAI_PLUS;
                 HttpWebRequest req = (HttpWebRequest)WebRequest.Create(url);
+                req.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
                 string result = "";
                 try
                 {

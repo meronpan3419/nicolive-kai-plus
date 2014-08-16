@@ -11,6 +11,7 @@ using System.Threading;
 using Microsoft.VisualBasic;
 using System.IO;
 using System.Data.SQLite;
+using System.Collections.Generic;
 
 namespace NicoLive
 {
@@ -36,7 +37,7 @@ namespace NicoLive
             {
                 if (s.Length <= 0) continue;
 
-                Utils.WriteLog("ParseComment(): " + s);
+                // Utils.WriteLog("ParseComment(): " + s);
 
                 //最終レス番号取得
                 if (s.StartsWith("<thread "))
@@ -137,6 +138,12 @@ namespace NicoLive
             if (nick != null)
             {
                 iCmt.Handle = nick;
+
+                // コテハンを相性用のリストに追加しておく
+                if (!mAishouList.Contains(nick))
+                {
+                    mAishouList.Add(nick);
+                }
             }
             else
             {
@@ -151,7 +158,7 @@ namespace NicoLive
             // NGユーザーを無視
             if (this.mUid.IsNGUser(iCmt.Uid))
             {
-                SetLastChatNo(int.Parse(iCmt.Uid));
+                SetLastChatNo(int.Parse(iCmt.No));
                 iCmt = null;
                 return;
             }
@@ -162,12 +169,18 @@ namespace NicoLive
                 ShowNGCommentNotice(int.Parse(iCmt.No));
             }
 
-            // コメントをリストに追加
-            this.Invoke((Action)delegate()
+            try
             {
-                this.AddComment(iCmt);
-            });
-
+                // コメントをリストに追加
+                this.Invoke((Action)delegate()
+                {
+                    this.AddComment(iCmt);
+                });
+            }
+            catch (Exception e)
+            {
+                Utils.WriteLog("RecvComment: AddComment:" + e.Message);
+            }
 
             //過去コメント
             if (mLastChatNo >= int.Parse(iCmt.No)) return;
@@ -177,6 +190,9 @@ namespace NicoLive
             {
                 iCmt.ToVote(ref mVote);
             }
+
+            // 棒読みタスクのクリア
+            BouyomiClear(iCmt);
 
             // 棒読みちゃん読み上げリストにコメントを追加
             AddSpeakText(iCmt);
@@ -196,6 +212,12 @@ namespace NicoLive
 
             // ようこそ！
             WelcomeMessage(iCmt);
+
+            // おみくじ
+            Omikuji(iCmt);
+
+            // 相性
+            Aishou(iCmt);
 
             // NGコメント通知
             SendNGCommentNotice(int.Parse(iCmt.No));
@@ -318,6 +340,7 @@ namespace NicoLive
 
         private void AddSpeakText(Comment iCmt)
         {
+            // 読み上げないコメントは帰る
             if (IsIgnoreComment(iCmt)) return;
 
             lock (mSpeakLock)
@@ -683,6 +706,148 @@ namespace NicoLive
             }
         }
 
+
+        //-------------------------------------------------------------------------
+        // 棒読みタスクのクリア
+        //-------------------------------------------------------------------------
+        private void BouyomiClear(Comment iCmt)
+        {
+            List<string> clear_keyword = new List<string>();
+            clear_keyword.Add("ザ・ワールド");
+            clear_keyword.Add("棒読み");
+
+            foreach (string keyword in clear_keyword)
+            {
+                if (iCmt.Text.StartsWith(keyword))
+                {
+                    using (Bouyomi bm = new Bouyomi())
+                    {
+                        bm.Clear();
+                    }
+                }
+            }
+
+        }
+
+        //-------------------------------------------------------------------------
+        // 相性
+        //-------------------------------------------------------------------------
+        private void Aishou(Comment iCmt)
+        {
+            if (mAishouList.Count < 2) return;
+            if (iCmt.IsOwner) return;
+
+            if (iCmt.Text.Contains("相性"))
+            {
+                string name;
+                if (mUid.Contains(iCmt.Uid))
+                {
+                    name = mUid.CheckNickname(iCmt.Uid);
+                }
+                else
+                {
+                    name = ">>" + iCmt.No;
+                }
+
+                mAishouList.Remove(name);
+                string name2;
+                int i = new Random().Next(mAishouList.Count);
+                name2 = mAishouList[i];
+                mAishouList.Add(name);
+
+
+                string post_msg;
+                int s = new Random().Next(400);
+                post_msg = name + "さんと" + name2 + "さんの相性は、" + s + "%です！";
+
+                this.Invoke((Action)delegate()
+                {
+                    this.SendComment(post_msg, true);
+                });
+
+            }
+        }
+
+        //-------------------------------------------------------------------------
+        // おみくじ
+        //-------------------------------------------------------------------------
+        private void Omikuji(Comment iCmt)
+        {
+            // 主コメはおみくじしない
+            if (iCmt.IsOwner) return;
+
+            if (iCmt.Text.Contains("おみくじ") && !iCmt.Text.Contains("ありません") )
+            {
+                string name;
+                if (mUid.Contains(iCmt.Uid))
+                {
+                    name = mUid.CheckNickname(iCmt.Uid);
+                }
+                else
+                {
+                    name = ">>" + iCmt.No;
+                }
+
+                string post_msg = "";
+                if (mOmikujiList.Contains(iCmt.Uid))
+                {
+                    post_msg = name + "さんは、おみくじをもう使えません。";
+                }
+                else
+                {
+                    mOmikujiList.Add(iCmt.Uid);
+                    
+                    int o = new System.Random().Next(1,100);
+                    string[] unsei = new string[7] {"大吉", "吉", "半吉", "小吉", "末小吉", "末吉", "凶" };
+                    int[] ratio = new int[7]{17, 35, 5, 4, 3, 6, 30};
+                    int r = 0;
+                    for (int i = 0; i < 7; i++)
+                    {
+                        r += ratio[i];
+                        if (o <= r)
+                        {
+                            post_msg = name + "さんの運勢は、" + unsei[i] + "です！";
+                            break;
+                        }
+                    }
+
+                }
+
+                this.Invoke((Action)delegate()
+                {
+                    this.SendComment(post_msg, true);
+                });
+
+            }
+            if (iCmt.Text.Contains("おみくじありません"))
+            {
+                string name;
+                if (mUid.Contains(iCmt.Uid))
+                {
+                    name = mUid.CheckNickname(iCmt.Uid);
+                }
+                else
+                {
+                    name = ">>" + iCmt.No;
+                }
+
+                string post_msg;
+                post_msg = name + "さんは、おみくじはあります！";
+
+                this.Invoke((Action)delegate()
+                {
+                    this.SendComment(post_msg, true);
+                });
+
+                if (mOmikujiList.Contains(iCmt.Uid))
+                {
+                    mOmikujiList.Remove(iCmt.Uid);
+                }
+
+            }
+        }
+
+
         //-------------------------------------------------------------------------
         // ようこそ！
         //-------------------------------------------------------------------------
@@ -998,8 +1163,6 @@ namespace NicoLive
             {
                 //MakeWakutori(true);
 
-                mNico.SendOwnerComment(LiveID, "/cls", "", mLiveInfo.Token);
-
                 WakuDlg dlg = new WakuDlg(LiveID, false);
                 dlg.ShowDialog();
 
@@ -1012,11 +1175,15 @@ namespace NicoLive
 
                     this.Invoke((Action)delegate()
                     {
-                        mNico.SendOwnerComment(LiveID, "/cls", "", mLiveInfo.Token);
-                        this.LiveID = dlg.mLv;
-                        if (!this.mDisconnect)
+                        if (Properties.Settings.Default.use_loss_time &&
+                             Properties.Settings.Default.use_next_lv_notice)
                         {
-                            mNico.SendOwnerComment(LiveID, "/perm 次枠こちら：http://nico.ms/" + dlg.mLv, "", mLiveInfo.Token);
+                            mNico.SendOwnerComment(LiveID, "/cls", "", mLiveInfo.Token);
+                            this.LiveID = dlg.mLv;
+                            if (!this.mDisconnect)
+                            {
+                                mNico.SendOwnerComment(LiveID, "/perm 次枠こちら：http://nico.ms/" + dlg.mLv, "", mLiveInfo.Token);
+                            }
                         }
                         mNico.SendOwnerComment(LiveID, "/disconnect", "", mLiveInfo.Token);
 

@@ -258,6 +258,8 @@ namespace NicoLive
             Dictionary<string, string> info_PublishStatus = nico.GetPublishStatus(iLiveID);
             Dictionary<string, string> info_PlayerStatus = nico.GetPlayerStatus(iLiveID);
 
+            Utils.WriteLog("GetInfo()");
+
             if (info_PlayerStatus != null)
             {
                 // コミュ番号取得

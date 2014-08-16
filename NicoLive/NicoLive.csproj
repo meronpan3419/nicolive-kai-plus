@@ -7,15 +7,18 @@
     <DefineConstants>TRACE;DEBUG</DefineConstants>
     <Optimize>true</Optimize>
     <UseVSHostingProcess>false</UseVSHostingProcess>
+    <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <PlatformTarget>x86</PlatformTarget>
-    <OutputPath>bin\x86\Release\</OutputPath>
+    <OutputPath>bin\mono</OutputPath>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <WarningLevel>4</WarningLevel>
+    <Optimize>false</Optimize>
   </PropertyGroup>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{AB68E11F-8FFA-4D60-9C92-F309472E4387}</ProjectGuid>
@@ -23,12 +26,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>NicoLive</RootNamespace>
     <AssemblyName>NicoLive</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <ApplicationIcon>app.ico</ApplicationIcon>
-    <StartupObject>
-    </StartupObject>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <UpgradeBackupLocation>
@@ -50,6 +50,8 @@
     <BootstrapperEnabled>true</BootstrapperEnabled>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
+    <StartupObject>NicoLive.Program</StartupObject>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -72,23 +74,17 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="CookieGetterSharp">
-      <HintPath>.\CookieGetterSharp.dll</HintPath>
-    </Reference>
-    <Reference Include="Hammock.ClientProfile, Version=1.0.0.0, Culture=neutral, PublicKeyToken=c148cfba29ed1a4d, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>.\Hammock.ClientProfile.dll</HintPath>
+      <HintPath>CookieGetterSharp.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="Newtonsoft.Json">
-      <HintPath>.\Newtonsoft.Json.dll</HintPath>
+      <HintPath>Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
-    <Reference Include="System.Data.SQLite, Version=1.0.66.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=x86">
-      <Private>True</Private>
-    </Reference>
+    <Reference Include="System.Data.SQLite, Version=1.0.66.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=x86" />
     <Reference Include="System.Management" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq">
@@ -103,7 +99,16 @@
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="TweetSharp">
-      <HintPath>.\TweetSharp.dll</HintPath>
+      <HintPath>TweetSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="Hammock.ClientProfile">
+      <HintPath>Hammock.ClientProfile.dll</HintPath>
+    </Reference>
+    <Reference Include="AxInterop.ShockwaveFlashObjects">
+      <HintPath>AxInterop.ShockwaveFlashObjects.dll</HintPath>
+    </Reference>
+    <Reference Include="Interop.ShockwaveFlashObjects">
+      <HintPath>..\..\..\..\デスクトップ\nicolive_dev\nicolive-kai-p11фti\Interop.ShockwaveFlashObjects.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -181,6 +186,7 @@
     <Compile Include="forms\WakuDlg\WakuDlg.Designer.cs">
       <DependentUpon>WakuDlg.cs</DependentUpon>
     </Compile>
+    <Compile Include="lib\Windows\Keyboard.cs" />
     <Compile Include="lib\Bouyomi\Bouyomi.cs" />
     <Compile Include="components\HQ\FMLE.cs" />
     <Compile Include="forms\Form1\Form1.cs">
@@ -209,6 +215,12 @@
       <DependentUpon>TwitterOAuthDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="components\HQ\NLE.cs" />
+    <Compile Include="forms\NGUser\NGUser.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="forms\NGUser\NGUser.Designer.cs">
+      <DependentUpon>NGUser.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="forms\ChangeProp\ChangePropDlg.resx">
@@ -224,12 +236,17 @@
     </EmbeddedResource>
     <EmbeddedResource Include="forms\LiveConsole\LiveConsole.resx">
       <DependentUpon>LiveConsole.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="forms\NGUser\NGUser.resx">
+      <DependentUpon>NGUser.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="forms\TwitterOAuthDialog\TwitterOAuthDialog.resx">
       <DependentUpon>TwitterOAuthDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="forms\Viewer\Viewer.resx">
       <DependentUpon>Viewer.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="forms\WakuDlg\WakuDlg.resx">
       <DependentUpon>WakuDlg.cs</DependentUpon>
@@ -342,9 +359,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="ankoSQLite3.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="app.ico" />
     <None Include="Resources\err.bmp" />
     <None Include="Resources\bro_ok2.bmp" />
@@ -387,16 +401,6 @@
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
-  </ItemGroup>
-  <ItemGroup>
-    <COMReference Include="AxShockwaveFlashObjects">
-      <Guid>{D27CDB6B-AE6D-11CF-96B8-444553540000}</Guid>
-      <VersionMajor>1</VersionMajor>
-      <VersionMinor>0</VersionMinor>
-      <Lcid>0</Lcid>
-      <WrapperTool>aximp</WrapperTool>
-      <Isolated>False</Isolated>
-    </COMReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

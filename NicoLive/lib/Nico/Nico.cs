@@ -109,6 +109,8 @@ namespace NicoLive
 
         private readonly string URI_WATCH_URL = "http://live.nicovideo.jp/watch";
 
+        private readonly string URI_NG_URL = "http://watch.live.nicovideo.jp/api/configurengword?";
+
         // コメントサーバーへのTCPソケット
         private TcpClient mTcp = null;
 
@@ -148,18 +150,19 @@ namespace NicoLive
             if (iLV.Length <= 2) return false;
             if (iToken.Length <= 0) return false;
 
-            string url = URI_STARTFME2 + iLV + "&key=hq&value=0&token=" + iToken;
-
+            // 配信の種別セット、value(0: 通常配信, 1: 外部配信) 
+            string url = URI_STARTFME2 + iLV + "&key=hq&value=1&token=" + iToken;
             string xml = HttpGet(url, ref this.mCookieLogin);
-            if (!xml.Contains("status=\"ok\""))
-                return false;
-            url = URI_STARTFME2 + iLV + "&key=exclude&value=0&token=" + iToken;
-            xml = HttpGet(url, ref this.mCookieLogin);
-
             if (!xml.Contains("status=\"ok\"")) return false;
 
-            //StartTime = Convert.ToUInt32(info_PublishStatus["start_time"]);
-            //<start_time>1355492291</start_time>
+            // 配信開始コマンド exclude
+            url = URI_STARTFME2 + iLV + "&key=exclude&value=0&token=" + iToken;
+            xml = HttpGet(url, ref this.mCookieLogin);
+            if (!xml.Contains("status=\"ok\"")) return false;
+
+            //
+            // ついでにstart_timeとend_timeのセット
+            //
             Regex r = new Regex("<start_time>(.*?)</start_time>");
             Match m = r.Match(xml);
             LiveInfo info = LiveInfo.Instance;
@@ -291,9 +294,15 @@ namespace NicoLive
 
         //-------------------------------------------------------------------------
         //  ログイン
+        //
+        //  ログイン処理の流れ
+        //  1.設定ファイルのuser_sessionでログイン
+        //  2.ブラウザのクッキーでログイン
+        //  3.ID/PASSでログイン
         //-------------------------------------------------------------------------
         public bool Login(string username, string password)
         {
+
             // hashtable to hold the arguments of POST request.
             Dictionary<string, string> post_arg = new Dictionary<string, string>(3);
 
@@ -309,6 +318,27 @@ namespace NicoLive
             this.mCookieLogin = new CookieContainer();
 
             string ret = "ログインエラー";
+
+            if (LoginTest(Properties.Settings.Default.user_session))
+            {
+                Utils.WriteLog("Nico: Login() LoginTest() local user_session OK");
+                Cookie c = new Cookie("user_session", Properties.Settings.Default.user_session, "/", ".nicovideo.jp");
+                c.Expires = DateTime.Now.AddDays(30);
+                this.mCookieLogin.Add(c);
+                // IEのCookieを書き換える
+
+                OverrideIECookie(addSessionidExpires(Properties.Settings.Default.user_session));
+
+                mIsLogin = true;
+                return true;
+
+            }
+            else
+            {
+                Utils.WriteLog("Nico: Login() local user_session failed");
+            }
+
+
 
             // ブラウザのクッキーを用いてログインを試みる
             if (Properties.Settings.Default.UseBrowserCookie)
@@ -346,8 +376,8 @@ namespace NicoLive
                                 Utils.WriteLog("Nico: Login() LoginTest() OK");
 
                                 // IEのCookieを書き換える
-                                OverrideIECookie(GetSessionidFromCookie(collection["user_session"].Value));
-
+                                OverrideIECookie(addSessionidExpires(collection["user_session"].Value));
+                                Properties.Settings.Default.user_session = collection["user_session"].Value;
                                 mIsLogin = true;
                                 return true;
 
@@ -386,7 +416,7 @@ namespace NicoLive
                 mIsLogin = false;
                 return false;
             }
-            
+
 
             // check if result contains "ログインエラー"
             if (ret.IndexOf("ログインエラー") != -1)
@@ -400,7 +430,10 @@ namespace NicoLive
             string user_session = "";
 
             //CookieからセッションＩＤ取得
-            user_session = GetSessionidFromCookie(user_session);
+            Uri uri = new Uri(URI_LOGIN);
+            CookieCollection cc = this.mCookieLogin.GetCookies(uri);
+            user_session = cc["user_session"].ToString();
+            string user_session2 = addSessionidExpires(user_session);
             if (user_session.Equals(""))
             {
                 Utils.WriteLog("Nico: Login()  Login by ID-PASS, user_session is null ");
@@ -409,7 +442,9 @@ namespace NicoLive
             }
 
             // IEのCookieを書き換える
-            OverrideIECookie(user_session);
+            OverrideIECookie(user_session2);
+            Properties.Settings.Default.user_session = user_session.Replace("user_session=","");
+            Properties.Settings.Default.Save();
 
             // ログイン済みフラグを立てる
             Utils.WriteLog("Nico: Login()  Login by ID-PASS, piiiiii");
@@ -417,21 +452,13 @@ namespace NicoLive
             return true;
         }
 
-        private string GetSessionidFromCookie(string user_session)
+        private string addSessionidExpires(string user_session)
         {
-            Uri uri = new Uri(URI_LOGIN);
-            CookieCollection cc = this.mCookieLogin.GetCookies(uri);
-            if (cc["user_session"] == null)
-            {
-                Utils.WriteLog("Could not get session id");
-                return "";
-            }
-            user_session = cc["user_session"].ToString();
             DateTime expires = DateTime.Now.AddDays(30);
 
             System.Globalization.CultureInfo culture = new System.Globalization.CultureInfo("en-US");
-            user_session += "; path=/; domain=.nicovideo.jp; expires=" + expires.ToString("ddd, d-MMM-yyyy HH:mm:ss ", culture) + "GMT;";
-            return user_session;
+            return user_session + "; path=/; domain=.nicovideo.jp; expires=" + expires.ToString("ddd, d-MMM-yyyy HH:mm:ss ", culture) + "GMT;";
+
         }
 
         private void OverrideIECookie(string user_session)
@@ -441,6 +468,7 @@ namespace NicoLive
             bool isIEProtectedMode = false;
             IEIsProtectedModeProcess(ref isIEProtectedMode);
 
+            Utils.WriteLog("OverrideIECookie: " + user_session);
             Utils.WriteLog("IEIsProtectedModeProcess: " + isIEProtectedMode.ToString());
             if (isIEProtectedMode)
             {
@@ -466,13 +494,19 @@ namespace NicoLive
 
         public bool LoginTest(string iUserSession)
         {
-            CookieContainer user_session = new CookieContainer();
-            user_session.Add(new Cookie("user_session", iUserSession, "/", ".nicovideo.jp"));
-            if (HttpGet("http://live.nicovideo.jp/my", ref user_session).Contains("<title>マイページ - ニコニコ生放送</title>"))
+            try
             {
-                return true;
+                CookieContainer user_session = new CookieContainer();
+                user_session.Add(new Cookie("user_session", iUserSession, "/", ".nicovideo.jp"));
+                if (HttpGet("http://live.nicovideo.jp/my", ref user_session).Contains("<title>マイページ - ニコニコ生放送</title>"))
+                {
+                    return true;
+                }
             }
-            return false;
+            catch(Exception)
+            {}
+                return false;
+            
         }
 
         private void IEIsProtectedModeProcess()
@@ -1099,8 +1133,8 @@ namespace NicoLive
             {
                 //閉じた時
                 Utils.WriteLog("閉じました。");
-                Utils.WriteLog("ReceiveDataCallback()"+ e.Message);
-                Utils.WriteLog("ReceiveDataCallback()"+ e.StackTrace);
+                Utils.WriteLog("ReceiveDataCallback()" + e.Message);
+                Utils.WriteLog("ReceiveDataCallback()" + e.StackTrace);
                 mIsLogin = false;
                 return;
             }
@@ -1311,12 +1345,14 @@ namespace NicoLive
             Match match = Regex.Match(res, "<input type=\"text\" name=\"title\" style=\"width:400px\" value=\"(.*?)\">");
             if (match.Success)
                 iInfo["title"] = match.Groups[1].Value;
-
-            match = Regex.Match(res, "<textarea name=\"description\" class=\"description\" rows=\"7\" style=\"width:400px\"  tabindex=\"0\">(.*?)</textarea>", RegexOptions.Singleline);
-            if (match.Success)
-                iInfo["description"] = HttpUtility.HtmlDecode(match.Groups[1].Value);
             else
-                iInfo["description"] = "";
+                iInfo["title"] = "^-^";
+
+            match = Regex.Match(res, "<textarea name=\"description\"(.*?)>(.*?)</textarea>", RegexOptions.Singleline);
+            if (match.Success)
+                iInfo["description"] = HttpUtility.HtmlDecode(match.Groups[2].Value);
+            else
+                iInfo["description"] = "^-^";
 
             // 広告設定取得
             match = Regex.Match(res, "<input type=\"radio\" name=\"ad_enable\" value=\"0\" checked", RegexOptions.Singleline);
@@ -1357,7 +1393,7 @@ namespace NicoLive
                 }
             }
 
-            mc = Regex.Matches(res, @"<input type=""checkbox"" value=""ロックする"" name=""taglock.*?"" id=""taglock.*?""\s+?(\w*?)\s+?>", RegexOptions.Multiline);
+            mc = Regex.Matches(res, @"<input type=""checkbox"" value=""ロックする"" name=""taglock.*?"" id=""taglock.*?"".*?>", RegexOptions.Multiline);
             if (mc.Count > 0)
             {
                 foreach (Match m in mc)
@@ -1609,17 +1645,20 @@ namespace NicoLive
         //-------------------------------------------------------------------------
         // 直近の配信を取得
         //-------------------------------------------------------------------------
-        public string GetRecentLive()
+        public string GetRecentLive(string username, string password)
         {
-            string url = "http://live.nicovideo.jp/my";
-            string res = HttpGet(url, ref mCookieLogin);
-            string lv = "";
 
-            // confirmチェック
-            Match match = Regex.Match(res, "http://live.nicovideo.jp/editstream/lv(.*?)\"");
-            if (match.Success)
+            string lv = "";
+            if (Login(username, password))
             {
-                lv = "lv" + match.Groups[1].Value;
+                string url = "http://live.nicovideo.jp/my";
+                string res = HttpGet(url, ref mCookieLogin);
+                // confirmチェック
+                Match match = Regex.Match(res, "http://live.nicovideo.jp/editstream/lv(.*?)\"");
+                if (match.Success)
+                {
+                    lv = "lv" + match.Groups[1].Value;
+                }
             }
             return lv;
         }
@@ -1658,6 +1697,8 @@ namespace NicoLive
         {
             // Create HttpWebRequest
             HttpWebRequest req = (HttpWebRequest)WebRequest.Create(url);
+            req.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
+            req.UserAgent = "Nicolive co274186 " + Program.VERSION_KAI_PLUS;
             req.CookieContainer = cc;
 
             try
@@ -1690,18 +1731,21 @@ namespace NicoLive
 
             //WebRequestの作成
             HttpWebRequest req = (HttpWebRequest)WebRequest.Create(url);
+            req.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
+
 
             //メソッドにPOSTを指定
             req.Method = "POST";
             //ContentTypeを設定
             req.ContentType = "multipart/form-data; boundary=" + boundary;
+
             req.CookieContainer = cc;
 
             req.Referer = "http://live.nicovideo.jp/editstream";
             req.ServicePoint.Expect100Continue = false;
             req.KeepAlive = true;
             req.Accept = "application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5";
-            req.UserAgent = "Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US) AppleWebKit/533.4 (KHTML, like Gecko) Chrome/5.0.375.99 Safari/533.4";
+            req.UserAgent = "Nicolive co274186 " + Program.VERSION_KAI_PLUS;
             //req.Headers["Accept-Encoding"] = "gzip,deflate,sdch";
             req.Headers["Accept-Language"] = "ja,en-US;q=0.8,en;q=0.6";
             req.Headers["Accept-Charset"] = "utf-8,Shift_JIS;q=0.7,*;q=0.3";
@@ -1787,12 +1831,14 @@ namespace NicoLive
 
             // create HttpWebRequest
             HttpWebRequest req = (HttpWebRequest)WebRequest.Create(url);
+            req.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
             req.Method = "POST";
+
             req.Proxy = null;
             req.ContentType = "application/x-www-form-urlencoded";
             if (user_agent.Equals(""))
             {
-                req.UserAgent = "";
+                req.UserAgent = "Nicolive co274186 " + Program.VERSION_KAI_PLUS;
             }
             else
             {
@@ -1845,7 +1891,10 @@ namespace NicoLive
 
             // create HttpWebRequest
             HttpWebRequest req = (HttpWebRequest)WebRequest.Create(url);
+            req.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
+
             req.Method = "POST";
+            req.UserAgent = "Nicolive co274186 " + Program.VERSION_KAI_PLUS;
             req.ContentType = "application/x-www-form-urlencoded";
             req.ContentLength = data.Length;
             req.CookieContainer = cc;
@@ -2004,6 +2053,36 @@ namespace NicoLive
             return true;
         }
 
+
+        public Dictionary<string, string> GetNGUser(string iLv)
+        {
+
+            // <id, token>
+            Dictionary<string, string> ng_user = new Dictionary<string, string>();
+
+            string url = URI_NG_URL +
+                        "video=" + iLv +
+                        "&mode=get";
+
+            string res = HttpGet(url, ref mCookieLogin);
+
+            MatchCollection mc = Regex.Matches(res, @"<ngclient id=""(.*?)"" token=""(?<token>.*?)"">(.*?)<type>id</type>(.*?)<source>(?<source>.*?)</source>", RegexOptions.Multiline);
+            if (mc.Count > 0)
+            {
+                int i = 1;
+                foreach (Match m in mc)
+                {
+                    //Utils.WriteLog(m.Groups["token"].Value);
+                    //Utils.WriteLog(m.Groups["source"].Value);
+                    ng_user[m.Groups["source"].Value] = m.Groups["token"].Value;
+                    i++;
+                }
+            }
+
+            return ng_user;
+            
+        }
+
         public TcpClient getTcpClient()
         {
             return mTcp;
@@ -2013,6 +2092,7 @@ namespace NicoLive
         {
             mIsLogin = isLogin;
         }
+
 
     }
 }

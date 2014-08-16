@@ -180,6 +180,14 @@ namespace NicoLive
                 }
             }
 
+            // 棒読みちゃん静かに
+            if (keyData == (Keys.Q | Keys.Control))
+            {
+                using (Bouyomi bm = new Bouyomi())
+                {
+                    bm.Clear();
+                }
+            }
 
             if (keyData == (Keys.Enter | Keys.Control))
             {
@@ -187,8 +195,7 @@ namespace NicoLive
                 {
                     if (!mCommentBox.Text.Equals(""))
                     {
-
-                        //TODO:改行入れる
+					
                         return true;
 
                     }

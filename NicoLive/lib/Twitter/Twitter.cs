@@ -74,10 +74,12 @@ namespace NicoLive
                 Properties.Settings.Default.tw_token = mToken;
                 Properties.Settings.Default.tw_token_secret = mTokenSecret;
 
+                return true;
+
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                
             }
             
 

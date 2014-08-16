@@ -66,7 +66,7 @@
             // toolStripLabel1
             // 
             this.toolStripLabel1.Name = "toolStripLabel1";
-            this.toolStripLabel1.Size = new System.Drawing.Size(46, 22);
+            this.toolStripLabel1.Size = new System.Drawing.Size(58, 22);
             this.toolStripLabel1.Text = "放送ID：";
             // 
             // mLiveID
@@ -86,7 +86,7 @@
             this.mSmallBtn.Image = ((System.Drawing.Image)(resources.GetObject("mSmallBtn.Image")));
             this.mSmallBtn.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.mSmallBtn.Name = "mSmallBtn";
-            this.mSmallBtn.Size = new System.Drawing.Size(23, 22);
+            this.mSmallBtn.Size = new System.Drawing.Size(24, 22);
             this.mSmallBtn.Text = "小";
             this.mSmallBtn.Click += new System.EventHandler(this.mSmallBtn_Click);
             // 
@@ -96,7 +96,7 @@
             this.mBigBtn.Image = ((System.Drawing.Image)(resources.GetObject("mBigBtn.Image")));
             this.mBigBtn.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.mBigBtn.Name = "mBigBtn";
-            this.mBigBtn.Size = new System.Drawing.Size(23, 22);
+            this.mBigBtn.Size = new System.Drawing.Size(24, 22);
             this.mBigBtn.Text = "大";
             this.mBigBtn.Click += new System.EventHandler(this.mBigBtn_Click);
             // 
@@ -112,7 +112,7 @@
             this.mTop.Image = ((System.Drawing.Image)(resources.GetObject("mTop.Image")));
             this.mTop.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.mTop.Name = "mTop";
-            this.mTop.Size = new System.Drawing.Size(45, 22);
+            this.mTop.Size = new System.Drawing.Size(48, 22);
             this.mTop.Text = "最前面";
             this.mTop.Click += new System.EventHandler(this.mTop_Click);
             // 
@@ -122,20 +122,20 @@
             this.mAutoBoot.Image = ((System.Drawing.Image)(resources.GetObject("mAutoBoot.Image")));
             this.mAutoBoot.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.mAutoBoot.Name = "mAutoBoot";
-            this.mAutoBoot.Size = new System.Drawing.Size(57, 22);
+            this.mAutoBoot.Size = new System.Drawing.Size(60, 22);
             this.mAutoBoot.Text = "自動起動";
             this.mAutoBoot.Click += new System.EventHandler(this.mAutoBoot_Click);
             // 
             // mFlash
             // 
-            this.mFlash.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.mFlash.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.mFlash.Enabled = true;
             this.mFlash.Location = new System.Drawing.Point(0, 25);
             this.mFlash.Margin = new System.Windows.Forms.Padding(0);
             this.mFlash.Name = "mFlash";
             this.mFlash.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("mFlash.OcxState")));
-            this.mFlash.Size = new System.Drawing.Size(960, 520);
+            this.mFlash.Size = new System.Drawing.Size(1312, 701);
             this.mFlash.TabIndex = 3;
             // 
             // UI_Timer

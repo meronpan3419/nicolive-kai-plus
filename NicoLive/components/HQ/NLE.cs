@@ -86,6 +86,7 @@ namespace NicoLive
                         while (try_count < 10)
                         {
                             SendMessage(hWndParent, WM_LBUTTONDOWN, _lParam, _lParam);
+                            Thread.Sleep(200);
                             SendMessage(hWndParent, WM_LBUTTONUP, 0, _lParam);
                             try_count++;
                                                       
@@ -223,8 +224,9 @@ namespace NicoLive
         //
         // ウインドウのキャプションをウインドウハンドルから取得
         //
-        private static string GetWindowText(IntPtr hWnd, int size = 1024)
+        private static string GetWindowText(IntPtr hWnd)
         {
+			int size = 1024;
             StringBuilder sb = new StringBuilder(size + 1);
             GetWindowText(hWnd, sb, sb.Capacity);
             return sb.ToString();

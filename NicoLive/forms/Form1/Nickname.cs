@@ -54,6 +54,12 @@ namespace NicoLive
         {
             mUid.SetNickname(iID, iName);
 
+            // コテハンを相性用のリストに追加しておく
+            if (!mAishouList.Contains(iName))
+            {
+                mAishouList.Add(iName);
+            }
+
             // メインのコメントリスト修正
             Utils.SetNickname(ref mCommentList, iID, iName);
 

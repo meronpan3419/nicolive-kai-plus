@@ -224,6 +224,15 @@ namespace NicoLive
         private CheckBox mUseNewConsole;
         private NumericUpDown mCommentMax;
         private Label label30;
+        private TextBox mXsplitShortcutkey;
+        private CheckBox mXsplitAlt;
+        private CheckBox mXsplitShift;
+        private CheckBox mXsplitCtrl;
+        private Label label31;
+
+
+        private bool mXsplitShortcutkeyEnterd = false;
+        private Button btnXsplitShotcutkeyTest; 
 
 
         private IContainer components;
@@ -278,6 +287,8 @@ namespace NicoLive
             this.mPassLabel = new System.Windows.Forms.Label();
             this.mPasswdBox = new System.Windows.Forms.TextBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.label30 = new System.Windows.Forms.Label();
+            this.mCommentMax = new System.Windows.Forms.NumericUpDown();
             this.mUseNewConsole = new System.Windows.Forms.CheckBox();
             this.label24 = new System.Windows.Forms.Label();
             this.tbResetMessage = new System.Windows.Forms.TextBox();
@@ -422,6 +433,11 @@ namespace NicoLive
             this.mFMLEPath = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.mXsplitShortcutkey = new System.Windows.Forms.TextBox();
+            this.mXsplitAlt = new System.Windows.Forms.CheckBox();
+            this.mXsplitShift = new System.Windows.Forms.CheckBox();
+            this.mXsplitCtrl = new System.Windows.Forms.CheckBox();
+            this.label31 = new System.Windows.Forms.Label();
             this.mXSplitShortcut = new System.Windows.Forms.CheckBox();
             this.mXSplitScene = new System.Windows.Forms.CheckBox();
             this.mUseXSplit = new System.Windows.Forms.RadioButton();
@@ -459,12 +475,12 @@ namespace NicoLive
             this.mOpenFileDlg = new System.Windows.Forms.OpenFileDialog();
             this.mSessionFileDlg = new System.Windows.Forms.OpenFileDialog();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.mCommentMax = new System.Windows.Forms.NumericUpDown();
-            this.label30 = new System.Windows.Forms.Label();
+            this.btnXsplitShotcutkeyTest = new System.Windows.Forms.Button();
             this.mTabPage8.SuspendLayout();
             this.mTabGeneral.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.mCommentMax)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.mRestTime)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.mSekigaeMinutes)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.mRestBatt)).BeginInit();
@@ -501,7 +517,6 @@ namespace NicoLive
             this.groupBox14.SuspendLayout();
             this.groupBox13.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.mLauncherList)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.mCommentMax)).BeginInit();
             this.SuspendLayout();
             // 
             // mCancelBtn
@@ -686,6 +701,38 @@ namespace NicoLive
             this.groupBox2.TabIndex = 5;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "その他";
+            // 
+            // label30
+            // 
+            this.label30.AutoSize = true;
+            this.label30.Location = new System.Drawing.Point(33, 166);
+            this.label30.Name = "label30";
+            this.label30.Size = new System.Drawing.Size(237, 12);
+            this.label30.TabIndex = 38;
+            this.label30.Text = "コメントサーバー接続時に読み込む過去コメント数";
+            // 
+            // mCommentMax
+            // 
+            this.mCommentMax.ImeMode = System.Windows.Forms.ImeMode.Off;
+            this.mCommentMax.Location = new System.Drawing.Point(276, 164);
+            this.mCommentMax.Maximum = new decimal(new int[] {
+            500,
+            0,
+            0,
+            0});
+            this.mCommentMax.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.mCommentMax.Name = "mCommentMax";
+            this.mCommentMax.Size = new System.Drawing.Size(43, 19);
+            this.mCommentMax.TabIndex = 37;
+            this.mCommentMax.Value = new decimal(new int[] {
+            20,
+            0,
+            0,
+            0});
             // 
             // mUseNewConsole
             // 
@@ -2019,7 +2066,7 @@ namespace NicoLive
             this.groupBox6.Controls.Add(this.label4);
             this.groupBox6.Location = new System.Drawing.Point(19, 34);
             this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Size = new System.Drawing.Size(428, 259);
+            this.groupBox6.Size = new System.Drawing.Size(428, 233);
             this.groupBox6.TabIndex = 23;
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "FME";
@@ -2028,7 +2075,7 @@ namespace NicoLive
             // 
             this.mFMEDOSMIN.AutoSize = true;
             this.mFMEDOSMIN.Enabled = false;
-            this.mFMEDOSMIN.Location = new System.Drawing.Point(163, 128);
+            this.mFMEDOSMIN.Location = new System.Drawing.Point(163, 117);
             this.mFMEDOSMIN.Name = "mFMEDOSMIN";
             this.mFMEDOSMIN.Size = new System.Drawing.Size(132, 16);
             this.mFMEDOSMIN.TabIndex = 38;
@@ -2037,7 +2084,7 @@ namespace NicoLive
             // 
             // mFMEsessionBtn
             // 
-            this.mFMEsessionBtn.Location = new System.Drawing.Point(353, 221);
+            this.mFMEsessionBtn.Location = new System.Drawing.Point(351, 205);
             this.mFMEsessionBtn.Name = "mFMEsessionBtn";
             this.mFMEsessionBtn.Size = new System.Drawing.Size(67, 23);
             this.mFMEsessionBtn.TabIndex = 37;
@@ -2059,7 +2106,7 @@ namespace NicoLive
             // 
             // mFMEsessions
             // 
-            this.mFMEsessions.Location = new System.Drawing.Point(147, 223);
+            this.mFMEsessions.Location = new System.Drawing.Point(145, 207);
             this.mFMEsessions.Name = "mFMEsessions";
             this.mFMEsessions.Size = new System.Drawing.Size(200, 19);
             this.mFMEsessions.TabIndex = 36;
@@ -2067,7 +2114,7 @@ namespace NicoLive
             // label13
             // 
             this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(12, 226);
+            this.label13.Location = new System.Drawing.Point(12, 210);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(122, 12);
             this.label13.TabIndex = 35;
@@ -2076,14 +2123,14 @@ namespace NicoLive
             // mFMLEProfileList
             // 
             this.mFMLEProfileList.FormattingEnabled = true;
-            this.mFMLEProfileList.Location = new System.Drawing.Point(147, 102);
+            this.mFMLEProfileList.Location = new System.Drawing.Point(147, 91);
             this.mFMLEProfileList.Name = "mFMLEProfileList";
             this.mFMLEProfileList.Size = new System.Drawing.Size(199, 20);
             this.mFMLEProfileList.TabIndex = 34;
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(353, 99);
+            this.button1.Location = new System.Drawing.Point(352, 89);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(66, 23);
             this.button1.TabIndex = 33;
@@ -2094,7 +2141,7 @@ namespace NicoLive
             // label18
             // 
             this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(12, 104);
+            this.label18.Location = new System.Drawing.Point(12, 94);
             this.label18.Name = "label18";
             this.label18.Size = new System.Drawing.Size(107, 12);
             this.label18.TabIndex = 32;
@@ -2102,7 +2149,7 @@ namespace NicoLive
             // 
             // mFMLEProfileBtm
             // 
-            this.mFMLEProfileBtm.Location = new System.Drawing.Point(353, 70);
+            this.mFMLEProfileBtm.Location = new System.Drawing.Point(353, 64);
             this.mFMLEProfileBtm.Name = "mFMLEProfileBtm";
             this.mFMLEProfileBtm.Size = new System.Drawing.Size(66, 23);
             this.mFMLEProfileBtm.TabIndex = 31;
@@ -2112,7 +2159,7 @@ namespace NicoLive
             // 
             // mFMLEProfilePath
             // 
-            this.mFMLEProfilePath.Location = new System.Drawing.Point(147, 72);
+            this.mFMLEProfilePath.Location = new System.Drawing.Point(147, 66);
             this.mFMLEProfilePath.Name = "mFMLEProfilePath";
             this.mFMLEProfilePath.Size = new System.Drawing.Size(200, 19);
             this.mFMLEProfilePath.TabIndex = 30;
@@ -2120,7 +2167,7 @@ namespace NicoLive
             // label16
             // 
             this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(12, 75);
+            this.label16.Location = new System.Drawing.Point(12, 69);
             this.label16.Name = "label16";
             this.label16.Size = new System.Drawing.Size(110, 12);
             this.label16.TabIndex = 29;
@@ -2129,7 +2176,7 @@ namespace NicoLive
             // m_show_fme_setting
             // 
             this.m_show_fme_setting.AutoSize = true;
-            this.m_show_fme_setting.Location = new System.Drawing.Point(14, 150);
+            this.m_show_fme_setting.Location = new System.Drawing.Point(14, 139);
             this.m_show_fme_setting.Name = "m_show_fme_setting";
             this.m_show_fme_setting.Size = new System.Drawing.Size(200, 16);
             this.m_show_fme_setting.TabIndex = 28;
@@ -2141,7 +2188,7 @@ namespace NicoLive
             this.groupBox3.Controls.Add(this.mFME_GUI_wait);
             this.groupBox3.Controls.Add(this.label11);
             this.groupBox3.Controls.Add(this.mFME_GUI);
-            this.groupBox3.Location = new System.Drawing.Point(14, 172);
+            this.groupBox3.Location = new System.Drawing.Point(14, 161);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(405, 41);
             this.groupBox3.TabIndex = 27;
@@ -2193,7 +2240,7 @@ namespace NicoLive
             // mFMEDOS
             // 
             this.mFMEDOS.AutoSize = true;
-            this.mFMEDOS.Location = new System.Drawing.Point(14, 128);
+            this.mFMEDOS.Location = new System.Drawing.Point(14, 117);
             this.mFMEDOS.Name = "mFMEDOS";
             this.mFMEDOS.Size = new System.Drawing.Size(143, 16);
             this.mFMEDOS.TabIndex = 26;
@@ -2229,30 +2276,87 @@ namespace NicoLive
             // 
             // groupBox5
             // 
+            this.groupBox5.Controls.Add(this.btnXsplitShotcutkeyTest);
+            this.groupBox5.Controls.Add(this.mXsplitShortcutkey);
+            this.groupBox5.Controls.Add(this.mXsplitAlt);
+            this.groupBox5.Controls.Add(this.mXsplitShift);
+            this.groupBox5.Controls.Add(this.mXsplitCtrl);
+            this.groupBox5.Controls.Add(this.label31);
             this.groupBox5.Controls.Add(this.mXSplitShortcut);
             this.groupBox5.Controls.Add(this.mXSplitScene);
             this.groupBox5.Controls.Add(this.mUseXSplit);
-            this.groupBox5.Location = new System.Drawing.Point(19, 299);
+            this.groupBox5.Location = new System.Drawing.Point(19, 273);
             this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(428, 92);
+            this.groupBox5.Size = new System.Drawing.Size(428, 118);
             this.groupBox5.TabIndex = 15;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "XSplit";
             // 
+            // mXsplitShortcutkey
+            // 
+            this.mXsplitShortcutkey.Location = new System.Drawing.Point(234, 78);
+            this.mXsplitShortcutkey.Name = "mXsplitShortcutkey";
+            this.mXsplitShortcutkey.Size = new System.Drawing.Size(61, 19);
+            this.mXsplitShortcutkey.TabIndex = 47;
+            this.mXsplitShortcutkey.KeyDown += new System.Windows.Forms.KeyEventHandler(this.mXsplitShortcutkey_KeyDown);
+            this.mXsplitShortcutkey.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox3_KeyPress);
+            // 
+            // mXsplitAlt
+            // 
+            this.mXsplitAlt.AutoSize = true;
+            this.mXsplitAlt.Location = new System.Drawing.Point(190, 81);
+            this.mXsplitAlt.Name = "mXsplitAlt";
+            this.mXsplitAlt.Size = new System.Drawing.Size(39, 16);
+            this.mXsplitAlt.TabIndex = 46;
+            this.mXsplitAlt.Text = "Alt";
+            this.mXsplitAlt.UseVisualStyleBackColor = true;
+            this.mXsplitAlt.CheckedChanged += new System.EventHandler(this.mXsplitAlt_CheckedChanged);
+            // 
+            // mXsplitShift
+            // 
+            this.mXsplitShift.AutoSize = true;
+            this.mXsplitShift.Location = new System.Drawing.Point(145, 81);
+            this.mXsplitShift.Name = "mXsplitShift";
+            this.mXsplitShift.Size = new System.Drawing.Size(48, 16);
+            this.mXsplitShift.TabIndex = 45;
+            this.mXsplitShift.Text = "Shift";
+            this.mXsplitShift.UseVisualStyleBackColor = true;
+            this.mXsplitShift.CheckedChanged += new System.EventHandler(this.mXsplitShift_CheckedChanged);
+            // 
+            // mXsplitCtrl
+            // 
+            this.mXsplitCtrl.AutoSize = true;
+            this.mXsplitCtrl.Location = new System.Drawing.Point(103, 81);
+            this.mXsplitCtrl.Name = "mXsplitCtrl";
+            this.mXsplitCtrl.Size = new System.Drawing.Size(43, 16);
+            this.mXsplitCtrl.TabIndex = 44;
+            this.mXsplitCtrl.Text = "Ctrl";
+            this.mXsplitCtrl.UseVisualStyleBackColor = true;
+            this.mXsplitCtrl.CheckedChanged += new System.EventHandler(this.mXsplitCtrl_CheckedChanged);
+            // 
+            // label31
+            // 
+            this.label31.AutoSize = true;
+            this.label31.Location = new System.Drawing.Point(12, 82);
+            this.label31.Name = "label31";
+            this.label31.Size = new System.Drawing.Size(89, 12);
+            this.label31.TabIndex = 43;
+            this.label31.Text = "ショートカットキー：";
+            // 
             // mXSplitShortcut
             // 
             this.mXSplitShortcut.AutoSize = true;
-            this.mXSplitShortcut.Location = new System.Drawing.Point(14, 67);
+            this.mXSplitShortcut.Location = new System.Drawing.Point(14, 63);
             this.mXSplitShortcut.Name = "mXSplitShortcut";
-            this.mXSplitShortcut.Size = new System.Drawing.Size(260, 16);
+            this.mXSplitShortcut.Size = new System.Drawing.Size(188, 16);
             this.mXSplitShortcut.TabIndex = 42;
-            this.mXSplitShortcut.Text = "ショートカットキー（crtl+shift+A）で配信を開始する";
+            this.mXSplitShortcut.Text = "ショートカットーキで配信を開始する";
             this.mXSplitShortcut.UseVisualStyleBackColor = true;
             // 
             // mXSplitScene
             // 
             this.mXSplitScene.AutoSize = true;
-            this.mXSplitScene.Location = new System.Drawing.Point(14, 45);
+            this.mXSplitScene.Location = new System.Drawing.Point(14, 41);
             this.mXSplitScene.Name = "mXSplitScene";
             this.mXSplitScene.Size = new System.Drawing.Size(169, 16);
             this.mXSplitScene.TabIndex = 14;
@@ -2580,37 +2684,15 @@ namespace NicoLive
             this.mSessionFileDlg.Filter = "fmesessions.dat|*.dat";
             this.mSessionFileDlg.Title = "fmesessions.dat";
             // 
-            // mCommentMax
+            // btnXsplitShotcutkeyTest
             // 
-            this.mCommentMax.ImeMode = System.Windows.Forms.ImeMode.Off;
-            this.mCommentMax.Location = new System.Drawing.Point(276, 164);
-            this.mCommentMax.Maximum = new decimal(new int[] {
-            500,
-            0,
-            0,
-            0});
-            this.mCommentMax.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.mCommentMax.Name = "mCommentMax";
-            this.mCommentMax.Size = new System.Drawing.Size(43, 19);
-            this.mCommentMax.TabIndex = 37;
-            this.mCommentMax.Value = new decimal(new int[] {
-            20,
-            0,
-            0,
-            0});
-            // 
-            // label30
-            // 
-            this.label30.AutoSize = true;
-            this.label30.Location = new System.Drawing.Point(33, 166);
-            this.label30.Name = "label30";
-            this.label30.Size = new System.Drawing.Size(237, 12);
-            this.label30.TabIndex = 38;
-            this.label30.Text = "コメントサーバー接続時に読み込む過去コメント数";
+            this.btnXsplitShotcutkeyTest.Location = new System.Drawing.Point(305, 76);
+            this.btnXsplitShotcutkeyTest.Name = "btnXsplitShotcutkeyTest";
+            this.btnXsplitShotcutkeyTest.Size = new System.Drawing.Size(75, 23);
+            this.btnXsplitShotcutkeyTest.TabIndex = 48;
+            this.btnXsplitShotcutkeyTest.Text = "テスト";
+            this.btnXsplitShotcutkeyTest.UseVisualStyleBackColor = true;
+            this.btnXsplitShotcutkeyTest.Click += new System.EventHandler(this.btnXsplitShotcutkeyTest_Click);
             // 
             // SettingDialog
             // 
@@ -2631,6 +2713,7 @@ namespace NicoLive
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.mCommentMax)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.mRestTime)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.mSekigaeMinutes)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.mRestBatt)).EndInit();
@@ -2685,7 +2768,6 @@ namespace NicoLive
             this.groupBox13.ResumeLayout(false);
             this.groupBox13.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.mLauncherList)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.mCommentMax)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -2898,6 +2980,24 @@ namespace NicoLive
             mFMLEProfileList.SelectedItem = Properties.Settings.Default.fmle_default_profile;
 
 
+            
+
+            mXsplitShortcutkey.Text = ((Keys)(Properties.Settings.Default.xsplit_shortcut_keys & 0xFFFF)).ToString();
+
+            bool shift = (((uint)Properties.Settings.Default.xsplit_shortcut_keys >> 16) & 0x1) == 0x1;
+            bool ctrl = (((uint)Properties.Settings.Default.xsplit_shortcut_keys >> 17) & 0x1) == 0x1;
+            bool alt = (((uint)Properties.Settings.Default.xsplit_shortcut_keys >> 18) & 0x1) == 0x1;
+
+            Utils.WriteLog("XSplit shorcut");
+            Utils.WriteLog("XSplit shorcut shift: " + shift);
+            Utils.WriteLog("XSplit shorcut ctrl: " + ctrl);
+            Utils.WriteLog("XSplit shorcut alt: " + alt);
+            Utils.WriteLog("XSplit shorcut key: " + mXsplitShortcutkey.Text);
+
+            mXsplitShift.Checked = shift;
+            mXsplitCtrl.Checked = ctrl;
+            mXsplitAlt.Checked = alt;
+
 
 
 
@@ -3050,7 +3150,7 @@ namespace NicoLive
             Properties.Settings.Default.enable_xsplit_scene_change = mXSplitScene.Checked;
             Properties.Settings.Default.use_xsplit_shortcut = mXSplitShortcut.Checked;
 
-
+            Properties.Settings.Default.xsplit_shortcut_keys = (uint)(mXsplitCtrl.Checked ? 0x20000 : 0) + (uint)(mXsplitShift.Checked ? 0x10000 : 0) + (uint)(mXsplitAlt.Checked ? 0x40000 : 0) + (Properties.Settings.Default.xsplit_shortcut_keys & 0xFFFF);
 
             // 表示
             Properties.Settings.Default.TotalCnt_view = mTotalCnt.Checked;
@@ -3678,6 +3778,61 @@ namespace NicoLive
             th.Name = "ShortcutKey: tweet comment";
             th.Start();
         }
+
+
+ 
+
+        private void mXsplitShortcutkey_KeyDown(object sender, KeyEventArgs e)
+        {
+            mXsplitShortcutkeyEnterd = true;
+            if ((int)e.KeyCode >= 0x41 && (int)e.KeyCode <= 0x5a)
+            {
+                Properties.Settings.Default.xsplit_shortcut_keys = (uint)(mXsplitCtrl.Checked ? 0x20000 : 0) + (uint)(mXsplitShift.Checked ? 0x10000 : 0) + (uint)(mXsplitAlt.Checked ? 0x40000 : 0) + (uint)e.KeyCode;
+                mXsplitShortcutkey.Text = e.KeyCode.ToString();
+            }
+            else
+            {
+                Properties.Settings.Default.xsplit_shortcut_keys = (uint)(mXsplitCtrl.Checked ? 0x20000 : 0) + (uint)(mXsplitShift.Checked ? 0x10000 : 0) + (uint)(mXsplitAlt.Checked ? 0x40000 : 0) + 0x41; // 'A'
+                mXsplitShortcutkey.Text = "A";
+            }
+
+        }
+
+
+
+        private void mXsplitCtrl_CheckedChanged(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.xsplit_shortcut_keys = (uint)(mXsplitCtrl.Checked ? 0x20000 : 0) + (uint)(mXsplitShift.Checked ? 0x10000 : 0) + (uint)(mXsplitAlt.Checked ? 0x40000 : 0) + (Properties.Settings.Default.xsplit_shortcut_keys & 0xFFFF);
+        
+        }
+
+        private void mXsplitShift_CheckedChanged(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.xsplit_shortcut_keys = (uint)(mXsplitCtrl.Checked ? 0x20000 : 0) + (uint)(mXsplitShift.Checked ? 0x10000 : 0) + (uint)(mXsplitAlt.Checked ? 0x40000 : 0) + (Properties.Settings.Default.xsplit_shortcut_keys & 0xFFFF);
+        }
+
+        private void mXsplitAlt_CheckedChanged(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.xsplit_shortcut_keys = (uint)(mXsplitCtrl.Checked ? 0x20000 : 0) + (uint)(mXsplitShift.Checked ? 0x10000 : 0) + (uint)(mXsplitAlt.Checked ? 0x40000 : 0) + (Properties.Settings.Default.xsplit_shortcut_keys & 0xFFFF);
+        }
+
+        private void textBox3_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (mXsplitShortcutkeyEnterd)
+            {
+                mXsplitShortcutkeyEnterd = false;
+                e.Handled = true;
+            }
+        }
+
+        private void btnXsplitShotcutkeyTest_Click(object sender, EventArgs e)
+        {
+            Keyboard.KeyboardInput( (uint)(mXsplitCtrl.Checked ? 0x20000 : 0) + (uint)(mXsplitShift.Checked ? 0x10000 : 0) + (uint)(mXsplitAlt.Checked ? 0x40000 : 0) + (Properties.Settings.Default.xsplit_shortcut_keys & 0xFFFF));
+        }
+
+
+
+
 
 
 
