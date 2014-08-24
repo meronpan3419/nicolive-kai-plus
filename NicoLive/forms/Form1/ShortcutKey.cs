@@ -54,6 +54,11 @@ namespace NicoLive
                 this.mCopyBtn.PerformClick();
                 return true;
             }
+            if ((int)keyData == (int)(Keys.F1 | Keys.Control))
+            {
+                this.mWakutoriBtn.PerformClick();
+                return true;
+            }
             if ((int)keyData == (int)Keys.F1)
             {
                 this.mWakutoriBtn.PerformClick();

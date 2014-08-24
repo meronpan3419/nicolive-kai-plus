@@ -124,8 +124,36 @@ namespace NicoLive
 
             // 最終コメント受信時間設定
             mLastChatTime = DateTime.Now;
+            
+            // NGユーザーを無視
+            if (this.mUid.IsNGUser(iCmt.Uid))
+            {
+                goto END;
+            }
 
-            CheckDisconnect(iCmt);
+            try
+            {
+                // コメントをリストに追加
+                this.Invoke((Action)delegate()
+                {
+                    this.AddComment(iCmt);
+                });
+            }
+            catch (Exception e)
+            {
+                Utils.WriteLog("RecvComment: AddComment:" + e.Message);
+            }
+
+            // 棒読みちゃん読み上げリストにコメントを追加
+            AddSpeakText(iCmt);
+
+            //配信終了チェック
+            if (CheckDisconnect(iCmt))
+            {
+                goto END;
+            }
+
+
 
             // アクティブ数設定
             mLiveInfo.ActivateUser(iCmt.Uid, iCmt.Date);
@@ -155,13 +183,7 @@ namespace NicoLive
             SaveHandle(iCmt);
 
 
-            // NGユーザーを無視
-            if (this.mUid.IsNGUser(iCmt.Uid))
-            {
-                SetLastChatNo(int.Parse(iCmt.No));
-                iCmt = null;
-                return;
-            }
+
 
             // NGコメント通知
             if (int.Parse(iCmt.No) < mLastChatNo - Properties.Settings.Default.comment_max + 1)
@@ -169,18 +191,7 @@ namespace NicoLive
                 ShowNGCommentNotice(int.Parse(iCmt.No));
             }
 
-            try
-            {
-                // コメントをリストに追加
-                this.Invoke((Action)delegate()
-                {
-                    this.AddComment(iCmt);
-                });
-            }
-            catch (Exception e)
-            {
-                Utils.WriteLog("RecvComment: AddComment:" + e.Message);
-            }
+
 
             //過去コメント
             if (mLastChatNo >= int.Parse(iCmt.No)) return;
@@ -194,8 +205,7 @@ namespace NicoLive
             // 棒読みタスクのクリア
             BouyomiClear(iCmt);
 
-            // 棒読みちゃん読み上げリストにコメントを追加
-            AddSpeakText(iCmt);
+
 
             // XSplitメッセージ
             if (Properties.Settings.Default.enable_xsplit_scene_change)
@@ -228,10 +238,11 @@ namespace NicoLive
                 SendFCG(iCmt);
             }
 
+        END:
             // 最終コメントNo設定
             SetLastChatNo(int.Parse(iCmt.No));
-
             iCmt = null;
+            return;
         }
 
 
@@ -1105,10 +1116,9 @@ namespace NicoLive
                 // 棒読みちゃんで自動枠取り通知
                 this.mBouyomi.Talk(mMsg.GetMessage("枠取りを開始します"));
 
-                this.Invoke((Action)delegate()
-                {
+
                     GetNextWaku(false);
-                });
+
             }
             return true;
 
@@ -1141,6 +1151,8 @@ namespace NicoLive
                     Wakutori mk = new Wakutori();
                     mk.MyOwner = this;
                     mk.AutoWaku = true;
+                    mk.ReuseLv = this.LiveID;
+
                     mk.ShowDialog();
 
                     if (mk.mState != WakuResult.NO_ERR) return;
@@ -1152,17 +1164,25 @@ namespace NicoLive
 
                 if (iUseLvNotice)
                 {
-                    if (Properties.Settings.Default.use_loss_time &&
-                         Properties.Settings.Default.use_next_lv_notice)
+                    try
                     {
-                        mNico.SendOwnerComment(LiveID, "/cls", "", mLiveInfo.Token);
 
-                        if (!this.mDisconnect)
+                        if (Properties.Settings.Default.use_loss_time &&
+                             Properties.Settings.Default.use_next_lv_notice)
                         {
-                            mNico.SendOwnerComment(LiveID, "/perm 次枠こちら：http://nico.ms/" + lv, "", mLiveInfo.Token);
+                            mNico.SendOwnerComment(LiveID, "/cls", "", mLiveInfo.Token);
+
+                            //if (!this.mDisconnect)
+                            //{
+                             mNico.SendOwnerComment(LiveID, "/perm 次枠こちら：http://nico.ms/" + lv, "", mLiveInfo.Token);
+                            //}
                         }
+                        mNico.SendOwnerComment(LiveID, "/disconnect", "", mLiveInfo.Token);
                     }
-                    mNico.SendOwnerComment(LiveID, "/disconnect", "", mLiveInfo.Token);
+                    catch (Exception e)
+                    {
+                        Utils.WriteLog("GetNextWaku:" + e.Message);
+                    }
 
                     Thread.Sleep(1000);
                 }
@@ -1170,9 +1190,9 @@ namespace NicoLive
                 this.Invoke((Action)delegate()
                 {
                     this.LiveID = lv;
-                    Connect(true);
                 });
 
+                Connect(true);
                 
 
                 //else if (dlg.mState == WakuResult.JUNBAN)

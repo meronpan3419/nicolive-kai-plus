@@ -25,12 +25,13 @@ namespace NicoLive
         private readonly string WATCH_URL = "http://live.nicovideo.jp/watch";
         private readonly string LOGIN_URL = "https://secure.nicovideo.jp/secure/login_form";
 
-        private string mReuseUrl = "";
+        private string mReuseID = "";
 
         public WakuResult mState = WakuResult.ERR;
         public string mLv = "";
 
         private bool mAutoWaku = false;  // 自動枠取り（画像認証まで）
+        bool bIncreasedTitle = false;
 
         //private Thread mCaptchaThread = null;   // CaptchaBreaker用スレッド
 
@@ -53,6 +54,12 @@ namespace NicoLive
         {
             set { mOwner = value; }
             get { return mOwner; }
+        }
+
+        public string ReuseLv
+        {
+            set { mReuseID = value; }
+            get { return mReuseID; }
         }
 
         //-------------------------------------------------------------------------
@@ -99,7 +106,7 @@ namespace NicoLive
         //-------------------------------------------------------------------------
         private void Wakutori_Load(object sender, EventArgs e)
         {
-            mReuseUrl = "";
+
             mPostTweet = false;
 
             if (mAutoWaku)
@@ -108,7 +115,12 @@ namespace NicoLive
 
                 // 自動で「使い回す」ページへ遷移
                 // 2014/08盆明けメンテでedit画面に前枠情報が入るように変更になった。
-                this.mBrowser.Navigate(EDIT_URL);
+                string url = EDIT_URL;
+                if (!mReuseID.Equals(""))
+                {
+                    url = EDIT_URL + "?reuseid=" + mReuseID.Replace("lv", "");
+                }
+                this.mBrowser.Navigate(url);
 
                 //string lv = mOwner.LiveID;
                 //if (lv.Length <= 0)
@@ -164,7 +176,7 @@ namespace NicoLive
         {
             if (mCaptcha.Length <= 0) return;
 
-            if (SetElementTextByName("captcha", mCaptcha))
+            if (SetElementValueByID("captcha", mCaptcha))
             {
                 InvokeButtonById("submit_ok");
             }
@@ -237,7 +249,7 @@ namespace NicoLive
 
                 string val = elem[0].GetAttribute("value");
                 int idx1 = val.IndexOf("lv");
-                Utils.WriteLog(val);
+                //Utils.WriteLog(val);
 
                 if (idx1 <= 0) return;
 
@@ -329,38 +341,37 @@ namespace NicoLive
         }
 
         //-------------------------------------------------------------------------
-        // 指定エレメントのテキストを変更する
+        // 指定エレメントの値を変更する
         //-------------------------------------------------------------------------
-        private bool SetElementTextByName(string iElemName, string iText)
+        private bool SetElementValueByID(string iElemID, string iText)
         {
             if (this.mBrowser.Document == null) return false;
 
             HtmlElementCollection all = this.mBrowser.Document.All;
-            HtmlElementCollection elem = all.GetElementsByName(iElemName);
+            HtmlElement elem = this.mBrowser.Document.GetElementById(iElemID);
 
-            if (elem.Count > 0)
-            {
-                elem[0].InnerText = iText;
-                return true;
-            }
-            return false;
+            if (elem == null) return false;
+
+            elem.SetAttribute("value", iText);
+            return true;
         }
         //-------------------------------------------------------------------------
-        // 指定エレメントのテキストを取得する
+        // 指定エレメントの値を取得する
         //-------------------------------------------------------------------------
-        private string GetElementTextByName(string iElemName)
+        private string GetElementValueByID(string iElemID)
         {
             if (this.mBrowser.Document == null) return null;
 
             HtmlElementCollection all = this.mBrowser.Document.All;
-            HtmlElementCollection elem = all.GetElementsByName(iElemName);
+            HtmlElement elem = this.mBrowser.Document.GetElementById(iElemID);
 
-            if (elem.Count > 0)
-            {
-                return elem[0].InnerText;
-            }
-            return null;
+            if (elem == null) return null;
+
+            return elem.GetAttribute("value");
+
         }
+
+
 
         //-------------------------------------------------------------------------
         // エレメントがあるかどうか
@@ -420,6 +431,22 @@ namespace NicoLive
             return (bool)(check.GetAttribute("checked") == "True");
         }
 
+        private HtmlElement FindLoginSubmitBotton()
+        {
+            if (this.mBrowser.Document == null) return null;
+            HtmlElementCollection elements = this.mBrowser.Document.GetElementsByTagName("input");
+
+            foreach(HtmlElement element in elements){
+
+                string value = element.GetAttribute("value");
+
+                if (value.Equals("ログイン"))
+                {
+                    return element;
+                }
+            }
+            return null;
+        }
 
         //-------------------------------------------------------------------------
         // ボタン実行
@@ -432,6 +459,17 @@ namespace NicoLive
             if (btn != null)
                 btn.InvokeMember("click");
         }
+
+        //-------------------------------------------------------------------------
+        // ボタン実行
+        //-------------------------------------------------------------------------
+        private void InvokeButtonByElement(HtmlElement iElem)
+        {
+            if (iElem == null) return;
+
+            iElem.InvokeMember("click");
+        }
+
         //-------------------------------------------------------------------------
         // 放送開始
         //-------------------------------------------------------------------------
@@ -517,35 +555,44 @@ namespace NicoLive
                 return;
             }
 
-            if (mReuseUrl.Length > 0 && uri.Equals(mReuseUrl))
+            if (uri.StartsWith(LOGIN_URL))
             {
                 // ＩＤとパスワード入力
-                SetElementTextByName("mail", Properties.Settings.Default.user_id);
-                SetElementTextByName("password", Properties.Settings.Default.password);
+                SetElementValueByID("mail", Properties.Settings.Default.user_id);
+                SetElementValueByID("password", Properties.Settings.Default.password);
                 // ログインボタンを押す
-                InvokeButtonById("submit");
+                //InvokeButtonById("submit");
+                HtmlElement login_botton= FindLoginSubmitBotton();
+                InvokeButtonByElement(login_botton);
             }
-            else if (uri.StartsWith(LOGIN_URL))
-            {
-                // ＩＤとパスワード入力
-                SetElementTextByName("mail", Properties.Settings.Default.user_id);
-                SetElementTextByName("password", Properties.Settings.Default.password);
-                // ログインボタンを押す
-                InvokeButtonById("login_submit");
-            }
-            else if (uri.StartsWith(MY_URL))
-            {
-                // マイページ
-                ScrollToText("toTop");
-                // ＩＤとパスワード入力
-                SetElementTextByName("mail", Properties.Settings.Default.user_id);
-                SetElementTextByName("password", Properties.Settings.Default.password);
-                // ログインボタンを押す
-                InvokeButtonById("submit");
-            }
+            //else if (uri.StartsWith(MY_URL))
+            //{
+            //    // マイページ
+            //    ScrollToText("toTop");
+            //    // ＩＤとパスワード入力
+            //    SetElementValueByID("mail", Properties.Settings.Default.user_id);
+            //    SetElementValueByID("password", Properties.Settings.Default.password);
+            //    // ログインボタンを押す
+            //    InvokeButtonById("submit");
+            //}
             else if (uri.StartsWith(EDIT_URL))
             {
                 
+
+                if (!bIncreasedTitle)
+                {
+
+                    // タイトルの番号の自動更新
+                    if (Properties.Settings.Default.title_auto_inc)
+                    {
+                        string title = GetElementValueByID("title");
+                        title = Utils.incTitle(title);
+                        SetElementValueByID("title", title);
+                        
+                    }
+                    bIncreasedTitle = true;
+                }
+
                 if (ContainElementById("error_message"))
                 {
                     ScrollToText("captcha");    // 画像認証位置までスクロール

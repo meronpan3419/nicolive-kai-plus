@@ -874,11 +874,11 @@ namespace NicoLive
             if (iName.Length > 0)
                 post_arg["name"] = iName;
 
-            Utils.WriteLog("OWNER:" + iComment);
+            Utils.WriteLog("SendOwnerComment:" + iComment);
 
             // send POST request
             string ret = HttpPost(uri, post_arg, ref this.mCookieLogin);
-            Utils.WriteLog(ret);
+            Utils.WriteLog("SendOwnerComment ret = " + ret);
             post_arg = null;
             return true;
         }
@@ -1818,7 +1818,7 @@ namespace NicoLive
             {
                 param += String.Format("{0}={1}&", Uri.EscapeDataString(k), Uri.EscapeDataString(vals[k]));
             }
-            Utils.WriteLog(param);
+            Utils.WriteLog("HttpPost param = " + param);
             byte[] data = Encoding.ASCII.GetBytes(param);
 
             // create HttpWebRequest

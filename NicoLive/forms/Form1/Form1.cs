@@ -274,6 +274,7 @@ namespace NicoLive
         //-------------------------------------------------------------------------
         public void Connect(bool iSkipLogin)
         {
+
             if (mLoginWorker.IsBusy)
                 return;
             mSkipBouyomi = true;
@@ -295,6 +296,8 @@ namespace NicoLive
             mSpeakList.Clear();
             mLiveInfo.Clear();
 
+            Utils.WriteLog("Connect()");
+
             mCurrentLiveID = "";
             // 放送ＩＤをフォーマット
             mLiveID.Text = ParseLiveID();
@@ -315,15 +318,14 @@ namespace NicoLive
             }
 
             // 放送IDが空
-            if (this.mLiveID.Text.Length == 0)
-            {
-                MessageBox.Show("放送ＩＤが空です。", "NicoLive");
-                return;
-            }
-
-
             this.Invoke((Action)delegate()
             {
+                if (this.mLiveID.Text.Length == 0)
+                {
+                    MessageBox.Show("放送ＩＤが空です。", "NicoLive");
+                    return;
+                }
+
                 this.mCommentList.Rows.Clear();
 
                 this.mConnectBtn.Enabled = false;
@@ -415,6 +417,7 @@ namespace NicoLive
             Wakutori mk = new Wakutori();
             mk.MyOwner = this;
             mk.AutoWaku = iAuto;
+            mk.ReuseLv = this.LiveID;
             mk.Show();
         }
 
@@ -471,7 +474,7 @@ namespace NicoLive
             }
 
 
-            
+
         }
 
 
@@ -555,7 +558,6 @@ namespace NicoLive
         private void mNextWakuFastBtn_Click(object sender, EventArgs e)
         {
 
-            //次枠通知
 
             if (mDoingGetNextWaku) return;
 
@@ -570,10 +572,9 @@ namespace NicoLive
 
             mNico.LiveStop(LiveID, mLiveInfo.Token);
 
-            this.Invoke((Action)delegate()
-            {
-                GetNextWaku(true);
-            });
+
+            GetNextWaku(true);
+
 
 
 

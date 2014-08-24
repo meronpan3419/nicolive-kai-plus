@@ -44,25 +44,32 @@ namespace NicoLive
             if (id.Length <= 2) return;
 
             InfoErr ret = mLiveInfo.GetInfo(id);
-            if (ret == InfoErr.ERR_NO_ERR)
-            {
-#if DEBUG
-                try
-                {
-                    this.Invoke((Action)delegate()
-                    {
-                        string member_only = "";
-                        if (mLiveInfo.IsMemberOnly)
-                        {
-                            member_only = "　【コミュ限】";
-                        }
-                        this.Text = "豆ライブ(NicoLive)" + member_only + "　【" + mLiveInfo.Title + "】" + "　[GC:" + GC.GetTotalMemory(false) + "]";
-                    });
-                }
-                catch (Exception)
-                {
 
-                }
+            if (ret == InfoErr.ERR_NOT_LOGIN)
+            {
+                //Connect(false);
+            }
+
+            if (ret != InfoErr.ERR_NO_ERR) return;
+
+
+#if DEBUG
+            try
+            {
+                this.Invoke((Action)delegate()
+                {
+                    string member_only = "";
+                    if (mLiveInfo.IsMemberOnly)
+                    {
+                        member_only = "　【コミュ限】";
+                    }
+                    this.Text = "豆ライブ(NicoLive)" + member_only + "　【" + mLiveInfo.Title + "】" + "　[GC:" + GC.GetTotalMemory(false) + "]";
+                });
+            }
+            catch (Exception)
+            {
+
+            }
 #else
                     // タイトル設定
                     try
@@ -88,128 +95,121 @@ namespace NicoLive
 
                     }
 #endif
-                // 来場者数
-                mVisitorCnt = (int)mLiveInfo.WatchCount;
+            // 来場者数
+            mVisitorCnt = (int)mLiveInfo.WatchCount;
 
-                try
-                {
-                    this.Invoke((Action)delegate()
-                    {
-                        this.mTotalCnt.Text = "来場者数：" + mVisitorCnt;
-                    });
-                }
-                catch (Exception ex)
-                {
-                    Utils.WriteLog(ex.Message);
-                }
-
-
-
-
-                UInt32 time_sec = mLiveInfo.Time;
-                UInt32 btime_sec = mLiveInfo.StartTime;
-
-                //次枠通知
-                if (Properties.Settings.Default.use_loss_time && Properties.Settings.Default.use_next_lv_notice)
-                {
-                    if ((time_sec - btime_sec > 30 * 60) && !mDoingGetNextWaku)
-                    {
-                        // 枠取り画面へ 
-                        if (mOwnLive && mContWaku.Checked)
-                        {
-                            mDoingGetNextWaku = true;
-                            Thread.Sleep(500);
-
-                            // 棒読みちゃんで自動枠取り通知
-                            this.mBouyomi.Talk(mMsg.GetMessage("枠取りを開始します"));
-
-                            mNico.LiveStop(LiveID, mLiveInfo.Token);
-
-                            this.Invoke((Action)delegate()
-                            {
-                                GetNextWaku(true);
-                            });
-                        }
-                    }
-                }
-
-
-                // 経過時間取得
-                if (Properties.Settings.Default.talk_3min)
-                {
-                    if (btime_sec < time_sec)
-                    {
-                        UInt32 lim_sec = 30 * 60;        // 30分
-                        UInt32 sub_sec = time_sec - btime_sec;  // 経過時間
-
-                        //
-                        if (sub_sec > lim_sec)
-                        {
-                            UInt32 mod = sub_sec / lim_sec;
-                            sub_sec = sub_sec - mod * lim_sec;
-                        }
-
-                        // 残り3分通事
-                        if (!mIsExtend)
-                        {
-
-                            int rest_min = Properties.Settings.Default.rest_time;
-                            string msg = String.Format(mMsg.GetMessage("のこり{0}ふんくらいです。"), rest_min);
-                            if (!this.mTalkLimit && sub_sec > (lim_sec - rest_min * 60))
-                            {
-                                this.mTalkLimit = true;
-
-                                // 連続枠取り通知
-                                if (Properties.Settings.Default.cont_waku_notice)
-                                {
-                                    if (mContWaku.Checked)
-                                    {
-                                        msg = msg + "連続枠取が設定されています";
-                                    }
-                                    else
-                                    {
-                                        msg = msg + "連続枠取が設定されていません";
-                                    }
-                                }
-                                this.mBouyomi.Talk(msg);
-                            }
-
-                        }
-                        if (sub_sec < 1 * 60)
-                        {
-                            this.mTalkLimit = false;
-                        }
-                        Utils.WriteLog("Time: " + sub_sec.ToString());
-                        Utils.WriteLog("StartTime: " + mLiveInfo.StartTime);
-                        Utils.WriteLog("EndTime: " + mLiveInfo.EndTime);
-                    }
-                }
-
-                // 自分の配信かどうか
-                string token = mLiveInfo.Token;
-                if (token.Length != 0)
-                {
-                    mOwnLive = true;
-                }
-
-                // Twitterポスト
-                if (mTwPost == false &&
-                    mOwnLive &&
-                    Properties.Settings.Default.tw_start_enable
-                    //Properties.Settings.Default.tw_token.Length == 0
-
-                    )
-                {
-                    TwitterPoster(true);
-                }
-            }
-            else if (ret == InfoErr.ERR_NOT_LOGIN)
+            try
             {
-                if (!mDisconnect && mNico != null && mNico.IsLogin)
+                this.Invoke((Action)delegate()
                 {
-                    //Connect(false);
+                    this.mTotalCnt.Text = "来場者数：" + mVisitorCnt;
+                });
+            }
+            catch (Exception ex)
+            {
+                Utils.WriteLog(ex.Message);
+            }
+
+
+
+
+            UInt32 time_sec = mLiveInfo.Time;
+            UInt32 btime_sec = mLiveInfo.StartTime;
+
+            //次枠通知
+            if (Properties.Settings.Default.use_loss_time && Properties.Settings.Default.use_next_lv_notice)
+            {
+                if ((time_sec - btime_sec > 30 * 60) && !mDoingGetNextWaku)
+                {
+                    // 枠取り画面へ 
+                    if (mOwnLive && mContWaku.Checked)
+                    {
+                        mDoingGetNextWaku = true;
+                        Thread.Sleep(500);
+
+                        // 棒読みちゃんで自動枠取り通知
+                        this.mBouyomi.Talk(mMsg.GetMessage("枠取りを開始します"));
+
+                        mNico.LiveStop(LiveID, mLiveInfo.Token);
+
+
+                        GetNextWaku(true);
+
+                    }
                 }
             }
+
+
+            // 経過時間取得
+            if (Properties.Settings.Default.talk_3min)
+            {
+                if (btime_sec < time_sec)
+                {
+                    UInt32 lim_sec = 30 * 60;        // 30分
+                    UInt32 sub_sec = time_sec - btime_sec;  // 経過時間
+
+                    //
+                    if (sub_sec > lim_sec)
+                    {
+                        UInt32 mod = sub_sec / lim_sec;
+                        sub_sec = sub_sec - mod * lim_sec;
+                    }
+
+                    // 残り3分通事
+                    if (!mIsExtend)
+                    {
+
+                        int rest_min = Properties.Settings.Default.rest_time;
+                        string msg = String.Format(mMsg.GetMessage("のこり{0}ふんくらいです。"), rest_min);
+                        if (!this.mTalkLimit && sub_sec > (lim_sec - rest_min * 60))
+                        {
+                            this.mTalkLimit = true;
+
+                            // 連続枠取り通知
+                            if (Properties.Settings.Default.cont_waku_notice)
+                            {
+                                if (mContWaku.Checked)
+                                {
+                                    msg = msg + "連続枠取が設定されています";
+                                }
+                                else
+                                {
+                                    msg = msg + "連続枠取が設定されていません";
+                                }
+                            }
+                            this.mBouyomi.Talk(msg);
+                        }
+
+                    }
+                    if (sub_sec < 1 * 60)
+                    {
+                        this.mTalkLimit = false;
+                    }
+                    Utils.WriteLog("Time: " + sub_sec.ToString());
+                    Utils.WriteLog("StartTime: " + mLiveInfo.StartTime);
+                    Utils.WriteLog("EndTime: " + mLiveInfo.EndTime);
+                }
+            }
+
+            // 自分の配信かどうか
+            string token = mLiveInfo.Token;
+            if (token.Length != 0)
+            {
+                mOwnLive = true;
+            }
+
+            // Twitterポスト
+            if (mTwPost == false &&
+                mOwnLive &&
+                Properties.Settings.Default.tw_start_enable
+                //Properties.Settings.Default.tw_token.Length == 0
+
+                )
+            {
+                TwitterPoster(true);
+            }
+
+
 
 
         }
