@@ -63,6 +63,9 @@ namespace NicoLive
             // メインのコメントリスト修正
             Utils.SetNickname(ref mCommentList, iID, iName);
 
+            mUid.SaveUserID(false);
+            mUid.SaveUserID(true);
+
         }
 
         //-------------------------------------------------------------------------
@@ -77,6 +80,9 @@ namespace NicoLive
                 // メインのコメントリスト修正
                 Utils.SetNickname(ref mCommentList, iID, iName);
             }
+
+            mUid.SaveUserID(false);
+            mUid.SaveUserID(true);
         }
     }
 }

@@ -31,7 +31,7 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Wakutori));
             this.mToolStrip = new System.Windows.Forms.ToolStrip();
-            this.mEnableBtn = new System.Windows.Forms.ToolStripButton();
+            this.mAutoWakutoriBtn = new System.Windows.Forms.ToolStripButton();
             this.mBackBtn = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.mFwdBtn = new System.Windows.Forms.ToolStripButton();
@@ -49,7 +49,7 @@
             // mToolStrip
             // 
             this.mToolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mEnableBtn,
+            this.mAutoWakutoriBtn,
             this.mBackBtn,
             this.toolStripSeparator1,
             this.mFwdBtn,
@@ -61,19 +61,18 @@
             this.mToolStrip.TabIndex = 0;
             this.mToolStrip.Text = "toolStrip1";
             // 
-            // mEnableBtn
+            // mAutoWakutoriBtn
             // 
-            this.mEnableBtn.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.mEnableBtn.CheckOnClick = true;
-            this.mEnableBtn.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.mEnableBtn.Enabled = false;
-            this.mEnableBtn.Image = ((System.Drawing.Image)(resources.GetObject("mEnableBtn.Image")));
-            this.mEnableBtn.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.mEnableBtn.Name = "mEnableBtn";
-            this.mEnableBtn.Size = new System.Drawing.Size(120, 22);
-            this.mEnableBtn.Text = "自動枠取り開始(F4)";
-            this.mEnableBtn.ToolTipText = "自動枠取り";
-            this.mEnableBtn.Click += new System.EventHandler(this.EnableBtn_Click);
+            this.mAutoWakutoriBtn.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.mAutoWakutoriBtn.CheckOnClick = true;
+            this.mAutoWakutoriBtn.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.mAutoWakutoriBtn.Image = ((System.Drawing.Image)(resources.GetObject("mAutoWakutoriBtn.Image")));
+            this.mAutoWakutoriBtn.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.mAutoWakutoriBtn.Name = "mAutoWakutoriBtn";
+            this.mAutoWakutoriBtn.Size = new System.Drawing.Size(120, 22);
+            this.mAutoWakutoriBtn.Text = "自動枠取り開始(F4)";
+            this.mAutoWakutoriBtn.ToolTipText = "自動枠取り";
+            this.mAutoWakutoriBtn.Click += new System.EventHandler(this.WakutoriBtn_Click);
             // 
             // mBackBtn
             // 
@@ -125,8 +124,8 @@
             this.mBrowser.Size = new System.Drawing.Size(922, 449);
             this.mBrowser.TabIndex = 1;
             this.mBrowser.Url = new System.Uri("", System.UriKind.Relative);
-            this.mBrowser.ProgressChanged += new System.Windows.Forms.WebBrowserProgressChangedEventHandler(this.Browser_ProgressChanged);
             this.mBrowser.DocumentCompleted += new System.Windows.Forms.WebBrowserDocumentCompletedEventHandler(this.Browser_DocumentCompleted);
+            this.mBrowser.ProgressChanged += new System.Windows.Forms.WebBrowserProgressChangedEventHandler(this.Browser_ProgressChanged);
             // 
             // mUITimer
             // 
@@ -184,7 +183,7 @@
         #endregion
 
         private System.Windows.Forms.ToolStrip mToolStrip;
-        private System.Windows.Forms.ToolStripButton mEnableBtn;
+        private System.Windows.Forms.ToolStripButton mAutoWakutoriBtn;
         private System.Windows.Forms.WebBrowser mBrowser;
         private System.Windows.Forms.Timer mUITimer;
         private System.Windows.Forms.StatusStrip mStatusStrip;

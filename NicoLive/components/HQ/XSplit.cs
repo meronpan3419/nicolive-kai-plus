@@ -698,7 +698,7 @@ namespace NicoLive
                         // 配信開始
                         if (Properties.Settings.Default.use_xsplit_shortcut)
                         {
-                            PushShortcutKeys();
+                            PushShortcutKeys2();
                         }
                         else
                         {
@@ -745,7 +745,7 @@ namespace NicoLive
                             // 配信停止
                             if (Properties.Settings.Default.use_xsplit_shortcut)
                             {
-                                PushShortcutKeys();
+                                PushShortcutKeys2();
                             }
                             else
                             {
@@ -773,7 +773,7 @@ namespace NicoLive
                             // 配信停止
                             if (Properties.Settings.Default.use_xsplit_shortcut)
                             {
-                                PushShortcutKeys();
+                                PushShortcutKeys2();
                             }
                             else
                             {
@@ -858,6 +858,24 @@ namespace NicoLive
             }
         }
 
+
+        private static void PushShortcutKeys2()
+        {
+            bool shift = (((uint)Properties.Settings.Default.xsplit_shortcut_keys >> 16) & 0x1) == 0x1;
+            bool ctrl = (((uint)Properties.Settings.Default.xsplit_shortcut_keys >> 17) & 0x1) == 0x1;
+            bool alt = (((uint)Properties.Settings.Default.xsplit_shortcut_keys >> 18) & 0x1) == 0x1;
+            uint key = (Properties.Settings.Default.xsplit_shortcut_keys & 0xFFFF);
+
+            uint shortcutkey = 0;
+            shortcutkey += (uint)(ctrl ? 0x20000 : 0);  // ctrl
+            shortcutkey += (uint)(shift ? 0x10000 : 0); // shift
+            shortcutkey += (uint)(alt ? 0x40000 : 0);   // alt
+            shortcutkey += key;                         // key
+
+            Keyboard.KeyboardInput(shortcutkey);
+
+
+        }
         //
         //  SHIFT+CONTROL+A
         //

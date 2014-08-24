@@ -121,7 +121,7 @@ namespace NicoLive
                            Properties.Settings.Default.password);
                 if (login)
                 {
-                    GetNextWaku();
+                    GetNextWaku(false);
                 }
             }
 
@@ -412,17 +412,7 @@ namespace NicoLive
             XSplit.HandlingStatus(LiveID, this);
         }
 
-        private void mCommentPostBtn_Click(object sender, EventArgs e)
-        {
-            CommentPost();
-        }
-        
-        private void mDisconnectBtn_Click(object sender, EventArgs e)
-        {
-            mNico.SendOwnerComment(LiveID, "/disconnect", "", mLiveInfo.Token);
-            mNico.LiveStop(LiveID, mLiveInfo.Token);
 
-        }
     }
 }
 //-------------------------------------------------------------------------

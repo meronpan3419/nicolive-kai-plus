@@ -211,7 +211,7 @@ namespace NicoLive
         {
             InitializeComponent();
 
-            Properties.Settings.Default.auto_wakutori = true;
+
 
             if (Properties.Settings.Default.tw_token.Length == 0 ||
                     Properties.Settings.Default.tw_token_secret.Length == 0)
@@ -572,7 +572,7 @@ namespace NicoLive
 
             this.Invoke((Action)delegate()
             {
-                GetNextWaku2();
+                GetNextWaku(true);
             });
 
 

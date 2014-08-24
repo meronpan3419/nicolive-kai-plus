@@ -127,7 +127,7 @@ namespace NicoLive
 
                             this.Invoke((Action)delegate()
                             {
-                                GetNextWaku2();
+                                GetNextWaku(true);
                             });
                         }
                     }

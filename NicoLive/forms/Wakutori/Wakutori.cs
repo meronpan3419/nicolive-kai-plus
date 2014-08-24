@@ -9,6 +9,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using System.Media;
 using System.Diagnostics;
+using System.Text.RegularExpressions;
 
 //-------------------------------------------------------------------------
 // クラス実装
@@ -25,6 +26,9 @@ namespace NicoLive
         private readonly string LOGIN_URL = "https://secure.nicovideo.jp/secure/login_form";
 
         private string mReuseUrl = "";
+
+        public WakuResult mState = WakuResult.ERR;
+        public string mLv = "";
 
         private bool mAutoWaku = false;  // 自動枠取り（画像認証まで）
 
@@ -60,7 +64,7 @@ namespace NicoLive
             mMsg = MessageSettings.Instance;
         }
 
-         //-------------------------------------------------------------------------
+        //-------------------------------------------------------------------------
         // ショートカットキー
         //-------------------------------------------------------------------------
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
@@ -69,22 +73,25 @@ namespace NicoLive
             {
                 this.mBackBtn.PerformClick();
                 return true;
-            }else
-            if ((int)keyData == (int)Keys.F2)
-            {
-                this.mFwdBtn.PerformClick();
-                return true;
-            }else
-            if ((int)keyData == (int)Keys.F3)
-            {
-                this.mReloadBtn.PerformClick();
-                return true;
-            }else
-            if ((int)keyData == (int)Keys.F4)
-            {
-                this.mEnableBtn.PerformClick();
-                return true;
             }
+            else
+                if ((int)keyData == (int)Keys.F2)
+                {
+                    this.mFwdBtn.PerformClick();
+                    return true;
+                }
+                else
+                    if ((int)keyData == (int)Keys.F3)
+                    {
+                        this.mReloadBtn.PerformClick();
+                        return true;
+                    }
+                    else
+                        if ((int)keyData == (int)Keys.F4)
+                        {
+                            this.mAutoWakutoriBtn.PerformClick();
+                            return true;
+                        }
             return base.ProcessCmdKey(ref msg, keyData);
         }
         //-------------------------------------------------------------------------
@@ -95,21 +102,26 @@ namespace NicoLive
             mReuseUrl = "";
             mPostTweet = false;
 
-            if (mAutoWaku && Properties.Settings.Default.auto_wakutori)
+            if (mAutoWaku)
             {
+                mAutoWakutoriBtn.Checked = true;
+
                 // 自動で「使い回す」ページへ遷移
-                string lv = mOwner.LiveID;
-                if (lv.Length <= 0)
-                {
-                    this.mBrowser.Navigate(MY_URL);
-                }
-                else
-                {
-                    //lv = lv.Substring(2);
-                    //mReuseUrl = EDIT_URL + "?" + "reuseid=" + lv;
-                    //this.mBrowser.Navigate(mReuseUrl);
-                    this.mBrowser.Navigate(EDIT_URL);
-                }
+                // 2014/08盆明けメンテでedit画面に前枠情報が入るように変更になった。
+                this.mBrowser.Navigate(EDIT_URL);
+
+                //string lv = mOwner.LiveID;
+                //if (lv.Length <= 0)
+                //{
+                //    this.mBrowser.Navigate(MY_URL);
+                //}
+                //else
+                //{
+                //    //lv = lv.Substring(2);
+                //    //mReuseUrl = EDIT_URL + "?" + "reuseid=" + lv;
+                //    //this.mBrowser.Navigate(mReuseUrl);
+                //    this.mBrowser.Navigate(EDIT_URL);
+                //}
             }
             else
             {
@@ -121,35 +133,35 @@ namespace NicoLive
         //-------------------------------------------------------------------------
         // DNSエラー時のリロード
         //-------------------------------------------------------------------------
-		private void DnsReload()
-		{
-			if (this.mBrowser.Url != null && mReloadWait == 0)
-			{
-				string uri = this.mBrowser.Document.Url.ToString();
+        private void DnsReload()
+        {
+            if (this.mBrowser.Url != null && mReloadWait == 0)
+            {
+                string uri = this.mBrowser.Document.Url.ToString();
 
-				if (uri.StartsWith("res://ieframe.dll/dnserrordiagoff_webOC.htm#") )
-					mReloadWait = 1;
-			}
+                if (uri.StartsWith("res://ieframe.dll/dnserrordiagoff_webOC.htm#"))
+                    mReloadWait = 1;
+            }
 
-			if (mReloadWait >= 1)
-			{
-				mReloadWait++;
-				if (mReloadWait > 20)
-				{
-					mReloadWait = 0;
+            if (mReloadWait >= 1)
+            {
+                mReloadWait++;
+                if (mReloadWait > 20)
+                {
+                    mReloadWait = 0;
                     if (this.mBrowser.CanGoBack)
                         this.mBrowser.GoBack();
                     else
-				    	this.mBrowser.Refresh();
-				}
-			}
-		}
+                        this.mBrowser.Refresh();
+                }
+            }
+        }
 
         //-------------------------------------------------------------------------
         // Captcha入力
         //-------------------------------------------------------------------------
-		private void InputCaptcha()
-		{
+        private void InputCaptcha()
+        {
             if (mCaptcha.Length <= 0) return;
 
             if (SetElementTextByName("captcha", mCaptcha))
@@ -162,100 +174,103 @@ namespace NicoLive
         //-------------------------------------------------------------------------
         // ステータス更新
         //-------------------------------------------------------------------------
-		private void UpdateStatus()
-		{
-			this.mEnableLabel.Text = (this.mEnableBtn.Checked) ? "自動枠取り動作中" : "自動枠取り待機中";
-			this.mEnableLabel.ForeColor = (this.mEnableBtn.Checked) ? Color.Red : Color.Black;
+        private void UpdateStatus()
+        {
+            this.mEnableLabel.Text = (this.mAutoWakutoriBtn.Checked) ? "自動枠取り動作中" : "自動枠取り待機中";
+            this.mEnableLabel.ForeColor = (this.mAutoWakutoriBtn.Checked) ? Color.Red : Color.Black;
 
-			if (this.mBrowser.Url != null && this.mBrowser.Url.ToString().StartsWith(EDIT_URL))
-			{
-				this.mEnableBtn.Enabled = true;
-			}
-			else
-			{
-				this.mEnableBtn.Enabled = false;
-			}
+            if (mBrowser.Url == null) return;
 
-			if (mBrowser.Url != null /*&& this.mEnableBtn.Checked*/ )
-			{
-				string uri = mBrowser.Url.ToString();
+            //if (this.mBrowser.Url.ToString().StartsWith(EDIT_URL))
+            //{
+            //    this.mAutoWakutoriBtn.Enabled = true;
+            //}
+            //else
+            //{
+            //    this.mAutoWakutoriBtn.Enabled = false;
+            //}
 
-				if (uri.StartsWith(WATCH_URL))
-				{
-					// 枠取り成功
-					SystemSounds.Beep.Play();
-					int idx = uri.IndexOf("lv");
-					uri = uri.Substring(idx);
 
-					using (Bouyomi bm = new Bouyomi())
-					{
-						bm.Talk(mMsg.GetMessage("枠が取れたよ"));
-					}
 
-					// 接続
-                    this.Invoke((MethodInvoker)delegate()
-                    {
-                        this.mOwner.LiveID = uri;
-                        this.mOwner.Connect(false);
-                    });
-					this.mUITimer.Enabled = false;
+            string uri = mBrowser.Url.ToString();
 
-                    try
-                    {
-                        this.Hide();
-                        this.Close();
-                    }
-                    catch (Exception e)
-                    {
-                        Utils.WriteLog("Close:"+e.Message);
-                    }
-                }
-                else if (uri.StartsWith(EDIT_URL))
+            if (uri.StartsWith(WATCH_URL))
+            {
+                // 枠取り成功
+                //SystemSounds.Beep.Play();
+                int idx = uri.IndexOf("lv");
+                mLv = uri.Substring(idx);
+
+                mState = WakuResult.NO_ERR;
+
+                using (Bouyomi bm = new Bouyomi())
                 {
-                    if (this.mBrowser.Document.GetElementById("res_done") != null)
-                    {
-                        HtmlElementCollection all = this.mBrowser.Document.All;
-                        HtmlElementCollection elem = all.GetElementsByName("blog_parts");
-	
-    			        if (elem.Count > 0)
-    			        {
-                            string val = elem[0].GetAttribute("value");
-                            int idx1 = val.IndexOf("lv");
-                            Utils.WriteLog(val);
-
-                            if (idx1 > 0)
-                            {
-                                int idx2 = val.IndexOf("\"", idx1);
-                                if (idx2 > 0)
-                                {
-                                    string lv = val.Substring(idx1, idx2 - idx1 );
-
-                                    Utils.WriteLog(lv);
-
-                                    this.Invoke((MethodInvoker)delegate()
-                                    {
-                                        this.mOwner.LiveID = lv;
-                                        this.mOwner.Connect(false);
-                                    });
-                                    this.mUITimer.Enabled = false;
-
-                                    try
-                                    {
-                                        this.Hide();
-                                        this.Close();
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        Utils.WriteLog(ex.Message);
-                                    }
-                                    
-                                }
-                            }
-           				}
-                    }
+                    bm.Talk(mMsg.GetMessage("枠が取れたよ"));
                 }
-			}
-		}
+
+                // 接続
+                this.Invoke((MethodInvoker)delegate()
+                {
+                    this.mOwner.LiveID = mLv;
+                    this.mOwner.Connect(false);
+                });
+                this.mUITimer.Enabled = false;
+
+                try
+                {
+                    this.Hide();
+                    this.Close();
+                }
+                catch (Exception e)
+                {
+                    Utils.WriteLog("Close:" + e.Message);
+                }
+            }
+            else if (uri.StartsWith(EDIT_URL))
+            {
+                if (this.mBrowser.Document.GetElementById("res_done") == null) return;
+
+                HtmlElementCollection all = this.mBrowser.Document.All;
+                HtmlElementCollection elem = all.GetElementsByName("blog_parts");
+
+                if (elem.Count <= 0) return;
+
+                string val = elem[0].GetAttribute("value");
+                int idx1 = val.IndexOf("lv");
+                Utils.WriteLog(val);
+
+                if (idx1 <= 0) return;
+
+                int idx2 = val.IndexOf("\"", idx1);
+                if (idx2 > 0) return;
+
+                string lv = val.Substring(idx1, idx2 - idx1);
+
+                Utils.WriteLog(lv);
+
+                this.Invoke((MethodInvoker)delegate()
+                {
+                    this.mOwner.LiveID = lv;
+                    this.mOwner.Connect(false);
+                });
+                this.mUITimer.Enabled = false;
+
+                try
+                {
+                    this.Hide();
+                    this.Close();
+                }
+                catch (Exception ex)
+                {
+                    Utils.WriteLog(ex.Message);
+                }
+
+
+
+
+            }
+
+        }
 
         //-------------------------------------------------------------------------
         // タイマー
@@ -266,26 +281,26 @@ namespace NicoLive
             if (this.mBrowser.Url == null) return;
 
             //if (this.mBrowser.IsBusy) return;
-            
+
             CheckElementById("kiyaku_accept", true);
 
             string uri = mBrowser.Url.ToString();
 
             // 画像認証ページ
-            if (uri.StartsWith(EDIT_URL) && this.mEnableBtn.Checked)
+            if (uri.StartsWith(EDIT_URL) && this.mAutoWakutoriBtn.Checked)
             {
                 // POSTボタン
                 InvokeButtonById("submit_ok");
             }
 
-			// DNSエラー時のリロード
-			DnsReload();
-        
+            // DNSエラー時のリロード
+            DnsReload();
+
             // キャプチャ入力
-			InputCaptcha();
-        
+            InputCaptcha();
+
             // その他情報変更
-			UpdateStatus();
+            UpdateStatus();
 
             // 放送開始クリック
             ClickStartBoardcast();
@@ -433,15 +448,15 @@ namespace NicoLive
                 Utils.WriteLog(uri);
 
                 // 半自動枠取りボタンがチェックされてない
-                if (!this.mEnableBtn.Checked) return;
+                if (!this.mAutoWakutoriBtn.Checked) return;
 
                 // queueカウント待ち
                 HtmlElement check = this.mBrowser.Document.GetElementById("que_count");
-                if( check != null )
-                {   
+                if (check != null)
+                {
                     int queue = 0;
                     int.TryParse(check.InnerText, out queue);
-                    
+
                     // 100人以上順番待ちの時はTweet
                     if (queue >= 102)
                     {
@@ -485,25 +500,24 @@ namespace NicoLive
             string uri = mBrowser.Url.ToString();
 
             Utils.WriteLog(uri);
-            
-            // 画像認証ページ
-            if (uri.StartsWith(EDIT_URL))
-            {
-                if (mAutoWaku && Properties.Settings.Default.auto_wakutori)
-                    this.mEnableBtn.Checked = true;
-            }
 
-            // エラーページの場合は戻る
+
+            // エラーページの場合は戻るかリトライ
             if (ContainElementById("error_box"))
             {
-                if (mAutoWaku && Properties.Settings.Default.auto_wakutori)
+                //自動枠取りの時はリロードしまくる
+                if (mAutoWaku)
+                {
                     this.mReloadBtn.PerformClick();
+                }
                 else
+                {
                     this.mBackBtn.PerformClick();
+                }
                 return;
             }
-            
-            if( mReuseUrl.Length > 0 && uri.Equals(mReuseUrl))
+
+            if (mReuseUrl.Length > 0 && uri.Equals(mReuseUrl))
             {
                 // ＩＤとパスワード入力
                 SetElementTextByName("mail", Properties.Settings.Default.user_id);
@@ -531,20 +545,30 @@ namespace NicoLive
             }
             else if (uri.StartsWith(EDIT_URL))
             {
-                // 画像認証位置までスクロール
+                
                 if (ContainElementById("error_message"))
                 {
-                    ScrollToText("captcha");
+                    ScrollToText("captcha");    // 画像認証位置までスクロール
+
                     HtmlElement btn = this.mBrowser.Document.GetElementById("error_message");
-                    if (btn != null && btn.InnerText.Contains("既に順番待ちに並んでいるか"))
+                    if (btn == null) return;
+
+                    if (btn.InnerText.Contains("既にこの時間に予約をしているか"))
                     {
+                        //lv190782836
+                        Regex r = new Regex("(lv[0-9]+)");
+                        Match m = r.Match(btn.InnerText);
+                        if (m.Success)
+                        {
+                            mBrowser.Navigate( WATCH_URL + "/" + m.Groups[1]);
+                        }
                         return;
                     }
                 }
             }
 
             // 半自動枠取りボタンがチェックされてない
-            if (!this.mEnableBtn.Checked) return;
+            if (!this.mAutoWakutoriBtn.Checked) return;
 
             // 順番待ち
             if (ContainElementById("waiting"))
@@ -565,7 +589,7 @@ namespace NicoLive
         //-------------------------------------------------------------------------
         // 半自動枠取り有効かボタン
         //-------------------------------------------------------------------------
-        private void EnableBtn_Click(object sender, EventArgs e)
+        private void WakutoriBtn_Click(object sender, EventArgs e)
         {
             CheckDocument(false);
         }

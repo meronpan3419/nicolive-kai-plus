@@ -263,7 +263,8 @@ namespace NicoLive
         public string GetCurrentLive(string username, string password)
         {
             const string uri = "http://live.nicovideo.jp/my";
-            const string REGEX_pat = "http://live.nicovideo.jp/watch/lv(?<videoid>[0-9]+)\" class=\"now\"";
+            const string REGEX_pat = "<a href=\"http://live.nicovideo.jp/watch/lv(?<videoid>[0-9]+)\\?ref=my_live\" title=\"生放送ページへ戻る\" class=\"nml\">";
+            //const string REGEX_pat = "http://live.nicovideo.jp/watch/lv(?<videoid>[0-9]+)\" class=\"now\"";
             //const string REGEX_pat = "immendStream\\('http://live.nicovideo.jp/','(?<videoid>[0-9]+)'";
             string result = "";
 
@@ -278,16 +279,7 @@ namespace NicoLive
                     result = "lv" + match[0].Groups["videoid"].Value;
                     Utils.WriteLog(result);
                 }
-                else
-                {
-                    regex = new Regex("<a href=\"http://live.nicovideo.jp/watch/lv(?<videoid>[0-9]+)\\?ref=my_live\" title=\"生放送ページへ戻る\" class=\"nml\">");
-                    match = regex.Matches(html);
-                    if (match.Count > 0)
-                    {
-                        result = "lv" + match[0].Groups["videoid"].Value;
-                        Utils.WriteLog(result);
-                    }
-                }
+
             }
             return result;
         }

@@ -245,6 +245,12 @@ namespace NicoLive
                 Utils.WriteLog("lv:" + mLv);
                 mState = WakuResult.NO_ERR;
 
+                using (Bouyomi bm = new Bouyomi())
+                {
+                    MessageSettings msg = MessageSettings.Instance;
+                    bm.Talk(msg.GetMessage("枠が取れたよ"));
+                }
+
                 SetLabelFromThread("枠取り完了", Color.Black, true);
                 Utils.WriteLog("WakuDlg: mWorker_DoWork(): 枠取り完了");
             }

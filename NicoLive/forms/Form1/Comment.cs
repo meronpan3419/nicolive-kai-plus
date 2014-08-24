@@ -776,7 +776,7 @@ namespace NicoLive
             // 主コメはおみくじしない
             if (iCmt.IsOwner) return;
 
-            if (iCmt.Text.Contains("おみくじ") && !iCmt.Text.Contains("ありません") )
+            if (iCmt.Text.Contains("おみくじ") && !iCmt.Text.Contains("ありません"))
             {
                 string name;
                 if (mUid.Contains(iCmt.Uid))
@@ -796,10 +796,10 @@ namespace NicoLive
                 else
                 {
                     mOmikujiList.Add(iCmt.Uid);
-                    
-                    int o = new System.Random().Next(1,100);
-                    string[] unsei = new string[7] {"大吉", "吉", "半吉", "小吉", "末小吉", "末吉", "凶" };
-                    int[] ratio = new int[7]{17, 35, 5, 4, 3, 6, 30};
+
+                    int o = new System.Random().Next(1, 100);
+                    string[] unsei = new string[7] { "大吉", "吉", "半吉", "小吉", "末小吉", "末吉", "凶" };
+                    int[] ratio = new int[7] { 17, 35, 5, 4, 3, 6, 30 };
                     int r = 0;
                     for (int i = 0; i < 7; i++)
                     {
@@ -817,6 +817,7 @@ namespace NicoLive
                 {
                     this.SendComment(post_msg, true);
                 });
+
 
             }
             if (iCmt.Text.Contains("おみくじありません"))
@@ -1106,7 +1107,7 @@ namespace NicoLive
 
                 this.Invoke((Action)delegate()
                 {
-                    GetNextWaku();
+                    GetNextWaku(false);
                 });
             }
             return true;
@@ -1117,93 +1118,76 @@ namespace NicoLive
         //-------------------------------------------------------------------------
         // 次枠取り
         //-------------------------------------------------------------------------
-        private void GetNextWaku()
+        private void GetNextWaku(bool iUseLvNotice)
         {
 
             Thread th = new Thread(delegate()
             {
-                //MakeWakutori(true);
+                
+                WakuResult result = WakuResult.ERR;
+                string lv = "";
 
-                WakuDlg dlg = new WakuDlg(LiveID, false);
-                dlg.ShowDialog();
-
-                if (dlg.mState == WakuResult.NO_ERR)
+                if (Properties.Settings.Default.use_auto_wakutiri_dialog)
                 {
-                    using (Bouyomi bm = new Bouyomi())
-                    {
-                        bm.Talk(mMsg.GetMessage("枠が取れたよ"));
-                    }
+                    WakuDlg dlg = new WakuDlg(LiveID, false);
+                    dlg.ShowDialog();
 
-                    this.Invoke((Action)delegate()
-                    {
-                        this.LiveID = dlg.mLv;
-                    });
-
-                    Connect(true);
+                    if (dlg.mState != WakuResult.NO_ERR) return;
+                    result = dlg.mState;
+                    lv = dlg.mLv;
                 }
-                else if (dlg.mState == WakuResult.JUNBAN)
+                else
                 {
-                    MakeWakutori(false);
+                    Wakutori mk = new Wakutori();
+                    mk.MyOwner = this;
+                    mk.AutoWaku = true;
+                    mk.ShowDialog();
+
+                    if (mk.mState != WakuResult.NO_ERR) return;
+                    result = mk.mState;
+                    lv = mk.mLv;
                 }
 
-            });
-            th.Name = "NivoLive.Form1.Comment.GetNextWaku()";
-            th.Start();
+                if (result != WakuResult.NO_ERR) return;
 
-
-        }
-
-        //-------------------------------------------------------------------------
-        // 次枠取り 次枠通知
-        //-------------------------------------------------------------------------
-        private void GetNextWaku2()
-        {
-
-            Thread th = new Thread(delegate()
-            {
-                //MakeWakutori(true);
-
-                WakuDlg dlg = new WakuDlg(LiveID, false);
-                dlg.ShowDialog();
-
-                if (dlg.mState == WakuResult.NO_ERR)
+                if (iUseLvNotice)
                 {
-                    using (Bouyomi bm = new Bouyomi())
+                    if (Properties.Settings.Default.use_loss_time &&
+                         Properties.Settings.Default.use_next_lv_notice)
                     {
-                        bm.Talk(mMsg.GetMessage("枠が取れたよ"));
-                    }
+                        mNico.SendOwnerComment(LiveID, "/cls", "", mLiveInfo.Token);
 
-                    this.Invoke((Action)delegate()
-                    {
-                        if (Properties.Settings.Default.use_loss_time &&
-                             Properties.Settings.Default.use_next_lv_notice)
+                        if (!this.mDisconnect)
                         {
-                            mNico.SendOwnerComment(LiveID, "/cls", "", mLiveInfo.Token);
-                            this.LiveID = dlg.mLv;
-                            if (!this.mDisconnect)
-                            {
-                                mNico.SendOwnerComment(LiveID, "/perm 次枠こちら：http://nico.ms/" + dlg.mLv, "", mLiveInfo.Token);
-                            }
+                            mNico.SendOwnerComment(LiveID, "/perm 次枠こちら：http://nico.ms/" + lv, "", mLiveInfo.Token);
                         }
-                        mNico.SendOwnerComment(LiveID, "/disconnect", "", mLiveInfo.Token);
+                    }
+                    mNico.SendOwnerComment(LiveID, "/disconnect", "", mLiveInfo.Token);
 
-                        Thread.Sleep(1000);
-                        Connect(true);
-                    });
-
-
+                    Thread.Sleep(1000);
                 }
-                else if (dlg.mState == WakuResult.JUNBAN)
+
+                this.Invoke((Action)delegate()
                 {
-                    MakeWakutori(false);
-                }
+                    this.LiveID = lv;
+                    Connect(true);
+                });
+
+                
+
+                //else if (dlg.mState == WakuResult.JUNBAN)
+                //{
+                //    MakeWakutori(true);
+                //}
 
             });
             th.Name = "NivoLive.Form1.Comment.GetNextWaku()";
+            th.SetApartmentState(ApartmentState.STA);
             th.Start();
 
 
         }
+
 
         //-------------------------------------------------------------------------
         // コメントリストにコメントを追加

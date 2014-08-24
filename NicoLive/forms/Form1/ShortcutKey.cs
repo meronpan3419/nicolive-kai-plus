@@ -45,7 +45,7 @@ namespace NicoLive
             {
                 if (mDoingGetNextWaku) return true;
 
-                GetNextWaku();
+                GetNextWaku(false);
 
                 return true;
             }

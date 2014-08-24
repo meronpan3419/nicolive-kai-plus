@@ -56,9 +56,6 @@
     <Setting Name="column_width_3" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">500</Value>
     </Setting>
-    <Setting Name="auto_wakutori" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
-    </Setting>
     <Setting Name="talk_3min" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
@@ -385,6 +382,9 @@
     </Setting>
     <Setting Name="xsplit_shortcut_keys" Type="System.UInt32" Scope="User">
       <Value Profile="(Default)">393281</Value>
+    </Setting>
+    <Setting Name="use_auto_wakutiri_dialog" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
     </Setting>
   </Settings>
 </SettingsFile>

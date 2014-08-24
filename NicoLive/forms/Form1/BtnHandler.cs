@@ -46,8 +46,12 @@ namespace NicoLive
                     return;
                 }
             }
+
+
+            bool useAutoWaku = (Form.ModifierKeys == Keys.Control);
             
-            MakeWakutori(false);
+            MakeWakutori(useAutoWaku);
+                
         }
         //-------------------------------------------------------------------------
         // コメント読み上げ起動
@@ -150,11 +154,46 @@ namespace NicoLive
                 this.LiveID = dlg.mLv;
                 Connect(false);
             }
-            else if (dlg.mState == WakuResult.JUNBAN)
-            {
-                MakeWakutori(false);
-            }
+            //else if (dlg.mState == WakuResult.JUNBAN)
+            //{
+            //    MakeWakutori(true);
+            //}
         }
+
+        //-------------------------------------------------------------------------
+        // コメントボタン
+        //-------------------------------------------------------------------------
+        private void mCommentPostBtn_Click(object sender, EventArgs e)
+        {
+            CommentPost();
+        }
+
+        //-------------------------------------------------------------------------
+        // 配信終了ボタン
+        //-------------------------------------------------------------------------
+        private void mDisconnectBtn_Click(object sender, EventArgs e)
+        {
+            if (mNico == null) return;
+            if (!mNico.IsLogin) return;
+            if (mContWaku.Checked)
+            {
+                DialogResult result = MessageBox.Show("連続枠取りが設定されています。次枠しますか？",
+                        "配信終了します",
+                        MessageBoxButtons.YesNo,
+                        MessageBoxIcon.Question,
+                        MessageBoxDefaultButton.Button2);
+                if (result == DialogResult.No)
+                {
+                    mContWaku.Checked = false;
+                }
+            }
+
+            mNico.SendOwnerComment(LiveID, "/disconnect", "", mLiveInfo.Token);
+            mNico.LiveStop(LiveID, mLiveInfo.Token);
+
+
+        }
+
 
         //-------------------------------------------------------------------------
         // 今ココ起動
