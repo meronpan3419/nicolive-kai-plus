@@ -125,42 +125,6 @@ namespace NicoLive
             // 最終コメント受信時間設定
             mLastChatTime = DateTime.Now;
             
-            // NGユーザーを無視
-            if (this.mUid.IsNGUser(iCmt.Uid))
-            {
-                goto END;
-            }
-
-            try
-            {
-                // コメントをリストに追加
-                this.Invoke((Action)delegate()
-                {
-                    this.AddComment(iCmt);
-                });
-            }
-            catch (Exception e)
-            {
-                Utils.WriteLog("RecvComment: AddComment:" + e.Message);
-            }
-
-            // 棒読みちゃん読み上げリストにコメントを追加
-            AddSpeakText(iCmt);
-
-            //配信終了チェック
-            if (CheckDisconnect(iCmt))
-            {
-                goto END;
-            }
-
-
-
-            // アクティブ数設定
-            mLiveInfo.ActivateUser(iCmt.Uid, iCmt.Date);
-
-            // ユーザーリストにＩＤを追加
-            mLiveInfo.AddUser(iCmt.Uid);
-
             // IDをコテハンに置換
             string nick = mUid.CheckNickname(iCmt.Uid);
             if (nick != null)
@@ -182,19 +146,50 @@ namespace NicoLive
             // コテハン登録
             SaveHandle(iCmt);
 
+            // NGユーザーを無視
+            if (this.mUid.IsNGUser(iCmt.Uid))
+            {
+                goto END;
+            }
+
+            try
+            {
+                // コメントをリストに追加
+                this.Invoke((Action)delegate()
+                {
+                    this.AddComment(iCmt);
+                });
+            }
+            catch (Exception e)
+            {
+                Utils.WriteLog("RecvComment: AddComment:" + e.Message);
+            }
+
+            //過去コメントだったら抜ける
+            if (mLastChatNo >= int.Parse(iCmt.No)) return;
+
+            //配信終了チェック
+            if (CheckDisconnect(iCmt))
+            {
+                goto END;
+            }
 
 
+
+            // 棒読みちゃん読み上げリストにコメントを追加
+            AddSpeakText(iCmt);
+
+            // アクティブ数設定
+            mLiveInfo.ActivateUser(iCmt.Uid, iCmt.Date);
+
+            // ユーザーリストにＩＤを追加
+            mLiveInfo.AddUser(iCmt.Uid);
 
             // NGコメント通知
             if (int.Parse(iCmt.No) < mLastChatNo - Properties.Settings.Default.comment_max + 1)
             {
                 ShowNGCommentNotice(int.Parse(iCmt.No));
             }
-
-
-
-            //過去コメント
-            if (mLastChatNo >= int.Parse(iCmt.No)) return;
 
             // 投票チェック
             if (iCmt.IsVote && iCmt.IsOwner)
@@ -204,8 +199,6 @@ namespace NicoLive
 
             // 棒読みタスクのクリア
             BouyomiClear(iCmt);
-
-
 
             // XSplitメッセージ
             if (Properties.Settings.Default.enable_xsplit_scene_change)
