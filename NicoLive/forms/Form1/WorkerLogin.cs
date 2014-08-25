@@ -75,6 +75,10 @@ namespace NicoLive
 
             if (live_id.Length <= 2)
             {
+                using (Bouyomi bm = new Bouyomi())
+                {
+                    bm.Talk("放送IDがわかりませんでした");
+                }
                 goto END;
             }
 
@@ -89,7 +93,7 @@ namespace NicoLive
             {
                 using (Bouyomi bm = new Bouyomi())
                 {
-                    bm.Talk("接続できませんでした");
+                    bm.Talk("ログインできませんでした");
                 }
             }
         GET_COMMENT:
@@ -192,7 +196,7 @@ namespace NicoLive
 
             using (Bouyomi bm = new Bouyomi())
             {
-                bm.Talk("コメントサーバーに接続しました");
+                bm.Talk("接続しました");
             }
 
             this.Invoke((Action)delegate()

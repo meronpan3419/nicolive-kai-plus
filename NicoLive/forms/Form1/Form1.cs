@@ -340,6 +340,14 @@ namespace NicoLive
 
             GC.Collect();
 
+            if (!mAutoReconnectOnGoing)
+            {
+                using (Bouyomi bm = new Bouyomi())
+                {
+                    bm.Talk("コメントサーバに接続します");
+                }
+            }
+
             // ログインワーカースタート
             mLoginWorker.RunWorkerAsync();
         }

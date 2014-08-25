@@ -248,12 +248,12 @@ namespace NicoLive
                 if (mNico.IsLogin)
                 {
                     // 再接続成功
-                    string msg = "再接続に成功しました";
+                    //string msg = "再接続に成功しました";
 
-                    if (this.mBouyomiBtn.Checked)
-                    {
-                        this.mBouyomi.Talk(msg);
-                    }
+                    //if (this.mBouyomiBtn.Checked)
+                    //{
+                    //    this.mBouyomi.Talk(msg);
+                    //}
                     mAutoReconnectOnGoing = false;
                     mConnectCount = 0;
                     return;
