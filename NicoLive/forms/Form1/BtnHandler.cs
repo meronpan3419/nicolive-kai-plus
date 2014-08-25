@@ -146,10 +146,7 @@ namespace NicoLive
 
             if (dlg.mState == WakuResult.NO_ERR)
             {
-                using (Bouyomi bm = new Bouyomi())
-                {
-                    bm.Talk(mMsg.GetMessage("枠が取れたよ"));
-                }
+
 
                 this.LiveID = dlg.mLv;
                 Connect(false);
