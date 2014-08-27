@@ -140,8 +140,12 @@ namespace NicoLive
         //-------------------------------------------------------------------------
         private void mCopyBtn_Click(object sender, EventArgs e)
         {
-
-            WakuDlg dlg = new WakuDlg(ParseLiveID(), true);
+            bool changeProp = true;
+            if (Form.ModifierKeys == Keys.Control)
+            {
+                changeProp = false;
+            }
+            WakuDlg dlg = new WakuDlg(ParseLiveID(), changeProp);
             dlg.ShowDialog();
 
             if (dlg.mState == WakuResult.NO_ERR)
