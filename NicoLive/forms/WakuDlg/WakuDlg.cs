@@ -126,7 +126,7 @@ namespace NicoLive
             Dictionary<string, string> tag = new Dictionary<string, string>();
             Dictionary<string, string> taglock = new Dictionary<string, string>();
         GET_OLD_INFO:
-            if (!mNico.GetOldLive(mLv, ref arr, ref comu, ref tag, ref taglock))
+            if (!mNico.GetOldLiveInfo(mLv, ref arr, ref comu, ref tag, ref taglock))
             {
                 if (mAbort) return;
 
@@ -232,7 +232,7 @@ namespace NicoLive
             }
 
             try_cnt = 0;
-            bool base64_encoded = false;
+            bool accept_kiyaku = false;
 
         RETRY:
             if (mAbort) return;
@@ -262,12 +262,11 @@ namespace NicoLive
             {
                 SetLabelFromThread("枠取り中（規約確認中）", Color.Black, false);
                 Utils.WriteLog("WakuDlg: mWorker_DoWork(): WakuErr.ERR_KIYAKU: 枠取り中（規約確認中）");
-                if (!base64_encoded)
+                if (!accept_kiyaku)
                 {
                     arr["kiyaku"] = "true";
                     arr["description"] = Utils.ToBase64(arr["description"]);
-                    //arr.Remove("confirm");
-                    base64_encoded = true;
+                    accept_kiyaku = true;
                 }
                 else
                 {
@@ -277,8 +276,6 @@ namespace NicoLive
                     Utils.WriteLog("WakuDlg: mWorker_DoWork(): WakuErr.ERR_KIYAKU: 枠取り中（再取得中）");
                     arr.Remove("kiyaku");
                     arr.Remove("confirm");
-                    arr["description"] = Utils.FromBase64(arr["description"]);
-                    base64_encoded = false;
                 }
                 goto RETRY;
             }
@@ -288,7 +285,7 @@ namespace NicoLive
                 Utils.WriteLog("WakuDlg: mWorker_DoWork(): WakuErr.ERR_WEBPAGESESSION: 枠取り中（WEBページの有効期限切れ）");
                 arr.Remove("kiyaku");
                 arr.Remove("confirm");
-                base64_encoded = false;
+                accept_kiyaku = false;
                 goto RETRY;
             }
             else if (err == WakuErr.ERR_DESCRIPTION_EMPTY)
@@ -297,8 +294,8 @@ namespace NicoLive
                 Utils.WriteLog("WakuDlg: mWorker_DoWork(): WakuErr.ERR_WEBPAGESESSION: 枠取り中（説明文なし）");
                 arr.Remove("kiyaku");
                 arr.Remove("confirm");
+                accept_kiyaku = false;
                 arr["description"] = "説明ありません";
-                base64_encoded = false;
                 goto RETRY;
             }
             else if (err == WakuErr.ERR_LOGIN)
@@ -314,14 +311,19 @@ namespace NicoLive
             {
                 SetLabelFromThread("枠取り中（多重投稿)", Color.Black, false);
                 Utils.WriteLog("WakuDlg: mWorker_DoWork(): WakuErr.ERR_TAJU: 枠取り中（多重投稿)");
+                arr.Remove("kiyaku");
                 arr.Remove("confirm");
+                arr["description"] = Utils.FromBase64(arr["description"]);
+                accept_kiyaku = false;
                 goto RETRY;
             }
             else if (err == WakuErr.ERR_KONZATU)
             {
                 SetLabelFromThread("枠取り中（混雑中）", Color.Black, false);
-                Utils.WriteLog("WakuDlg: mWorker_DoWork(): WakuErr.ERR_KONZATU: 枠取り中（混雑中）");
+                arr.Remove("kiyaku");
                 arr.Remove("confirm");
+                arr["description"] = Utils.FromBase64(arr["description"]);
+                accept_kiyaku = false;
                 goto RETRY;
             }
 

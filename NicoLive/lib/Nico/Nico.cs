@@ -1328,7 +1328,7 @@ namespace NicoLive
         //-------------------------------------------------------------------------
         // 過去の放送情報の取得
         //-------------------------------------------------------------------------
-        public bool GetOldLive(string iLv, ref Dictionary<string, string> iInfo, ref Dictionary<string, string> iCom, ref Dictionary<string, string> iTag, ref Dictionary<string, string> iTaglock)
+        public bool GetOldLiveInfo(string iLv, ref Dictionary<string, string> iInfo, ref Dictionary<string, string> iCom, ref Dictionary<string, string> iTag, ref Dictionary<string, string> iTaglock)
         {
             string lv = iLv.Replace("lv", "");
             string url = "http://live.nicovideo.jp/editstream?reuseid=" + lv;
@@ -1540,6 +1540,15 @@ namespace NicoLive
             {
                 Utils.WriteLog("GetWaku() confirm =" + match.Groups[1].Value);
                 iParam["confirm"] = match.Groups[1].Value;
+            }
+
+            // description更新（入力時はtextareaだけど規約確認の時はinputタグでbase64してあるので）
+            match = Regex.Match(res, "<input type=\"hidden\" name=\"description\"(.*?)value=\"((.*?))\"");
+
+            if (match.Success)
+            {
+                Utils.WriteLog("GetWaku() description =" + Utils.FromBase64(match.Groups[2].Value));
+                iParam["description"] = Utils.FromBase64(match.Groups[2].Value);
             }
 
             // エラーチェック error_message

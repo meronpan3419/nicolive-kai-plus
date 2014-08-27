@@ -124,7 +124,7 @@ namespace NicoLive
 
             // 最終コメント受信時間設定
             mLastChatTime = DateTime.Now;
-            
+
             // IDをコテハンに置換
             string nick = mUid.CheckNickname(iCmt.Uid);
             if (nick != null)
@@ -1110,7 +1110,7 @@ namespace NicoLive
                 this.mBouyomi.Talk(mMsg.GetMessage("枠取りを開始します"));
 
 
-                    GetNextWaku(false);
+                GetNextWaku(false);
 
             }
             return true;
@@ -1126,7 +1126,7 @@ namespace NicoLive
 
             Thread th = new Thread(delegate()
             {
-                
+
                 WakuResult result = WakuResult.ERR;
                 string lv = "";
 
@@ -1167,7 +1167,7 @@ namespace NicoLive
 
                             //if (!this.mDisconnect)
                             //{
-                             mNico.SendOwnerComment(LiveID, "/perm 次枠こちら：http://nico.ms/" + lv, "", mLiveInfo.Token);
+                            mNico.SendOwnerComment(LiveID, "/perm 次枠こちら：http://nico.ms/" + lv, "", mLiveInfo.Token);
                             //}
                         }
                         mNico.SendOwnerComment(LiveID, "/disconnect", "", mLiveInfo.Token);
@@ -1180,13 +1180,21 @@ namespace NicoLive
                     Thread.Sleep(1000);
                 }
 
-                this.Invoke((Action)delegate()
+                try
                 {
-                    this.LiveID = lv;
-                });
+                    this.Invoke((Action)delegate()
+                    {
+                        this.LiveID = lv;
+                    });
+                }
+                catch (Exception e)
+                {
+                    Utils.WriteLog("GetNextWaku:" + e.Message);
+                }
+
 
                 Connect(true);
-                
+
 
                 //else if (dlg.mState == WakuResult.JUNBAN)
                 //{
