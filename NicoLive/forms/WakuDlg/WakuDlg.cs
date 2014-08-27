@@ -262,12 +262,43 @@ namespace NicoLive
             {
                 SetLabelFromThread("枠取り中（規約確認中）", Color.Black, false);
                 Utils.WriteLog("WakuDlg: mWorker_DoWork(): WakuErr.ERR_KIYAKU: 枠取り中（規約確認中）");
-                arr["kiyaku"] = "true";
                 if (!base64_encoded)
                 {
+                    arr["kiyaku"] = "true";
                     arr["description"] = Utils.ToBase64(arr["description"]);
+                    //arr.Remove("confirm");
                     base64_encoded = true;
                 }
+                else
+                {
+                    //規約確認したけどダメだったから最初から
+                    // そもそも規約確認じゃないのにWakuErr.ERR_KIYAKUしてるのがあれなので修正するまでのコード↓
+                    SetLabelFromThread("枠取り中（再取得中）", Color.Black, false);
+                    Utils.WriteLog("WakuDlg: mWorker_DoWork(): WakuErr.ERR_KIYAKU: 枠取り中（再取得中）");
+                    arr.Remove("kiyaku");
+                    arr.Remove("confirm");
+                    arr["description"] = Utils.FromBase64(arr["description"]);
+                    base64_encoded = false;
+                }
+                goto RETRY;
+            }
+            else if (err == WakuErr.ERR_WEB_PAGE_SESSION)
+            {
+                SetLabelFromThread("枠取り中（WEBページの有効期限切れ）", Color.Black, false);
+                Utils.WriteLog("WakuDlg: mWorker_DoWork(): WakuErr.ERR_WEBPAGESESSION: 枠取り中（WEBページの有効期限切れ）");
+                arr.Remove("kiyaku");
+                arr.Remove("confirm");
+                base64_encoded = false;
+                goto RETRY;
+            }
+            else if (err == WakuErr.ERR_DESCRIPTION_EMPTY)
+            {
+                SetLabelFromThread("枠取り中（説明文なし）", Color.Black, false);
+                Utils.WriteLog("WakuDlg: mWorker_DoWork(): WakuErr.ERR_WEBPAGESESSION: 枠取り中（説明文なし）");
+                arr.Remove("kiyaku");
+                arr.Remove("confirm");
+                arr["description"] = "説明ありません";
+                base64_encoded = false;
                 goto RETRY;
             }
             else if (err == WakuErr.ERR_LOGIN)
@@ -293,6 +324,7 @@ namespace NicoLive
                 arr.Remove("confirm");
                 goto RETRY;
             }
+
             else if (err == WakuErr.ERR_JUNBAN_WAIT)
             {
                 SetLabelFromThread("順番待ちに並びます", Color.Black, false);

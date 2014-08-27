@@ -50,6 +50,8 @@ namespace NicoLive
         ERR_JUNBAN_WAIT,                            // 順番待ち
         ERR_MOJI,									// 文字数制限エラー
         ERR_TAG,                                    // タグエラー
+        ERR_WEB_PAGE_SESSION,                         // WEBページの有効期限エラー
+        ERR_DESCRIPTION_EMPTY,                         //番組説明文入力してください
     };
 
     struct SaleList
@@ -1536,11 +1538,11 @@ namespace NicoLive
 
             if (match.Success)
             {
-                Utils.WriteLog(match.Groups[1].Value);
+                Utils.WriteLog("GetWaku() confirm =" + match.Groups[1].Value);
                 iParam["confirm"] = match.Groups[1].Value;
             }
 
-            // エラーチェック
+            // エラーチェック error_message
             match = Regex.Match(res, "<li id=\"error_message\">(.*?)</li>");
             if (match.Success)
             {
@@ -1573,8 +1575,15 @@ namespace NicoLive
                     return WakuErr.ERR_TAJU;
                 if (err.Contains("放送するコミュニティが選択されていません"))
                     return WakuErr.ERR_ALREADY_LIVE;
+                if (err.Contains("WEBページの有効期限が切れています"))
+                    return WakuErr.ERR_WEB_PAGE_SESSION;
+                if (err.Contains("番組説明文入力してください"))
+                    return WakuErr.ERR_DESCRIPTION_EMPTY;
                 else
+                {
                     Utils.WriteLog(match.Groups[1].Value);
+                    Utils.WriteLog("Nico.GetWaku() WakuErr.ERR_UNKOWN:" + match.Groups[1].Value, org_res);
+                }
             }
             if (res.Contains("<h2>メンテナンス中です</h2>"))
             {
@@ -1585,17 +1594,7 @@ namespace NicoLive
             {
                 return WakuErr.ERR_LOGIN;
             }
-            if (res.Contains("<li id=\"error_message\">") && res.Contains("WEBページの有効期限が切れています<br>※お手数ですがもう一度はじめから操作しなおしてください"))
-            {
-                Utils.WriteLog("Nico.GetWaku() WEBページの有効期限が切れています:" + match.Groups[1].Value, "");
-                return WakuErr.ERR_KIYAKU;
-            }
 
-            if (res.Contains("<li id=\"error_message\">"))
-            {
-                Utils.WriteLog("Nico.GetWaku() WakuErr.ERR_UNKOWN:" + match.Groups[1].Value, org_res);
-                return WakuErr.ERR_UNKOWN;
-            }
             if (res.Contains("番組が見つかりません"))
             {
                 return WakuErr.ERR_KIYAKU;
@@ -1608,7 +1607,7 @@ namespace NicoLive
             {
                 return WakuErr.ERR_KIYAKU;
             }
-            if (res.Contains("<div id=\"kiyaku_txt\">"))
+            if (res.Contains("<div class=\"kiyaku_txt\">"))
             {
                 return WakuErr.ERR_KIYAKU;
             }
@@ -1645,7 +1644,7 @@ namespace NicoLive
             {
                 string url = "http://live.nicovideo.jp/my";
                 string res = HttpGet(url, ref mCookieLogin);
-                // confirmチェック
+
                 Match match = Regex.Match(res, "http://live.nicovideo.jp/editstream/lv(.*?)\"");
                 if (match.Success)
                 {
