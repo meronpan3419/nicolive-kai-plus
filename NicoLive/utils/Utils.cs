@@ -64,306 +64,121 @@ namespace NicoLive
                });
         }
 
-        //-------------------------------------------------------------------------
-        // コメント追加
-        //-------------------------------------------------------------------------
-        public static void AddComment(ref DataGridView iView, Comment iCmt)
+        ////-------------------------------------------------------------------------
+        //// コメント追加
+        ////-------------------------------------------------------------------------
+        //public static void AddComment(ref DataGridView iView, Comment iCmt)
+        //{
+
+
+        //    iView.Rows.Insert(0, iView.Rows);
+
+
+        //    iView.Rows[0].Cells[(int)CommentColumn.COLUMN_NUMBER].Value = iCmt.No;
+        //    iView.Rows[0].Cells[(int)CommentColumn.COLUMN_ID].Value = iCmt.Uid;
+        //    iView.Rows[0].Cells[(int)CommentColumn.COLUMN_HANDLE].Value = iCmt.Handle;
+        //    iView.Rows[0].Cells[(int)CommentColumn.COLUMN_COMMENT].Value = iCmt.Text;
+
+
+        //    if (iCmt.Premium.Equals("3"))
+        //    {
+        //        iView.Rows[0].Cells[(int)CommentColumn.COLUMN_COMMENT].Style.ForeColor = Properties.Settings.Default.owner_color;
+        //    }
+        //    //else if (iCmt.IsNG)
+        //    //{
+        //    //    iView.Rows[0].Cells[(int)CommentColumn.COLUMN_COMMENT].Style.ForeColor = Properties.Settings.Default.ng_color;
+        //    //}
+        //    else if (iCmt.Mail.Contains("docomo"))
+        //    {
+        //        iView.Rows[0].Cells[(int)CommentColumn.COLUMN_COMMENT].Style.ForeColor = Properties.Settings.Default.mobile_color;
+        //    }
+
+        //    // テロップの抜き出し
+        //    if (iCmt.Text.StartsWith("/telop "))
+        //    {
+        //        // 色はパープル
+        //        iView.Rows[0].Cells[(int)CommentColumn.COLUMN_COMMENT].Style.ForeColor = Color.Purple;
+
+        //        //Regex deleteCommand = new Regex("^/telop (?:show|show0|perm) (.*)$");
+        //        //Match m = deleteCommand.Match(iCmt.Text);
+        //        //if (m.Success)
+        //        //{
+        //        //     iView.Rows[0].Cells[(int)CommentColumn.COLUMN_COMMENT].Value =m.Groups[1].Value;
+        //        //}
+        //    }
+
+        //    // change color for /press コマンド
+        //    if (iCmt.Text.StartsWith("/press"))
+        //    {
+        //        Regex deleteCommand = new Regex("^/press show (white|red|pink|orange|green|cyan|blue|purple|black) ");
+        //        Match m = deleteCommand.Match(iCmt.Text);
+        //        if (m.Success)
+        //        {
+        //            if (m.Groups[1].Value.Contains("red"))
+        //            {
+        //                iView.Rows[0].Cells[(int)CommentColumn.COLUMN_COMMENT].Style.ForeColor = Color.Red;
+        //            }
+        //            else if (m.Groups[1].Value.Contains("pink"))
+        //            {
+        //                iView.Rows[0].Cells[(int)CommentColumn.COLUMN_COMMENT].Style.ForeColor = Color.Pink;
+        //            }
+        //            else if (m.Groups[1].Value.Contains("orange"))
+        //            {
+        //                iView.Rows[0].Cells[(int)CommentColumn.COLUMN_COMMENT].Style.ForeColor = Color.Orange;
+        //            }
+        //            else if (m.Groups[1].Value.Contains("green"))
+        //            {
+        //                iView.Rows[0].Cells[(int)CommentColumn.COLUMN_COMMENT].Style.ForeColor = Color.Green;
+        //            }
+        //            else if (m.Groups[1].Value.Contains("cyan"))
+        //            {
+        //                iView.Rows[0].Cells[(int)CommentColumn.COLUMN_COMMENT].Style.ForeColor = Color.Cyan;
+        //            }
+        //            else if (m.Groups[1].Value.Contains("blue"))
+        //            {
+        //                iView.Rows[0].Cells[(int)CommentColumn.COLUMN_COMMENT].Style.ForeColor = Color.Blue;
+        //            }
+        //            else if (m.Groups[1].Value.Contains("purple"))
+        //            {
+        //                iView.Rows[0].Cells[(int)CommentColumn.COLUMN_COMMENT].Style.ForeColor = Color.Purple;
+        //            }
+        //        }
+
+        //        //deleteCommand = new Regex("^/press show (?:white |niconicowhite |red |pink |orange |green |cyan |blue |purple |black )?(.*)$");
+        //        //m = deleteCommand.Match(iCmt.Text);
+        //        //if (m.Success)
+        //        //{
+        //        //    iView.Rows[0].Cells[(int)CommentColumn.COLUMN_COMMENT].Value = m.Groups[1].Value;
+        //        //}
+        //    }
+
+        //    // /chukei の色制御
+        //    if (iCmt.Text.StartsWith("/chukei"))
+        //    {
+        //        Regex deleteCommand = new Regex("^/chukei ([0-9a-f]{3})[0-9a-f]{2}");
+        //        Match m = deleteCommand.Match(iCmt.Text);
+        //        if (m.Success)
+        //        {
+        //            int color = Convert.ToInt32(m.Groups[1].Value, 16);
+        //            int r = (color >> 8) * 17;
+        //            int g = ((color >> 4) & 15) * 17;
+        //            int b = (color & 15) * 17;
+        //            iView.Rows[0].Cells[(int)CommentColumn.COLUMN_COMMENT].Style.ForeColor = Color.FromArgb(r, g, b);
+        //        }
+        //    }
+
+        //    int max_item = Properties.Settings.Default.comment_max;
+        //    if (iView.Rows.Count > max_item)
+        //    {
+        //        iView.Rows.RemoveAt(max_item);
+        //    }
+
+        //}
+
+        private static DataGridViewRow makeCommentRow(ref DataGridView iView, Comment iCmt, System.Drawing.Color iColor)
         {
-
-
-            iView.Rows.Insert(0, iView.Rows);
-
-
-            iView.Rows[0].Cells[(int)CommentColumn.COLUMN_NUMBER].Value = iCmt.No;
-            iView.Rows[0].Cells[(int)CommentColumn.COLUMN_ID].Value = iCmt.Uid;
-            iView.Rows[0].Cells[(int)CommentColumn.COLUMN_HANDLE].Value = iCmt.Handle;
-            iView.Rows[0].Cells[(int)CommentColumn.COLUMN_COMMENT].Value = iCmt.Text;
-
-
-            if (iCmt.Premium.Equals("3"))
-            {
-                iView.Rows[0].Cells[(int)CommentColumn.COLUMN_COMMENT].Style.ForeColor = Properties.Settings.Default.owner_color;
-            }
-            //else if (iCmt.IsNG)
-            //{
-            //    iView.Rows[0].Cells[(int)CommentColumn.COLUMN_COMMENT].Style.ForeColor = Properties.Settings.Default.ng_color;
-            //}
-            else if (iCmt.Mail.Contains("docomo"))
-            {
-                iView.Rows[0].Cells[(int)CommentColumn.COLUMN_COMMENT].Style.ForeColor = Properties.Settings.Default.mobile_color;
-            }
-
-            // テロップの抜き出し
-            if (iCmt.Text.StartsWith("/telop "))
-            {
-                // 色はパープル
-                iView.Rows[0].Cells[(int)CommentColumn.COLUMN_COMMENT].Style.ForeColor = Color.Purple;
-
-                //Regex deleteCommand = new Regex("^/telop (?:show|show0|perm) (.*)$");
-                //Match m = deleteCommand.Match(iCmt.Text);
-                //if (m.Success)
-                //{
-                //     iView.Rows[0].Cells[(int)CommentColumn.COLUMN_COMMENT].Value =m.Groups[1].Value;
-                //}
-            }
-
-            // change color for /press コマンド
-            if (iCmt.Text.StartsWith("/press"))
-            {
-                Regex deleteCommand = new Regex("^/press show (white|red|pink|orange|green|cyan|blue|purple|black) ");
-                Match m = deleteCommand.Match(iCmt.Text);
-                if (m.Success)
-                {
-                    if (m.Groups[1].Value.Contains("red"))
-                    {
-                        iView.Rows[0].Cells[(int)CommentColumn.COLUMN_COMMENT].Style.ForeColor = Color.Red;
-                    }
-                    else if (m.Groups[1].Value.Contains("pink"))
-                    {
-                        iView.Rows[0].Cells[(int)CommentColumn.COLUMN_COMMENT].Style.ForeColor = Color.Pink;
-                    }
-                    else if (m.Groups[1].Value.Contains("orange"))
-                    {
-                        iView.Rows[0].Cells[(int)CommentColumn.COLUMN_COMMENT].Style.ForeColor = Color.Orange;
-                    }
-                    else if (m.Groups[1].Value.Contains("green"))
-                    {
-                        iView.Rows[0].Cells[(int)CommentColumn.COLUMN_COMMENT].Style.ForeColor = Color.Green;
-                    }
-                    else if (m.Groups[1].Value.Contains("cyan"))
-                    {
-                        iView.Rows[0].Cells[(int)CommentColumn.COLUMN_COMMENT].Style.ForeColor = Color.Cyan;
-                    }
-                    else if (m.Groups[1].Value.Contains("blue"))
-                    {
-                        iView.Rows[0].Cells[(int)CommentColumn.COLUMN_COMMENT].Style.ForeColor = Color.Blue;
-                    }
-                    else if (m.Groups[1].Value.Contains("purple"))
-                    {
-                        iView.Rows[0].Cells[(int)CommentColumn.COLUMN_COMMENT].Style.ForeColor = Color.Purple;
-                    }
-                }
-
-                //deleteCommand = new Regex("^/press show (?:white |niconicowhite |red |pink |orange |green |cyan |blue |purple |black )?(.*)$");
-                //m = deleteCommand.Match(iCmt.Text);
-                //if (m.Success)
-                //{
-                //    iView.Rows[0].Cells[(int)CommentColumn.COLUMN_COMMENT].Value = m.Groups[1].Value;
-                //}
-            }
-
-            // /chukei の色制御
-            if (iCmt.Text.StartsWith("/chukei"))
-            {
-                Regex deleteCommand = new Regex("^/chukei ([0-9a-f]{3})[0-9a-f]{2}");
-                Match m = deleteCommand.Match(iCmt.Text);
-                if (m.Success)
-                {
-                    int color = Convert.ToInt32(m.Groups[1].Value, 16);
-                    int r = (color >> 8) * 17;
-                    int g = ((color >> 4) & 15) * 17;
-                    int b = (color & 15) * 17;
-                    iView.Rows[0].Cells[(int)CommentColumn.COLUMN_COMMENT].Style.ForeColor = Color.FromArgb(r, g, b);
-                }
-            }
-
-            int max_item = Properties.Settings.Default.comment_max;
-            if (iView.Rows.Count > max_item)
-            {
-                iView.Rows.RemoveAt(max_item);
-            }
-
-        }
-
-        //-------------------------------------------------------------------------
-        // コメント追加
-        //-------------------------------------------------------------------------
-        public static void AddComment(ref DataGridView iView, Comment iCmt, System.Drawing.Color iColor)
-        {
-
-            int i = 0;
-            if (!Properties.Settings.Default.comment_sort_desc)
-            {
-                i = iView.Rows.Count;
-            }
-
-            iView.Rows.Insert(i, iView.Rows);
-
-            iView.Rows[i].Cells[(int)CommentColumn.COLUMN_NUMBER].Style.BackColor = iColor;
-            iView.Rows[i].Cells[(int)CommentColumn.COLUMN_ID].Style.BackColor = iColor;
-            iView.Rows[i].Cells[(int)CommentColumn.COLUMN_HANDLE].Style.BackColor = iColor;
-            iView.Rows[i].Cells[(int)CommentColumn.COLUMN_COMMENT].Style.BackColor = iColor;
-            iView.Rows[i].Cells[(int)CommentColumn.COLUMN_INFO].Style.BackColor = iColor;
-            iView.Rows[i].Cells[(int)CommentColumn.COLUMN_TIME].Style.BackColor = iColor;
-
-            iView.Rows[i].Cells[(int)CommentColumn.COLUMN_NUMBER].Value = iCmt.No;
-            iView.Rows[i].Cells[(int)CommentColumn.COLUMN_ID].Value = iCmt.Uid;
-            iView.Rows[i].Cells[(int)CommentColumn.COLUMN_HANDLE].Value = iCmt.Handle;
-            iView.Rows[i].Cells[(int)CommentColumn.COLUMN_COMMENT].Value = iCmt.Text;
-
-            if ( iCmt.ElapsedTime != null)
-            {
-                iView.Rows[i].Cells[(int)CommentColumn.COLUMN_TIME].Value = UNIX_EPOCH.AddSeconds(int.Parse(iCmt.ElapsedTime)).ToString("HH:mm:ss");
-            }else
-            {
-                iView.Rows[i].Cells[(int)CommentColumn.COLUMN_TIME].Value = "";
-            
-            }
-            //1	プレミアム会員
-            //2	運営のシステム
-            //3	放送主
-            //6	バックステージパス及び公式生の運営コメント
-            //7	バックステージパス
-            //8	新iPhoneアプリからのコメント
-            //9	新iPhoneアプリからのコメント
-
-            string info = "";
-
-            // 情報設定
-
-
-            if (iCmt.Premium.Equals("1"))
-            {   
-                //プレミアム会員
-                info += "P ";
-
-            }
-            else if (iCmt.Premium.Equals("2"))
-            {
-                //運営
-                info += "運 ";
-            }
-            else if (iCmt.Premium.Equals("3"))
-            {
-                //主
-                info += "主 ";
-                iView.Rows[i].Cells[(int)CommentColumn.COLUMN_COMMENT].Style.ForeColor = Properties.Settings.Default.owner_color;
-            }
-            else if (iCmt.Premium.Equals("6"))
-            {
-                // BSP, 公式
-                info += "BSP ";
-            }
-            else if (iCmt.Premium.Equals("7"))
-            {
-                // BSP
-                info += "BSP ";
-            }
-            else if (iCmt.Premium.Equals("8"))
-            {
-                // BSP
-                info += "iPhone ";
-            }
-            else if (iCmt.Premium.Equals("9"))
-            {
-                // BSP
-                info += "iPhone ";
-            }
-            if (iCmt.Mail.Contains("docomo"))
-            {
-                // BSP
-                info += "docomo ";
-                iView.Rows[i].Cells[(int)CommentColumn.COLUMN_COMMENT].Style.ForeColor = Properties.Settings.Default.mobile_color;
-            }
-
-            // NGスコア
-            info += iCmt.Score + " ";
-
-
-            iView.Rows[i].Cells[(int)CommentColumn.COLUMN_INFO].Value = info;
-
-
-
-            // テロップの抜き出し
-            if (iCmt.Text.StartsWith("/telop "))
-            {
-                // 色はパープル
-                iView.Rows[i].Cells[(int)CommentColumn.COLUMN_COMMENT].Style.ForeColor = Color.Purple;
-
-            }
-
-            // change color for /press コマンド
-            if (iCmt.Text.StartsWith("/press"))
-            {
-                Regex deleteCommand = new Regex("^/press show (white|red|pink|orange|green|cyan|blue|purple|black) ");
-                Match m = deleteCommand.Match(iCmt.Text);
-                if (m.Success)
-                {
-                    if (m.Groups[1].Value.Contains("red"))
-                    {
-                        iView.Rows[i].Cells[(int)CommentColumn.COLUMN_COMMENT].Style.ForeColor = Color.Red;
-                    }
-                    else if (m.Groups[1].Value.Contains("pink"))
-                    {
-                        iView.Rows[i].Cells[(int)CommentColumn.COLUMN_COMMENT].Style.ForeColor = Color.Pink;
-                    }
-                    else if (m.Groups[1].Value.Contains("orange"))
-                    {
-                        iView.Rows[i].Cells[(int)CommentColumn.COLUMN_COMMENT].Style.ForeColor = Color.Orange;
-                    }
-                    else if (m.Groups[1].Value.Contains("green"))
-                    {
-                        iView.Rows[i].Cells[(int)CommentColumn.COLUMN_COMMENT].Style.ForeColor = Color.Green;
-                    }
-                    else if (m.Groups[1].Value.Contains("cyan"))
-                    {
-                        iView.Rows[i].Cells[(int)CommentColumn.COLUMN_COMMENT].Style.ForeColor = Color.Cyan;
-                    }
-                    else if (m.Groups[1].Value.Contains("blue"))
-                    {
-                        iView.Rows[i].Cells[(int)CommentColumn.COLUMN_COMMENT].Style.ForeColor = Color.Blue;
-                    }
-                    else if (m.Groups[1].Value.Contains("purple"))
-                    {
-                        iView.Rows[i].Cells[(int)CommentColumn.COLUMN_COMMENT].Style.ForeColor = Color.Purple;
-                    }
-                }
-
-                //deleteCommand = new Regex("^/press show (?:white |niconicowhite |red |pink |orange |green |cyan |blue |purple |black )?(.*)$");
-                //m = deleteCommand.Match(iCmt.Text);
-                //if (m.Success)
-                //{
-                //    iView.Rows[0].Cells[(int)CommentColumn.COLUMN_COMMENT].Value = m.Groups[1].Value;
-                //}
-            }
-
-            // /chukei の色制御
-            if (iCmt.Text.StartsWith("/chukei"))
-            {
-                Regex deleteCommand = new Regex("^/chukei ([0-9a-f]{3})[0-9a-f]{2}");
-                Match m = deleteCommand.Match(iCmt.Text);
-                if (m.Success)
-                {
-                    int color = Convert.ToInt32(m.Groups[1].Value, 16);
-                    int r = (color >> 8) * 17;
-                    int g = ((color >> 4) & 15) * 17;
-                    int b = (color & 15) * 17;
-                    iView.Rows[i].Cells[(int)CommentColumn.COLUMN_COMMENT].Style.ForeColor = Color.FromArgb(r, g, b);
-                }
-            }
-
-
-
-
-            int max_item = Properties.Settings.Default.comment_max;
-            if (iView.Rows.Count > max_item)
-            {
-                iView.Rows.RemoveAt(max_item);
-            }
-
-            //iView.Refresh();
-
-        }
-
-        //-------------------------------------------------------------------------
-        // コメント追加
-        //-------------------------------------------------------------------------
-        public static void AddComment(ref DataGridView iView, Comment iCmt, System.Drawing.Color iColor, ref List<DataGridViewRow> iPastChatList)
-        {
-
-            DataGridViewRow row = new DataGridViewRow();
+            DataGridViewRow row =  new DataGridViewRow();
             row.CreateCells(iView);
-
             row.Cells[(int)CommentColumn.COLUMN_NUMBER].Style.BackColor = iColor;
             row.Cells[(int)CommentColumn.COLUMN_ID].Style.BackColor = iColor;
             row.Cells[(int)CommentColumn.COLUMN_HANDLE].Style.BackColor = iColor;
@@ -529,6 +344,46 @@ namespace NicoLive
                     row.Cells[(int)CommentColumn.COLUMN_COMMENT].Style.ForeColor = Color.FromArgb(r, g, b);
                 }
             }
+            return row;
+        }
+
+        //-------------------------------------------------------------------------
+        // コメント追加
+        //-------------------------------------------------------------------------
+        public static void AddComment(ref DataGridView iView, Comment iCmt, System.Drawing.Color iColor)
+        {
+            DataGridViewRow row = makeCommentRow(ref iView, iCmt, iColor);
+
+            int i = 0;
+            if (!Properties.Settings.Default.comment_sort_desc)
+            {
+                i = iView.Rows.Count;
+            }
+
+            try
+            {
+                iView.Rows.Insert(i, row);
+
+                int max_item = Properties.Settings.Default.comment_max;
+                if (iView.Rows.Count > max_item)
+                {
+                    iView.Rows.RemoveAt(max_item);
+                }
+            } catch(Exception e){
+                Utils.WriteLog("AddComment() :" + e.Message);
+            }
+
+            //iView.Refresh();
+
+        }
+
+        //-------------------------------------------------------------------------
+        // コメント追加
+        //-------------------------------------------------------------------------
+        public static void AddComment(ref DataGridView iView, Comment iCmt, System.Drawing.Color iColor, ref List<DataGridViewRow> iPastChatList)
+        {
+
+            DataGridViewRow row = makeCommentRow(ref iView, iCmt, iColor); 
 
             if (Properties.Settings.Default.comment_sort_desc)
             {
@@ -594,7 +449,7 @@ namespace NicoLive
             }
             catch (Exception ex)
             {
-                Utils.WriteLog(ex.Message);
+                Utils.WriteLog("updateColor() : " + ex.Message);
             }
 
         }
@@ -689,8 +544,8 @@ namespace NicoLive
                     writer.Flush();
                     writer.Close();
                 }
-            } catch{
-
+            } catch(Exception e){
+                System.Diagnostics.Debug.WriteLine("WriteLog() :" + e.Message);
             }
         }
 
