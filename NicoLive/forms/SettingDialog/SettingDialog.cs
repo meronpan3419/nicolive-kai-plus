@@ -3027,6 +3027,8 @@ namespace NicoLive
         //-------------------------------------------------------------------------
         private void mDelRes_Click(object sender, EventArgs e)
         {
+            if (mResList.RowCount <= 1) return;
+            
             foreach (DataGridViewRow row in mResList.SelectedRows)
             {
                 mResList.Rows.Remove(row);
