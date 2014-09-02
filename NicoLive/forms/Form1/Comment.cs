@@ -1118,8 +1118,8 @@ namespace NicoLive
                 // 棒読みちゃんで自動枠取り通知
                 this.mBouyomi.Talk(mMsg.GetMessage("枠取りを開始します"));
 
-
-                GetNextWaku(true);
+                bool lv_notice = mUseHQ.Checked;
+                GetNextWaku(lv_notice);
 
             }
             return true;
@@ -1168,17 +1168,8 @@ namespace NicoLive
                 {
                     try
                     {
-
-                        if (Properties.Settings.Default.use_loss_time &&
-                             Properties.Settings.Default.use_next_lv_notice)
-                        {
-                            mNico.SendOwnerComment(LiveID, "/cls", "", mLiveInfo.Token);
-
-                            //if (!this.mDisconnect)
-                            //{
-                            mNico.SendOwnerComment(LiveID, "/perm 次枠こちら：http://nico.ms/" + lv, "", mLiveInfo.Token);
-                            //}
-                        }
+                        mNico.SendOwnerComment(LiveID, "/cls", "", mLiveInfo.Token);
+                        mNico.SendOwnerComment(LiveID, "/perm 次枠こちら：http://nico.ms/" + lv, "", mLiveInfo.Token);
                         mNico.SendOwnerComment(LiveID, "/disconnect", "", mLiveInfo.Token);
                     }
                     catch (Exception e)

@@ -93,7 +93,7 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.btnBouyomiClear = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.cbUseHQ = new System.Windows.Forms.CheckBox();
+            this.mUseHQ = new System.Windows.Forms.CheckBox();
             this.mHQStatus = new System.Windows.Forms.Label();
             this.mHQStopBtn = new System.Windows.Forms.Button();
             this.mHQStartBtn = new System.Windows.Forms.Button();
@@ -731,7 +731,7 @@
             // groupBox1
             // 
             this.groupBox1.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.groupBox1.Controls.Add(this.cbUseHQ);
+            this.groupBox1.Controls.Add(this.mUseHQ);
             this.groupBox1.Controls.Add(this.mHQStatus);
             this.groupBox1.Controls.Add(this.mHQStopBtn);
             this.groupBox1.Controls.Add(this.mHQStartBtn);
@@ -749,14 +749,14 @@
             // 
             // cbUseHQ
             // 
-            this.cbUseHQ.AutoSize = true;
-            this.cbUseHQ.Location = new System.Drawing.Point(7, -1);
-            this.cbUseHQ.Name = "cbUseHQ";
-            this.cbUseHQ.Size = new System.Drawing.Size(72, 16);
-            this.cbUseHQ.TabIndex = 31;
-            this.cbUseHQ.Text = "外部配信";
-            this.cbUseHQ.UseVisualStyleBackColor = true;
-            this.cbUseHQ.CheckedChanged += new System.EventHandler(this.cbUseHQ_CheckedChanged);
+            this.mUseHQ.AutoSize = true;
+            this.mUseHQ.Location = new System.Drawing.Point(7, -1);
+            this.mUseHQ.Name = "cbUseHQ";
+            this.mUseHQ.Size = new System.Drawing.Size(72, 16);
+            this.mUseHQ.TabIndex = 31;
+            this.mUseHQ.Text = "外部配信";
+            this.mUseHQ.UseVisualStyleBackColor = true;
+            this.mUseHQ.CheckedChanged += new System.EventHandler(this.cbUseHQ_CheckedChanged);
             // 
             // mHQStatus
             // 
@@ -1142,7 +1142,7 @@
         private System.Windows.Forms.ComboBox mFMLEProfileList;
         private System.Windows.Forms.Label mHQStatus;
         private System.Windows.Forms.ToolStripMenuItem LiveConsoleStripMenuItem;
-        private System.Windows.Forms.CheckBox cbUseHQ;
+        private System.Windows.Forms.CheckBox mUseHQ;
         private System.Windows.Forms.Button btnBouyomiClear;
         private System.Windows.Forms.ToolStripMenuItem NGUserStripMenuItem;
     }

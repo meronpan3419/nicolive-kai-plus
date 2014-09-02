@@ -60,5 +60,10 @@ namespace NicoLive
             lbNGUser.Items.Remove(lbNGUser.SelectedItem);
 
         }
+
+        private void NGUser_Load(object sender, EventArgs e)
+        {
+            update_nguser(mLv);  
+        }
     }
 }

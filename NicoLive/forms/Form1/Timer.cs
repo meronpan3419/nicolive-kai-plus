@@ -40,7 +40,7 @@ namespace NicoLive
             //}
 
             // 配信方法更新
-            cbUseHQ.Checked = Properties.Settings.Default.use_hq;
+            mUseHQ.Checked = Properties.Settings.Default.use_hq;
             updateBroadcastType();
 
 
@@ -121,11 +121,11 @@ namespace NicoLive
                 }
                 else
                 {
- 
+
 
                     remaining_time = String.Format("残り時間 -{0:D2}:{1:D2}", (int)((remaining_sec * -1) / 60), (int)((remaining_sec * -1) % 60));
                 }
- 
+
 
                 this.Invoke((Action)delegate()
                 {
@@ -138,25 +138,23 @@ namespace NicoLive
                     {
                         mRemainingTime.ForeColor = System.Drawing.Color.Black;
                     }
-                    
+
                     mRemainingTime.Text = remaining_time;
                 });
 
 
                 //３０分で終了
-                if (!Properties.Settings.Default.use_loss_time)
+                if (!mContWaku.Checked && mLiveInfo.StartTime != 0 && !mIsExtend)
                 {
-                    if (mLiveInfo.StartTime != 0 && !mIsExtend)
-                    {
-                        uint now = Utils.GetUnixTime(DateTime.Now);
-                        uint end_time = mLiveInfo.EndTime;
+                    uint now = Utils.GetUnixTime(DateTime.Now);
+                    uint end_time = mLiveInfo.EndTime;
 
-                        if (now > end_time) // 30分経過
-                        {
-                            mNico.SendOwnerComment(LiveID, "/disconnect", "", mLiveInfo.Token);
-                            mNico.LiveStop(LiveID, mLiveInfo.Token);
-                        }
+                    if (now > end_time) // 30分経過
+                    {
+                        mNico.SendOwnerComment(LiveID, "/disconnect", "", mLiveInfo.Token);
+                        mNico.LiveStop(LiveID, mLiveInfo.Token);
                     }
+
                 }
             }
 
@@ -189,7 +187,7 @@ namespace NicoLive
                             Utils.WriteLog("UITimer_Tick()", "!mNico.getTcpClient().Connected");
                         }
                         Utils.WriteLog("ConnectionCheck:" + tc.Connected.ToString());
-                        
+
                     }
                 }
 

@@ -359,12 +359,6 @@
     <Setting Name="use_flash_console" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="use_loss_time" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
-    </Setting>
-    <Setting Name="use_next_lv_notice" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
-    </Setting>
     <Setting Name="use_flash_comment_generator" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>

@@ -116,27 +116,23 @@ namespace NicoLive
             UInt32 time_sec = mLiveInfo.Time;
             UInt32 btime_sec = mLiveInfo.StartTime;
 
-            //次枠通知
-            if (Properties.Settings.Default.use_loss_time && Properties.Settings.Default.use_next_lv_notice)
+            //30分経過で自動継枠取り
+            if (mUseHQ.Checked &&
+                (time_sec - btime_sec > 30 * 60) &&
+                !mDoingGetNextWaku &&
+                 mContWaku.Checked)
             {
-                if ((time_sec - btime_sec > 30 * 60) && !mDoingGetNextWaku)
-                {
-                    // 枠取り画面へ 
-                    if (/*mOwnLive &&*/ mContWaku.Checked)
-                    {
-                        mDoingGetNextWaku = true;
-                        Thread.Sleep(500);
+                mDoingGetNextWaku = true;
+                Thread.Sleep(500);
 
-                        // 棒読みちゃんで自動枠取り通知
-                        this.mBouyomi.Talk(mMsg.GetMessage("枠取りを開始します"));
+                // 棒読みちゃんで自動枠取り通知
+                this.mBouyomi.Talk(mMsg.GetMessage("枠取りを開始します"));
 
-                        mNico.LiveStop(LiveID, mLiveInfo.Token);
+                mNico.LiveStop(LiveID, mLiveInfo.Token);
+
+                GetNextWaku(true);
 
 
-                        GetNextWaku(true);
-
-                    }
-                }
             }
 
 

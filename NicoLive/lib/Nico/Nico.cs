@@ -15,7 +15,7 @@ using System.Xml;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
 using System.Web;
-using Hal.CookieGetterSharp;
+//using Hal.CookieGetterSharp;
 
 //-------------------------------------------------------------------------
 // クラス実装
@@ -290,7 +290,7 @@ namespace NicoLive
         //
         //  ログイン処理の流れ
         //  1.設定ファイルのuser_sessionでログイン
-        //  2.ブラウザのクッキーでログイン
+        //  /*2.ブラウザのクッキーでログイン*/
         //  3.ID/PASSでログイン
         //-------------------------------------------------------------------------
         public bool Login(string username, string password)
@@ -334,69 +334,69 @@ namespace NicoLive
 
 
             // ブラウザのクッキーを用いてログインを試みる
-            if (Properties.Settings.Default.UseBrowserCookie)
-            {
+            //if (Properties.Settings.Default.UseBrowserCookie)
+            //{
 
-                Utils.WriteLog("Nico: Login() Login by Cookie");
+            //    Utils.WriteLog("Nico: Login() Login by Cookie");
 
-                ICookieGetter[] cookieGetters = CookieGetter.CreateInstances(true);
+            //    ICookieGetter[] cookieGetters = CookieGetter.CreateInstances(true);
 
-                ICookieGetter s = null;
-                foreach (ICookieGetter es in cookieGetters)
-                {
-                    if (es.ToString().Equals(Properties.Settings.Default.Browser))
-                    {
-                        s = es;
-                        break;
-                    }
-                }
-                if (s != null)
-                {
-                    Utils.WriteLog("Nico: Login() has Cookie");
-                    try
-                    {
-                        //System.Net.Cookie cookie = s.GetCookie(new Uri("http://live.nicovideo.jp/"), "user_session");
+            //    ICookieGetter s = null;
+            //    foreach (ICookieGetter es in cookieGetters)
+            //    {
+            //        if (es.ToString().Equals(Properties.Settings.Default.Browser))
+            //        {
+            //            s = es;
+            //            break;
+            //        }
+            //    }
+            //    if (s != null)
+            //    {
+            //        Utils.WriteLog("Nico: Login() has Cookie");
+            //        try
+            //        {
+            //            //System.Net.Cookie cookie = s.GetCookie(new Uri("http://live.nicovideo.jp/"), "user_session");
 
-                        System.Net.CookieCollection collection = s.GetCookieCollection(new Uri("http://live.nicovideo.jp/"));
+            //            System.Net.CookieCollection collection = s.GetCookieCollection(new Uri("http://live.nicovideo.jp/"));
 
-                        Utils.WriteLog("Nico: Login() user_session: " + collection["user_session"].Value);
+            //            Utils.WriteLog("Nico: Login() user_session: " + collection["user_session"].Value);
 
-                        if (collection["user_session"] != null)
-                        {
-                            this.mCookieLogin.Add(new Cookie("user_session", collection["user_session"].Value, "/", ".nicovideo.jp"));
-                            if (LoginTest(collection["user_session"].Value))
-                            {
-                                Utils.WriteLog("Nico: Login() LoginTest() OK");
+            //            if (collection["user_session"] != null)
+            //            {
+            //                this.mCookieLogin.Add(new Cookie("user_session", collection["user_session"].Value, "/", ".nicovideo.jp"));
+            //                if (LoginTest(collection["user_session"].Value))
+            //                {
+            //                    Utils.WriteLog("Nico: Login() LoginTest() OK");
 
-                                // IEのCookieを書き換える
-                                OverrideIECookie(addSessionidExpires(collection["user_session"].Value));
-                                Properties.Settings.Default.user_session = collection["user_session"].Value;
-                                mIsLogin = true;
-                                return true;
+            //                    // IEのCookieを書き換える
+            //                    OverrideIECookie(addSessionidExpires(collection["user_session"].Value));
+            //                    Properties.Settings.Default.user_session = collection["user_session"].Value;
+            //                    mIsLogin = true;
+            //                    return true;
 
-                            }
-                            else
-                            {
-                                Utils.WriteLog("Nico: Login() has Cookie, user_session null");
-                            }
-                        }
-                        else
-                        {
-                            Utils.WriteLog("Nico: Login() LoginTest() NG");
-                        }
+            //                }
+            //                else
+            //                {
+            //                    Utils.WriteLog("Nico: Login() has Cookie, user_session null");
+            //                }
+            //            }
+            //            else
+            //            {
+            //                Utils.WriteLog("Nico: Login() LoginTest() NG");
+            //            }
 
-                    }
-                    catch (Exception ex)
-                    {
-                        //System.Windows.Forms.MessageBox.Show(ex.Message);
-                        Utils.WriteLog("Nico: Login() has Cookie: " + ex.Message);
-                    }
-                }
-                else
-                {
-                    Utils.WriteLog("Nico: Login() not has Cookie");
-                }
-            }
+            //        }
+            //        catch (Exception ex)
+            //        {
+            //            //System.Windows.Forms.MessageBox.Show(ex.Message);
+            //            Utils.WriteLog("Nico: Login() has Cookie: " + ex.Message);
+            //        }
+            //    }
+            //    else
+            //    {
+            //        Utils.WriteLog("Nico: Login() not has Cookie");
+            //    }
+            //}
 
             Utils.WriteLog("Nico: Login() Login by ID-PASS");
 
@@ -553,27 +553,27 @@ namespace NicoLive
             return name;
         }
 
-        public string GetUsername(string iUserID, string iRegex, string iUserSession)
-        {
-            if (iUserID.Length <= 0) return "";
+        //public string GetUsername(string iUserID, string iRegex, string iUserSession)
+        //{
+        //    if (iUserID.Length <= 0) return "";
 
-            string name = "";
-            string uri = "http://www.nicovideo.jp/user/" + iUserID;
-            CookieContainer user_session = new CookieContainer();
-            user_session.Add(new Cookie("user_session", iUserSession, "/", ".nicovideo.jp"));
-            string res = HttpGet(uri, ref user_session);
+        //    string name = "";
+        //    string uri = "http://www.nicovideo.jp/user/" + iUserID;
+        //    CookieContainer user_session = new CookieContainer();
+        //    user_session.Add(new Cookie("user_session", iUserSession, "/", ".nicovideo.jp"));
+        //    string res = HttpGet(uri, ref user_session);
 
 
-            if (res != null)
-            {
-                Match match = Regex.Match(res, iRegex);
-                if (match.Success)
-                {
-                    name = match.Groups[1].Value;
-                }
-            }
-            return name;
-        }
+        //    if (res != null)
+        //    {
+        //        Match match = Regex.Match(res, iRegex);
+        //        if (match.Success)
+        //        {
+        //            name = match.Groups[1].Value;
+        //        }
+        //    }
+        //    return name;
+        //}
 
 
 

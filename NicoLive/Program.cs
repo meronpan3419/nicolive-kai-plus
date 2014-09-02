@@ -19,16 +19,13 @@ namespace NicoLive
 {
     static class Program
     {
-        public static string VERSION_KAI_PLUS = "kai_p12noyounamono3beta";
+        public static string VERSION_KAI_PLUS = "kai_p12";
 
 
         /// <summary>
         /// アプリケーションのメイン エントリ ポイントです。
         /// </summary>
         [STAThread]
-
-
-
         static void Main()
         {
             
@@ -123,9 +120,6 @@ namespace NicoLive
             {
                 Utils.WriteLog("Main() " + e.Message);
                 Utils.WriteLog("Main() " + e.StackTrace);
-
-                Utils.WriteLog("Main()", e.Message);
-                Utils.WriteLog("Main()", e.StackTrace);
             }
         }
     }

@@ -73,6 +73,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "NGUser";
             this.Text = "NGユーザー";
+            this.Load += new System.EventHandler(this.NGUser_Load);
             this.ResumeLayout(false);
 
         }

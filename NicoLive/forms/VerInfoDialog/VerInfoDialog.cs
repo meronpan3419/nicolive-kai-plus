@@ -1,7 +1,7 @@
 //-------------------------------------------------------------------------
-// ?o?[?W?????_?C?A???O
+// バージョンダイアログ
 //
-// Copyright (c) ??????(http://ch.nicovideo.jp/community/co48276)
+// Copyright (c) 金時豆(http://ch.nicovideo.jp/community/co48276)
 // $Id$
 //-------------------------------------------------------------------------
 using System;
@@ -11,21 +11,21 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 
 //-------------------------------------------------------------------------
-// ?N???X????
+// クラス実装
 //-------------------------------------------------------------------------
 namespace NicoLive
 {
-	/// <summary>
-	/// VerInfoDialog ???T?v???????????B
-	/// </summary>
-	public class VerInfoDialog : System.Windows.Forms.Form
-	{
-		private System.Windows.Forms.PictureBox pictureBox1;
-		private System.Windows.Forms.Label label1;
-		private System.Windows.Forms.Label label2;
-		private System.Windows.Forms.Label label3;
-		private System.Windows.Forms.Button button1;
-		private System.Windows.Forms.Label label4;
+    /// <summary>
+    /// VerInfoDialog の概要の説明です。
+    /// </summary>
+    public class VerInfoDialog : System.Windows.Forms.Form
+    {
+        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Label label4;
         private LinkLabel mComuLink;
         private LinkLabel mProjectLink;
         private Label label5;
@@ -34,43 +34,45 @@ namespace NicoLive
         private Label label7;
         private Label label8;
         private LinkLabel linkLabel1;
-		/// <summary>
-		/// ?K?v???f?U?C?i?????????B
-		/// </summary>
-		private System.ComponentModel.Container components = null;
+        /// <summary>
+        /// 必要なデザイナ変数です。
+        /// </summary>
+        private System.ComponentModel.Container components = null;
 
-		public VerInfoDialog()
-		{
-			//
-			// Windows ?t?H?[?? ?f?U?C?i ?T?|?[?g???K?v?????B
-			//
-			InitializeComponent();
+        public VerInfoDialog()
+        {
+            //
+            // Windows フォーム デザイナ サポートに必要です。
+            //
+            InitializeComponent();
 
+            //
+            // TODO: InitializeComponent 呼び出しの後に、コンストラクタ コードを追加してください。
+            //
+        }
 
-		}
+        /// <summary>
+        /// 使用されているリソースに後処理を実行します。
+        /// </summary>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                if (components != null)
+                {
+                    components.Dispose();
+                }
+            }
+            base.Dispose(disposing);
+        }
 
-		/// <summary>
-		/// ?g?p?????????????\?[?X?????????????s???????B
-		/// </summary>
-		protected override void Dispose( bool disposing )
-		{
-			if( disposing )
-			{
-				if(components != null)
-				{
-					components.Dispose();
-				}
-			}
-			base.Dispose( disposing );
-		}
-
-		#region Windows ?t?H?[?? ?f?U?C?i?????????????R?[?h 
-		/// <summary>
-		/// ?f?U?C?i ?T?|?[?g???K?v?????\?b?h?????B???????\?b?h?????e??
-		/// ?R?[?h ?G?f?B?^?????X?????????????????B
-		/// </summary>
-		private void InitializeComponent()
-		{
+        #region Windows フォーム デザイナで生成されたコード
+        /// <summary>
+        /// デザイナ サポートに必要なメソッドです。このメソッドの内容を
+        /// コード エディタで変更しないでください。
+        /// </summary>
+        private void InitializeComponent()
+        {
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -166,7 +168,7 @@ namespace NicoLive
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(69, 12);
             this.label5.TabIndex = 8;
-            this.label5.Text = "?R?~???j?e?B?[?F";
+            this.label5.Text = "コミュニティー：";
             // 
             // label6
             // 
@@ -175,7 +177,7 @@ namespace NicoLive
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(62, 12);
             this.label6.TabIndex = 9;
-            this.label6.Text = "?v???W?F?N?g?F";
+            this.label6.Text = "プロジェクト：";
             // 
             // mLinkKaze
             // 
@@ -194,7 +196,7 @@ namespace NicoLive
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(47, 12);
             this.label7.TabIndex = 11;
-            this.label7.Text = "???????F";
+            this.label7.Text = "改造版：";
             // 
             // label8
             // 
@@ -203,7 +205,7 @@ namespace NicoLive
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(44, 12);
             this.label8.TabIndex = 13;
-            this.label8.Text = "??plus?F";
+            this.label8.Text = "改plus：";
             // 
             // linkLabel1
             // 
@@ -240,116 +242,116 @@ namespace NicoLive
             this.MinimizeBox = false;
             this.Name = "VerInfoDialog";
             this.ShowInTaskbar = false;
-            this.Text = "?o?[?W????????";
+            this.Text = "バージョン情報";
             this.TopMost = true;
             this.Load += new System.EventHandler(this.VerInfoDialog_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
-		}
-		#endregion
+        }
+        #endregion
 
-		private void VerInfoDialog_Load(object sender, System.EventArgs e)
-		{
-			// ***** Application?N???X???v???p?e?B?????????? *****
-			// ?o?[?W???????iAssemblyInformationalVersionAttribute?????j??????
-			string appVersion = Application.ProductVersion;
-			// ???i???iAssemblyProductAttribute?????j??????
-			string appProductName = Application.ProductName;
-			// ???????iAssemblyCompanyAttribute?????j??????
-			string appCompanyName = Application.CompanyName;
+        private void VerInfoDialog_Load(object sender, System.EventArgs e)
+        {
+            // ***** Applicationクラスのプロパティにより取得 *****
+            // バージョン名（AssemblyInformationalVersionAttribute属性）を取得
+            string appVersion = Application.ProductVersion;
+            // 製品名（AssemblyProductAttribute属性）を取得
+            string appProductName = Application.ProductName;
+            // 会社名（AssemblyCompanyAttribute属性）を取得
+            string appCompanyName = Application.CompanyName;
 
-			// ***** ?A?Z???u?????????????? *****
-			Assembly mainAssembly = Assembly.GetEntryAssembly();
+            // ***** アセンブリから直接取得 *****
+            Assembly mainAssembly = Assembly.GetEntryAssembly();
 
-			// ?R?s?[???C?g??????????
-			string appCopyright = "-";
-			object[] CopyrightArray = 
-				mainAssembly.GetCustomAttributes(
-				typeof(AssemblyCopyrightAttribute), false);
-			if ((CopyrightArray != null) && (CopyrightArray.Length > 0))
-			{
-				appCopyright = 
-					((AssemblyCopyrightAttribute)CopyrightArray[0]).Copyright;
-			}
+            // コピーライト情報を取得
+            string appCopyright = "-";
+            object[] CopyrightArray =
+                mainAssembly.GetCustomAttributes(
+                typeof(AssemblyCopyrightAttribute), false);
+            if ((CopyrightArray != null) && (CopyrightArray.Length > 0))
+            {
+                appCopyright =
+                    ((AssemblyCopyrightAttribute)CopyrightArray[0]).Copyright;
+            }
 
-			// ??????????????
-			string appDescription = "-";
-			object[] DescriptionArray = 
-				mainAssembly.GetCustomAttributes(
-				typeof(AssemblyDescriptionAttribute), false);
-			if ((DescriptionArray != null) && (DescriptionArray.Length > 0))
-			{
-				appDescription = 
-					((AssemblyDescriptionAttribute)DescriptionArray[0]).Description;
-			}
+            // 詳細情報を取得
+            string appDescription = "-";
+            object[] DescriptionArray =
+                mainAssembly.GetCustomAttributes(
+                typeof(AssemblyDescriptionAttribute), false);
+            if ((DescriptionArray != null) && (DescriptionArray.Length > 0))
+            {
+                appDescription =
+                    ((AssemblyDescriptionAttribute)DescriptionArray[0]).Description;
+            }
 
-			// ***** EXE?t?@?C???????????????iWin32API?g?p?j *****
-			
-			// ?A?v???P?[?V?????E?A?C?R????????
-			Icon appIcon;
-			SHFILEINFO shinfo = new SHFILEINFO();
-			IntPtr hSuccess = SHGetFileInfo( 
-				mainAssembly.Location, 0, 
-				ref shinfo, (uint)Marshal.SizeOf(shinfo), 
-				SHGFI_ICON | SHGFI_LARGEICON);
-			if (hSuccess != IntPtr.Zero)
-			{
-				appIcon = Icon.FromHandle(shinfo.hIcon);
-			}
-			else
-			{
-				appIcon = SystemIcons.Application;
-			}
+            // ***** EXEファイルから直接取得（Win32API使用） *****
 
-			// ???x?????????o?[?W???????????Z?b?g
-			pictureBox1.Image = appIcon.ToBitmap(); 
-			Text = appProductName + " ???o?[?W????????";
-			label1.Text = appProductName;
-			label2.Text = "Version " + appVersion + " " + Program.VERSION_KAI_PLUS;
-			label3.Text = appCopyright;
-			label4.Text = appDescription;
+            // アプリケーション・アイコンを取得
+            Icon appIcon;
+            SHFILEINFO shinfo = new SHFILEINFO();
+            IntPtr hSuccess = SHGetFileInfo(
+                mainAssembly.Location, 0,
+                ref shinfo, (uint)Marshal.SizeOf(shinfo),
+                SHGFI_ICON | SHGFI_LARGEICON);
+            if (hSuccess != IntPtr.Zero)
+            {
+                appIcon = Icon.FromHandle(shinfo.hIcon);
+            }
+            else
+            {
+                appIcon = SystemIcons.Application;
+            }
 
-			// ?o?[?W???????????????i???o?[?W?????j
-			//AssemblyName mainAssemName = mainAssembly.GetName();
-			//Version appVersion2 = mainAssemName.Version;
-			//MessageBox.Show(appVersion2.ToString());
+            // ラベルなどにバージョン情報をセット
+            pictureBox1.Image = appIcon.ToBitmap();
+            Text = appProductName + " のバージョン情報";
+            label1.Text = appProductName;
+            label2.Text = "Version " + appVersion + " " + Program.VERSION_KAI_PLUS;
+            label3.Text = appCopyright;
+            label4.Text = appDescription;
 
-            // ?Z???^?????O
+            // バージョン情報を取得（別バージョン）
+            //AssemblyName mainAssemName = mainAssembly.GetName();
+            //Version appVersion2 = mainAssemName.Version;
+            //MessageBox.Show(appVersion2.ToString());
+
+            // センタリング
             this.Top = (Screen.PrimaryScreen.WorkingArea.Height - this.Height) / 2;
             this.Left = (Screen.PrimaryScreen.WorkingArea.Width - this.Width) / 2;
-		}
+        }
 
-		private void button1_Click(object sender, System.EventArgs e)
-		{
-			this.Close();
-		}
+        private void button1_Click(object sender, System.EventArgs e)
+        {
+            this.Close();
+        }
 
-		#region ?A?C?R???????p??Win32API
+        #region アイコン取得用のWin32API
 
-		// SHGetFileInfo????
-		[DllImport("shell32.dll")]
-		private static extern IntPtr SHGetFileInfo(string pszPath, uint dwFileAttributes, ref SHFILEINFO psfi, uint cbSizeFileInfo, uint uFlags);
+        // SHGetFileInfo関数
+        [DllImport("shell32.dll")]
+        private static extern IntPtr SHGetFileInfo(string pszPath, uint dwFileAttributes, ref SHFILEINFO psfi, uint cbSizeFileInfo, uint uFlags);
 
-		// SHGetFileInfo???????g?p?????t???O
-		private const uint SHGFI_ICON = 0x100; // ?A?C?R???E???\?[?X??????
-		private const uint SHGFI_LARGEICON = 0x0; // ???????A?C?R??
-		private const uint SHGFI_SMALLICON = 0x1; // ???????A?C?R??
+        // SHGetFileInfo関数で使用するフラグ
+        private const uint SHGFI_ICON = 0x100; // アイコン・リソースの取得
+        private const uint SHGFI_LARGEICON = 0x0; // 大きいアイコン
+        private const uint SHGFI_SMALLICON = 0x1; // 小さいアイコン
 
-		// SHGetFileInfo???????g?p?????\????
-		private struct SHFILEINFO
-		{
-			public IntPtr hIcon;
-			public IntPtr iIcon;
-			public uint dwAttributes;
-			[MarshalAs(UnmanagedType.ByValTStr, SizeConst = 260)]
-			public string szDisplayName;
-			[MarshalAs(UnmanagedType.ByValTStr, SizeConst = 80)]
-			public string szTypeName;
-		};
+        // SHGetFileInfo関数で使用する構造体
+        private struct SHFILEINFO
+        {
+            public IntPtr hIcon;
+            public IntPtr iIcon;
+            public uint dwAttributes;
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 260)]
+            public string szDisplayName;
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 80)]
+            public string szTypeName;
+        };
 
-		#endregion
+        #endregion
 
         private void ComuLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
@@ -366,10 +368,10 @@ namespace NicoLive
 
             System.Diagnostics.Process.Start("http://nicolive_wakusu.b72.in/nicolive_kai_plus/");
         }
-	}
+    }
 }
 //-------------------------------------------------------------------------
-// ?o?[?W?????_?C?A???O
+// バージョンダイアログ
 //
-// Copyright (c) ??????(http://ch.nicovideo.jp/community/co48276)
+// Copyright (c) 金時豆(http://ch.nicovideo.jp/community/co48276)
 //-------------------------------------------------------------------------

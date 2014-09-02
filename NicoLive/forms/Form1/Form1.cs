@@ -586,8 +586,8 @@ namespace NicoLive
 
             mNico.LiveStop(LiveID, mLiveInfo.Token);
 
-
-            GetNextWaku(true);
+            bool lv_notice = mUseHQ.Checked && !mDisconnect;
+            GetNextWaku(lv_notice);
 
 
 
@@ -625,7 +625,7 @@ namespace NicoLive
 
         private void cbUseHQ_CheckedChanged(object sender, EventArgs e)
         {
-            Properties.Settings.Default.use_hq = cbUseHQ.Checked;
+            Properties.Settings.Default.use_hq = mUseHQ.Checked;
         }
 
 

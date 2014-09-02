@@ -1454,30 +1454,6 @@ namespace NicoLive.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool use_loss_time {
-            get {
-                return ((bool)(this["use_loss_time"]));
-            }
-            set {
-                this["use_loss_time"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool use_next_lv_notice {
-            get {
-                return ((bool)(this["use_next_lv_notice"]));
-            }
-            set {
-                this["use_next_lv_notice"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool use_flash_comment_generator {
             get {
                 return ((bool)(this["use_flash_comment_generator"]));
