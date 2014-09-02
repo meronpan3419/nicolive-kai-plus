@@ -200,6 +200,7 @@ namespace NicoLive
                     if (ts.Seconds >= 1)
                     {
                         mPastChat = false;
+                        if (mPastChatList.Count <= 0) return;
                         this.mCommentList.Rows.AddRange(mPastChatList.ToArray());
                     }
                 }

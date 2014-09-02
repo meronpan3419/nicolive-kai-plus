@@ -26,7 +26,13 @@ namespace NicoLive
                     // コメント読み上げ
                     SpeakComment();
                 }
-                // ちょっとウェイト
+
+                //if (!mNico.IsLogin)
+                //{
+                //    Utils.WriteLog("CommentWorker_DoWork: !mNico.IsLogin");
+                //    break;
+                //}
+
                 Thread.Sleep(100);
             }
         }

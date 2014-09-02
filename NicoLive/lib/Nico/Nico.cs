@@ -243,13 +243,12 @@ namespace NicoLive
         {
             try
             {
-                if (mTcp != null)
+                if (mTcp != null && mTcp.Connected)
                 {
-                    if (mTcp.Connected)
-                    {
-                        mTcp.Close();
-                    }
+                    mTcp.Client.Disconnect(false);
+                    //mTcp.Close();                    
                 }
+
             }
             catch (Exception e)
             {
@@ -437,7 +436,7 @@ namespace NicoLive
 
             // IEのCookieを書き換える
             OverrideIECookie(user_session2);
-            Properties.Settings.Default.user_session = user_session.Replace("user_session=","");
+            Properties.Settings.Default.user_session = user_session.Replace("user_session=", "");
             Properties.Settings.Default.Save();
 
             // ログイン済みフラグを立てる
@@ -497,10 +496,10 @@ namespace NicoLive
                     return true;
                 }
             }
-            catch(Exception)
-            {}
-                return false;
-            
+            catch (Exception)
+            { }
+            return false;
+
         }
 
         private void IEIsProtectedModeProcess()
@@ -1048,8 +1047,12 @@ namespace NicoLive
             try
             {
                 Utils.WriteLog("Addr: " + uri + "    Port: " + port);
-                if (mTcp != null)
-                    mTcp.Close();
+                if (mTcp != null && mTcp.Connected)
+                {
+                    mTcp.Client.Disconnect(false);
+                    //mTcp.Close();                    
+                }
+
                 mTcp = new TcpClient(uri, int.Parse(port));
                 Utils.WriteLog("ConnectToCommentServer(): サーバーと接続しました。");
 
@@ -1069,7 +1072,7 @@ namespace NicoLive
             }
             catch (Exception e)
             {
-                Utils.WriteLog("GetCommentXML:" + e.Message);
+                Utils.WriteLog("ConnectToCommentServer(): send request: " + e.Message);
                 mIsLogin = false;
                 return NicoErr.ERR_COULD_NOT_CONNECT_COMMENT_SERVER;
             }
@@ -1114,41 +1117,58 @@ namespace NicoLive
         //-------------------------------------------------------------------------
         private static void ReceiveDataCallback(System.IAsyncResult ar)
         {
-            //状態オブジェクトの取得
-            AsyncStateObject so = (AsyncStateObject)ar.AsyncState;
-
             //読み込んだ長さを取得
             int len = 0;
+            AsyncStateObject so;
+            Socket socket;
+
             try
             {
-                len = so.Socket.EndReceive(ar);
+                //状態オブジェクトの取得
+                so = (AsyncStateObject)ar.AsyncState;
+                socket = so.Socket;
+
+
+
+
+                len = socket.EndReceive(ar);
             }
             catch (System.ObjectDisposedException e)
             {
                 //閉じた時
-                Utils.WriteLog("閉じました。");
+                Utils.WriteLog("ReceiveDataCallback(): ObjectDisposedException 閉じました。");
                 Utils.WriteLog("ReceiveDataCallback()" + e.Message);
-                Utils.WriteLog("ReceiveDataCallback()" + e.StackTrace);
+                //Utils.WriteLog("ReceiveDataCallback()" + e.StackTrace);
                 mIsLogin = false;
                 return;
             }
             catch (SocketException e)
             {
                 //閉じた時
-                Utils.WriteLog("閉じました。");
+                Utils.WriteLog("ReceiveDataCallback(): SocketException 閉じました。");
+                Utils.WriteLog("ReceiveDataCallback()" + e.Message);
+                //Utils.WriteLog("ReceiveDataCallback()" + e.StackTrace);
+                mIsLogin = false;
+                return;
+            }
+            catch (Exception e)
+            {
+                //閉じた時
+                Utils.WriteLog("ReceiveDataCallback(): Exception 閉じました。");
                 Utils.WriteLog("ReceiveDataCallback()" + e.Message);
                 Utils.WriteLog("ReceiveDataCallback()" + e.StackTrace);
                 mIsLogin = false;
                 return;
             }
 
+
             //切断されたか調べる
             if (len <= 0)
             {
-                Utils.WriteLog("切断されました。");
+                Utils.WriteLog("ReceiveDataCallback(): 切断されました。");
                 so.Socket.Close();
                 mIsLogin = false;
-                mComment = "<chat date=\"\" no=\"\" premium=\"2\" thread=\"\" user_id=\"\" vpos=\"\">コメントサーバーから切断されました</chat>";
+                //mComment = "<chat date=\"\" no=\"\" premium=\"2\" thread=\"\" user_id=\"\" vpos=\"\">コメントサーバーから切断されました</chat>";
                 return;
             }
 
@@ -1209,13 +1229,25 @@ namespace NicoLive
                 }
             }
 
-            //再び受信開始
-            so.Socket.BeginReceive(so.ReceiveBuffer,
-                0,
-                so.ReceiveBuffer.Length,
-                System.Net.Sockets.SocketFlags.None,
-                new System.AsyncCallback(ReceiveDataCallback),
-                so);
+            try
+            {
+                //再び受信開始
+                so.Socket.BeginReceive(so.ReceiveBuffer,
+                    0,
+                    so.ReceiveBuffer.Length,
+                    System.Net.Sockets.SocketFlags.None,
+                    new System.AsyncCallback(ReceiveDataCallback),
+                    so);
+            }
+            catch (Exception e)
+            {
+                //閉じた時
+                Utils.WriteLog("再受信開始失敗");
+                Utils.WriteLog("ReceiveDataCallback()" + e.Message);
+                Utils.WriteLog("ReceiveDataCallback()" + e.StackTrace);
+                mIsLogin = false;
+                return;
+            }
         }
 
         //-------------------------------------------------------------------------
@@ -2080,7 +2112,7 @@ namespace NicoLive
             }
 
             return ng_user;
-            
+
         }
 
         public TcpClient getTcpClient()

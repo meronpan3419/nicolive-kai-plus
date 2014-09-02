@@ -122,7 +122,7 @@ namespace NicoLive
                 if ((time_sec - btime_sec > 30 * 60) && !mDoingGetNextWaku)
                 {
                     // 枠取り画面へ 
-                    if (mOwnLive && mContWaku.Checked)
+                    if (/*mOwnLive &&*/ mContWaku.Checked)
                     {
                         mDoingGetNextWaku = true;
                         Thread.Sleep(500);

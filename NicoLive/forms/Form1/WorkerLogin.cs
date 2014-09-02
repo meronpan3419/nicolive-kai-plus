@@ -187,120 +187,128 @@ namespace NicoLive
 
 
             disconnect = false;
-            mPastChatList.Clear();
-            mWelcomeList.Clear();
-            mOmikujiList.Clear();
-            mAishouList.Clear();
-            // 過去コメ読み込みスタート
-            mPastChat = true;
+            mNico.WakutoriMode = false;
 
             using (Bouyomi bm = new Bouyomi())
             {
                 bm.Talk("接続しました");
             }
 
-            this.Invoke((Action)delegate()
-            {
-
-                // 簡易ビュアー自動起動
-                if (Properties.Settings.Default.viewer_auto_boot)
-                {
-
-                    if (mViewer == null || mViewer.IsDisposed)
-                    {
-                        mViewer = new Viewer(LiveID);
-                    }
-                    mViewer.Show();
-                    mViewer.Activate();
-
-                }
-
-                // 配信コンソール自動表示
-                if (Properties.Settings.Default.use_flash_console)
-                {
-                    if (mLiveConsole == null || mLiveConsole.IsDisposed)
-                    {
-                        mLiveConsole = new LiveConsole(LiveID);
-                    }
-                    mLiveConsole.Show();
-                    mLiveConsole.Activate();
-
-                }
-
-                mNico.WakutoriMode = false;
-
-                mCommentList.Rows.Clear();
-
-
-
-                // 情報を取得
-                Thread th = new Thread(delegate()
-                {
-                    Utils.WriteLog("Start: LoginWorker_DoWork(): GetInfo(),GetMemberOnlyInfo()");
-                    mLiveInfo.GetInfo(live_id);
-                    mLiveInfo.GetMemberOnlyInfo(live_id);
-                    Utils.WriteLog("Finish: LoginWorker_DoWork(): GetInfo(),GetMemberOnlyInfo()");
-
-                    // 開演待ちスキップするか？
-                    if (Properties.Settings.Default.skip5min)
-                    {
-                        // 開演5分待ちスキップ
-                        mNico.LiveStart(live_id, mLiveInfo.Token);
-                        Utils.WriteLog("LiveStart skip 5 min");
-                    }
-
-                    // らんちゃー
-                    if (Properties.Settings.Default.use_launcher)
-                    {
-                        mLauncher.Exec(this.LiveID);
-                    }
-
-                    //debug
-                    Nico nico = Nico.Instance;
-                    System.Collections.Generic.Dictionary<string, string> arr = nico.GetFMEProfile(this.LiveID);
-                    if (arr.Count <= 1) return;
-                    string url = arr["url"];
-                    string stream = arr["stream"];
-                    //Utils.WriteLog("LoginWorker_DoWork:url: " + url);
-                    //Utils.WriteLog("LoginWorker_DoWork:stream: " + stream);
-
-                    //Utils.WriteLog(@"ffmpeg  -f alsa -ac 1 -i pulse -acodec nellymoser  -f x11grab -s 1366x768 -i :0.0+1366,0 -r 10 -vcodec libx264 -crf 26 -keyint_min 0  -bufsize 600k  -r 10 -pix_fmt yuv420p -ar 44100 -b:a 96k -b:v 300k -f flv """ + url + "/" + stream + " flashVer=FMLE/3.0\\20(compatible;\\20FMSc/1.0) swfUrl=" + url + "/" + stream + "\"");
-
-                });
-                th.Name = "LoginWorker_DoWork(): GetInfo(),GetMemberOnlyInfo()";
-                th.Start();
-
-
-
-                // ロガー起動
-                if (Properties.Settings.Default.save_log)
+            Thread th_forms = new Thread(delegate()
                 {
                     try
                     {
-                        Directory.CreateDirectory("log");
-                        mLogger = new StreamWriter("log/" + LiveID + ".xml", true);
+                        this.Invoke((Action)delegate()
+                        {
+
+                            // 簡易ビュアー自動起動
+                            if (Properties.Settings.Default.viewer_auto_boot)
+                            {
+
+                                if (mViewer == null || mViewer.IsDisposed)
+                                {
+                                    mViewer = new Viewer(LiveID);
+                                }
+                                mViewer.Show();
+                                mViewer.Activate();
+
+                            }
+
+                            // 配信コンソール自動表示
+                            if (Properties.Settings.Default.use_flash_console)
+                            {
+                                if (mLiveConsole == null || mLiveConsole.IsDisposed)
+                                {
+                                    mLiveConsole = new LiveConsole(LiveID);
+                                }
+                                mLiveConsole.Show();
+                                mLiveConsole.Activate();
+
+                            }
+
+
+                            if (mViewer != null && !mViewer.IsDisposed)
+                            {
+                                mViewer.SetLiveID(LiveID);
+                            }
+
+                            if (mLiveConsole != null && !mLiveConsole.IsDisposed)
+                            {
+                                mLiveConsole.LoadMovie(LiveID);
+                            }
+                        });
                     }
                     catch (Exception ex)
                     {
-                        Utils.WriteLog("LoginWorker_DoWork:" + ex.Message);
+                        Utils.WriteLog("LoginWorker_DoWork(): mViewer,mLiveConsole" + ex.StackTrace);
+                        Utils.WriteLog("LoginWorker_DoWork(): mViewer,mLiveConsole" + ex.Message);
                     }
-                }
+                });
+            th_forms.Name = "LoginWorker_DoWork(): mViewer,mLiveConsole";
+            th_forms.Start();
 
 
-                if (mViewer != null && !mViewer.IsDisposed)
+            // 情報を取得
+            Thread th_info = new Thread(delegate()
+            {
+                Utils.WriteLog("Start: LoginWorker_DoWork(): GetInfo(),GetMemberOnlyInfo()");
+                mLiveInfo.GetInfo(live_id);
+                mLiveInfo.GetMemberOnlyInfo(live_id);
+                Utils.WriteLog("Finish: LoginWorker_DoWork(): GetInfo(),GetMemberOnlyInfo()");
+
+                // 開演待ちスキップするか？
+                if (Properties.Settings.Default.skip5min)
                 {
-                    mViewer.SetLiveID(LiveID);
+                    // 開演5分待ちスキップ
+                    mNico.LiveStart(live_id, mLiveInfo.Token);
+                    Utils.WriteLog("LiveStart skip 5 min");
                 }
 
-                if (mLiveConsole != null && !mLiveConsole.IsDisposed)
+                // らんちゃー
+                if (Properties.Settings.Default.use_launcher)
                 {
-                    mLiveConsole.LoadMovie(LiveID);
+                    mLauncher.Exec(this.LiveID);
                 }
 
 
 
+                //debug
+                Nico nico = Nico.Instance;
+                System.Collections.Generic.Dictionary<string, string> arr = nico.GetFMEProfile(this.LiveID);
+                if (arr.Count <= 1) return;
+                string url = arr["url"];
+                string stream = arr["stream"];
+                //Utils.WriteLog("LoginWorker_DoWork:url: " + url);
+                //Utils.WriteLog("LoginWorker_DoWork:stream: " + stream);
+
+                //Utils.WriteLog(@"ffmpeg  -f alsa -ac 1 -i pulse -acodec nellymoser  -f x11grab -s 1366x768 -i :0.0+1366,0 -r 10 -vcodec libx264 -crf 26 -keyint_min 0  -bufsize 600k  -r 10 -pix_fmt yuv420p -ar 44100 -b:a 96k -b:v 300k -f flv """ + url + "/" + stream + " flashVer=FMLE/3.0\\20(compatible;\\20FMSc/1.0) swfUrl=" + url + "/" + stream + "\"");
 
             });
+            th_info.Name = "LoginWorker_DoWork(): GetInfo(),GetMemberOnlyInfo()";
+            th_info.Start();
+
+
+
+            // ロガー起動
+            if (Properties.Settings.Default.save_log)
+            {
+                try
+                {
+                    Directory.CreateDirectory("log");
+                    mLogger = new StreamWriter("log/" + LiveID + ".xml", true);
+                }
+                catch (Exception ex)
+                {
+                    Utils.WriteLog("LoginWorker_DoWork:" + ex.Message);
+                }
+            }
+
+
+
+
+
+
+
 
 
         END:
@@ -308,17 +316,28 @@ namespace NicoLive
             {
                 mAutoReconnectOnGoing = false;
             }
+
             mLogin_cancel = false;
-            this.Invoke((Action)delegate()
+            this.mLastChatTime = DateTime.Now;
+            this.mLastCompctTime = DateTime.Now;
+            this.mLastConnectionCheckTime = DateTime.Now;
+            this.mCompactForcast = false;
+            this.mStartHQ = false;
+            this.mDisconnect = disconnect;
+
+            try
             {
-                this.mConnectBtn.Enabled = true;
-                this.mLastChatTime = DateTime.Now;
-                this.mLastCompctTime = DateTime.Now;
-                this.mLastConnectionCheckTime = DateTime.Now;
-                this.mCompactForcast = false;
-                this.mStartHQ = false;
-                this.mDisconnect = disconnect;
-            });
+                this.Invoke((Action)delegate()
+                {
+                    this.mConnectBtn.Enabled = true;
+
+                });
+            }
+            catch (Exception ex)
+            {
+                Utils.WriteLog("LoginWorker_DoWork:" + ex.Message);
+                Utils.WriteLog("LoginWorker_DoWork:" + ex.StackTrace);
+            }
         }
     }
 }

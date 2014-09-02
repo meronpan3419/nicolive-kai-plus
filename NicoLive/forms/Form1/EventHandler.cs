@@ -245,7 +245,8 @@ namespace NicoLive
             }
             catch (Exception ex)
             {
-                Utils.WriteLog(ex.Message);
+                Utils.WriteLog("mCommentList_CellDoubleClick() :" +  ex.Message);
+                Utils.WriteLog("mCommentList_CellDoubleClick() :" + ex.StackTrace);
             }
         }
 
@@ -400,7 +401,7 @@ namespace NicoLive
             }
             catch (Exception ex)
             {
-                Utils.WriteLog(ex.Message);
+                Utils.WriteLog("miCommentColor_Click() : " + ex.Message);
             }
 
 

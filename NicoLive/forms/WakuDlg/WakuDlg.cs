@@ -285,6 +285,7 @@ namespace NicoLive
                 Utils.WriteLog("WakuDlg: mWorker_DoWork(): WakuErr.ERR_WEBPAGESESSION: 枠取り中（WEBページの有効期限切れ）");
                 arr.Remove("kiyaku");
                 arr.Remove("confirm");
+                arr["description"] = Utils.FromBase64(arr["description"]);
                 accept_kiyaku = false;
                 goto RETRY;
             }
@@ -320,6 +321,7 @@ namespace NicoLive
             else if (err == WakuErr.ERR_KONZATU)
             {
                 SetLabelFromThread("枠取り中（混雑中）", Color.Black, false);
+                Utils.WriteLog("WakuDlg: mWorker_DoWork(): WakuErr.ERR_TAJU: 枠取り中（混雑中)");
                 arr.Remove("kiyaku");
                 arr.Remove("confirm");
                 arr["description"] = Utils.FromBase64(arr["description"]);

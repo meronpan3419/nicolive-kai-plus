@@ -165,7 +165,7 @@ namespace NicoLive
         private int mLastChatNo2;
 
         // 過去コメ読み込み中かどうか
-        private bool mPastChat;
+        private bool mPastChat = false;
 
         // コメントバッファ
         List<DataGridViewRow> mPastChatList = new List<DataGridViewRow>();
@@ -295,6 +295,12 @@ namespace NicoLive
 
             mSpeakList.Clear();
             mLiveInfo.Clear();
+            mWelcomeList.Clear();
+            mOmikujiList.Clear();
+            mAishouList.Clear();
+
+            // 過去コメ読み込み
+            mPastChat = true;
 
             Utils.WriteLog("Connect()");
 
@@ -317,7 +323,7 @@ namespace NicoLive
                 mLogger = null;
             }
 
-            // 放送IDが空
+            
             this.Invoke((Action)delegate()
             {
                 if (this.mLiveID.Text.Length == 0)
@@ -327,7 +333,7 @@ namespace NicoLive
                 }
 
                 this.mCommentList.Rows.Clear();
-
+                this.mPastChatList.Clear();
                 this.mConnectBtn.Enabled = false;
             });
 
