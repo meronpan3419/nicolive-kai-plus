@@ -346,8 +346,13 @@ namespace NicoLive
                 do
                 {
                     if (mAbort) return;
-                    Dictionary<string, string> waitInfo = mNico.GetJunban(lv);
-                    if (waitInfo.ContainsKey("stream_status") && waitInfo["stream_status"].Equals("3"))
+                    Dictionary<string, string> wait_info = mNico.GetJunban(lv);
+                    if (wait_info == null)
+                    {
+                        Utils.WriteLog("WakuDlg: mWorker_DoWork(): mNico.GetJunban == null");
+                        continue;
+                    }
+                    if (wait_info.ContainsKey("stream_status") && wait_info["stream_status"].Equals("3"))
                     {
                         SetLabelFromThread("ERR:別の放送が開始されています。", Color.Red, false);
                         Utils.WriteLog("WakuDlg: mWorker_DoWork(): 別の放送が開始されています");
@@ -356,9 +361,9 @@ namespace NicoLive
 
                     //Utils.WriteLog(lv);
 
-                    if (!waitInfo.ContainsKey("count"))
+                    if (!wait_info.ContainsKey("count"))
                         continue;
-                    int cnt = int.Parse(waitInfo["count"]);
+                    int cnt = int.Parse(wait_info["count"]);
                     if (cnt <= 1)
                     {
                         mLv = lv;
@@ -369,9 +374,9 @@ namespace NicoLive
                     }
                     else
                     {
-                        Match match = Regex.Match(waitInfo["start_time"], "日(.*?)時(.*?)分");
-                        SetLabelFromThread("順番待ち: " + waitInfo["count"] + "人 （" + match.Groups[1].Value + "時" + match.Groups[2].Value + "分）", Color.Black, false);
-                        Utils.WriteLog("WakuDlg: mWorker_DoWork(): 順番待ち: " + waitInfo["count"] + "人 （" + match.Groups[1].Value + "時" + match.Groups[2].Value + "分）");
+                        Match match = Regex.Match(wait_info["start_time"], "日(.*?)時(.*?)分");
+                        SetLabelFromThread("順番待ち: " + wait_info["count"] + "人 （" + match.Groups[1].Value + "時" + match.Groups[2].Value + "分）", Color.Black, false);
+                        Utils.WriteLog("WakuDlg: mWorker_DoWork(): 順番待ち: " + wait_info["count"] + "人 （" + match.Groups[1].Value + "時" + match.Groups[2].Value + "分）");
 
                         // 100人以上順番待ちの時はTweet
                         if (cnt >= 102)

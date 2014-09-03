@@ -77,10 +77,12 @@ namespace NicoLive
                     string lv = LiveID;
                     if (lv.Length > 2)
                     {
-                        Dictionary<string, string> arr = nico.GetFMEProfile(lv);
-                        if (arr["status"].Equals("ok"))
+                        Dictionary<string, string> fme_profiles = nico.GetFMEProfile(lv);
+                        if (fme_profiles == null) return;
+                        if (fme_profiles.Count <= 1) return;
+                        if (fme_profiles["status"].Equals("ok"))
                         {
-                            FMLE.Start(arr, fmle_profile_path);
+                            FMLE.Start(fme_profiles, fmle_profile_path);
                         }
                     }
                 }

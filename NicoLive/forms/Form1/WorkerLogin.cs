@@ -274,10 +274,11 @@ namespace NicoLive
 
                 //debug
                 Nico nico = Nico.Instance;
-                System.Collections.Generic.Dictionary<string, string> arr = nico.GetFMEProfile(this.LiveID);
-                if (arr.Count <= 1) return;
-                string url = arr["url"];
-                string stream = arr["stream"];
+                System.Collections.Generic.Dictionary<string, string> fme_profiles = nico.GetFMEProfile(this.LiveID);
+                if (fme_profiles == null) return;
+                if (fme_profiles.Count <= 1) return;
+                string url = fme_profiles["url"];
+                string stream = fme_profiles["stream"];
                 //Utils.WriteLog("LoginWorker_DoWork:url: " + url);
                 //Utils.WriteLog("LoginWorker_DoWork:stream: " + stream);
 

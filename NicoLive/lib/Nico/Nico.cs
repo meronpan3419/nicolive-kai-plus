@@ -155,11 +155,13 @@ namespace NicoLive
             // 配信の種別セット、value(0: 通常配信, 1: 外部配信) 
             string url = URI_STARTFME2 + iLV + "&key=hq&value=1&token=" + iToken;
             string xml = HttpGet(url, ref this.mCookieLogin);
+            if (xml == null) return false;
             if (!xml.Contains("status=\"ok\"")) return false;
 
             // 配信開始コマンド exclude
             url = URI_STARTFME2 + iLV + "&key=exclude&value=0&token=" + iToken;
             xml = HttpGet(url, ref this.mCookieLogin);
+            if (xml == null) return false;
             if (!xml.Contains("status=\"ok\"")) return false;
 
             //
@@ -200,6 +202,8 @@ namespace NicoLive
 
             string url = URI_STARTFME2 + iLV + "&key=end_now&token=" + iToken;
             string xml = HttpGet(url, ref this.mCookieLogin);
+
+            if (xml == null) return false;
 
             return (xml.Contains("status=\"ok\""));
         }
@@ -267,22 +271,25 @@ namespace NicoLive
             const string REGEX_pat = "<a href=\"http://live.nicovideo.jp/watch/lv(?<videoid>[0-9]+)\\?ref=my_live\" title=\"生放送ページへ戻る\" class=\"nml\">";
             //const string REGEX_pat = "http://live.nicovideo.jp/watch/lv(?<videoid>[0-9]+)\" class=\"now\"";
             //const string REGEX_pat = "immendStream\\('http://live.nicovideo.jp/','(?<videoid>[0-9]+)'";
-            string result = "";
+            string result_lv = "";
 
-            if (Login(username, password))
+            if (!Login(username, password)) return result_lv;
+
+            string html = HttpGet(uri, ref this.mCookieLogin);
+
+            if (html == null) return result_lv;
+
+            Regex regex = new Regex(REGEX_pat);
+            MatchCollection match = regex.Matches(html);
+
+            if (match.Count > 0)
             {
-                string html = HttpGet(uri, ref this.mCookieLogin);
-                Regex regex = new Regex(REGEX_pat);
-                MatchCollection match = regex.Matches(html);
-
-                if (match.Count > 0)
-                {
-                    result = "lv" + match[0].Groups["videoid"].Value;
-                    Utils.WriteLog(result);
-                }
-
+                result_lv = "lv" + match[0].Groups["videoid"].Value;
+                Utils.WriteLog(result_lv);
             }
-            return result;
+
+
+            return result_lv;
         }
 
         //-------------------------------------------------------------------------
@@ -953,6 +960,7 @@ namespace NicoLive
                             block_no);
 
             string result = HttpGet(url, ref this.mCookieLogin);
+            if (result == null) return false;
 
             string postkey = "";
             Match match = Regex.Match(result, "postkey=(.+)");
@@ -1298,6 +1306,8 @@ namespace NicoLive
             string api_url = URI_GETFMEPROFILE + iLV;
             string xml = HttpGet(api_url, ref this.mCookieLogin);
 
+            if (xml == null) return null;
+
             Dictionary<string, string> ret = new Dictionary<string, string>();
 
             ret["status"] = "ok";
@@ -1325,37 +1335,24 @@ namespace NicoLive
             return ret;
         }
 
-        //-------------------------------------------------------------------------
-        // FMEプロファイルの取得
-        //-------------------------------------------------------------------------
-        public bool StartFME(string iLV, string iToken)
-        {
-            if (iLV.Length <= 2) return false;
-            if (iToken.Length <= 0) return false;
-
-            string url = URI_STARTFME + iLV + "?key=exclude&value=0&token=" + iToken;
-            string xml = HttpGet(url, ref this.mCookieLogin);
-
-            return (xml.Contains("status=\"ok\""));
-        }
 
         //-------------------------------------------------------------------------
         // 過去の放送情報の取得
         //-------------------------------------------------------------------------
-        public string GetAlreadtLive()
-        {
-            string url = "http://live.nicovideo.jp/my";
-            string res = HttpGet(url, ref mCookieLogin);
-            string lv = "";
+        //public string GetAlreadtLive()
+        //{
+        //    string url = "http://live.nicovideo.jp/my";
+        //    string res = HttpGet(url, ref mCookieLogin);
+        //    string lv = "";
 
-            if (res == null) return lv;
+        //    if (res == null) return lv;
 
-            Match match = Regex.Match(res, "<a href=\"http://live.nicovideo.jp/watch/(lv[0-9]+)\" title=\"生放送ページへ戻る\"");
+        //    Match match = Regex.Match(res, "<a href=\"http://live.nicovideo.jp/watch/(lv[0-9]+)\" title=\"生放送ページへ戻る\"");
 
-            if (match.Success)
-                lv = match.Groups[1].Value;
-            return lv;
-        }
+        //    if (match.Success)
+        //        lv = match.Groups[1].Value;
+        //    return lv;
+        //}
 
         //-------------------------------------------------------------------------
         // 過去の放送情報の取得
@@ -1686,6 +1683,8 @@ namespace NicoLive
                 string url = "http://live.nicovideo.jp/my";
                 string res = HttpGet(url, ref mCookieLogin);
 
+                if (res == null) return lv;
+
                 Match match = Regex.Match(res, "http://live.nicovideo.jp/editstream/lv(.*?)\"");
                 if (match.Success)
                 {
@@ -1702,24 +1701,26 @@ namespace NicoLive
         {
             iLv.Replace("lv", "");
 
-            Dictionary<string, string> arr = new Dictionary<string, string>();
+            Dictionary<string, string> wait_info = new Dictionary<string, string>();
 
             string url = "http://live.nicovideo.jp/api/waitinfo/" + iLv;
 
             string res = HttpGet(url, ref mCookieLogin);
 
+            if (res == null) return null;
+
             Utils.WriteLog(res);
             Match match;
             match = Regex.Match(res, "<count>(.*?)</count>");
             if (match.Success)
-                arr["count"] = match.Groups[1].Value;
+                wait_info["count"] = match.Groups[1].Value;
             match = Regex.Match(res, "<start_time>(.*?)</start_time>");
             if (match.Success)
-                arr["start_time"] = match.Groups[1].Value;
+                wait_info["start_time"] = match.Groups[1].Value;
             match = Regex.Match(res, "<stream_status>(.*?)</stream_status>");
             if (match.Success)
-                arr["stream_status"] = match.Groups[1].Value;
-            return arr;
+                wait_info["stream_status"] = match.Groups[1].Value;
+            return wait_info;
         }
 
         //-------------------------------------------------------------------------
@@ -1967,6 +1968,7 @@ namespace NicoLive
             string xml = HttpGet(url, ref mCookieLogin);
 
             //Utils.WriteLog(xml);
+            if (xml == null) return false;
 
             if (!xml.Contains("status=\"ok\""))
                 return false;
@@ -2079,6 +2081,8 @@ namespace NicoLive
 
             Utils.WriteLog(xml);
 
+            if (xml == null) return false;
+
             if (!xml.Contains("status=\"ok\""))
                 return false;
 
@@ -2097,6 +2101,7 @@ namespace NicoLive
                         "&mode=get";
 
             string res = HttpGet(url, ref mCookieLogin);
+            if (res == null) return null;
 
             MatchCollection mc = Regex.Matches(res, @"<ngclient id=""(.*?)"" token=""(?<token>.*?)"">(.*?)<type>id</type>(.*?)<source>(?<source>.*?)</source>", RegexOptions.Multiline);
             if (mc.Count > 0)

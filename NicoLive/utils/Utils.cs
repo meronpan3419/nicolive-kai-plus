@@ -177,8 +177,10 @@ namespace NicoLive
 
         private static DataGridViewRow makeCommentRow(ref DataGridView iView, Comment iCmt, System.Drawing.Color iColor)
         {
-            DataGridViewRow row =  new DataGridViewRow();
+            DataGridViewRow row = new DataGridViewRow();
+
             row.CreateCells(iView);
+
             row.Cells[(int)CommentColumn.COLUMN_NUMBER].Style.BackColor = iColor;
             row.Cells[(int)CommentColumn.COLUMN_ID].Style.BackColor = iColor;
             row.Cells[(int)CommentColumn.COLUMN_HANDLE].Style.BackColor = iColor;
@@ -352,16 +354,17 @@ namespace NicoLive
         //-------------------------------------------------------------------------
         public static void AddComment(ref DataGridView iView, Comment iCmt, System.Drawing.Color iColor)
         {
-            DataGridViewRow row = makeCommentRow(ref iView, iCmt, iColor);
-
-            int i = 0;
-            if (!Properties.Settings.Default.comment_sort_desc)
-            {
-                i = iView.Rows.Count;
-            }
-
             try
             {
+                DataGridViewRow row = makeCommentRow(ref iView, iCmt, iColor);
+
+                int i = 0;
+                if (!Properties.Settings.Default.comment_sort_desc)
+                {
+                    i = iView.Rows.Count;
+                }
+
+
                 iView.Rows.Insert(i, row);
 
                 int max_item = Properties.Settings.Default.comment_max;
@@ -369,7 +372,9 @@ namespace NicoLive
                 {
                     iView.Rows.RemoveAt(max_item);
                 }
-            } catch(Exception e){
+            }
+            catch (Exception e)
+            {
                 Utils.WriteLog("AddComment() :" + e.Message);
             }
 
@@ -383,7 +388,8 @@ namespace NicoLive
         public static void AddComment(ref DataGridView iView, Comment iCmt, System.Drawing.Color iColor, ref List<DataGridViewRow> iPastChatList)
         {
 
-            DataGridViewRow row = makeCommentRow(ref iView, iCmt, iColor); 
+            
+            DataGridViewRow row = makeCommentRow(ref iView, iCmt, iColor);
 
             if (Properties.Settings.Default.comment_sort_desc)
             {
@@ -483,7 +489,7 @@ namespace NicoLive
 
         public static void Tweet(string iTweetString)
         {
-            using (Twitter tw = new Twitter(Properties.Settings.Default.tw_token, Properties.Settings.Default.tw_token_secret)) 
+            using (Twitter tw = new Twitter(Properties.Settings.Default.tw_token, Properties.Settings.Default.tw_token_secret))
             {
                 try
                 {
@@ -544,7 +550,9 @@ namespace NicoLive
                     writer.Flush();
                     writer.Close();
                 }
-            } catch(Exception e){
+            }
+            catch (Exception e)
+            {
                 System.Diagnostics.Debug.WriteLine("WriteLog() :" + e.Message);
             }
         }
