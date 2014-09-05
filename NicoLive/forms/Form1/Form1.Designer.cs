@@ -41,6 +41,7 @@
             this.toolStripDropDownButton1 = new System.Windows.Forms.ToolStripDropDownButton();
             this.ViewerMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.LiveConsoleStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.NGUserStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.SettingMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
@@ -123,7 +124,6 @@
             this.mGatherUserIDWorker = new System.ComponentModel.BackgroundWorker();
             this.mXSplitTimer = new System.Windows.Forms.Timer(this.components);
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.NGUserStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mToolStrip.SuspendLayout();
             this.mStatusStrip.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
@@ -171,7 +171,7 @@
             // mLiveID
             // 
             this.mLiveID.Name = "mLiveID";
-            this.mLiveID.Size = new System.Drawing.Size(74, 25);
+            this.mLiveID.Size = new System.Drawing.Size(90, 25);
             this.mLiveID.ToolTipText = "lv～";
             this.mLiveID.KeyDown += new System.Windows.Forms.KeyEventHandler(this.LiveID_KeyDown);
             // 
@@ -216,6 +216,13 @@
             this.LiveConsoleStripMenuItem.Size = new System.Drawing.Size(221, 22);
             this.LiveConsoleStripMenuItem.Text = "配信コンソール";
             this.LiveConsoleStripMenuItem.Click += new System.EventHandler(this.LiveConsoleStripMenuItem_Click);
+            // 
+            // NGUserStripMenuItem
+            // 
+            this.NGUserStripMenuItem.Name = "NGUserStripMenuItem";
+            this.NGUserStripMenuItem.Size = new System.Drawing.Size(221, 22);
+            this.NGUserStripMenuItem.Text = "NGユーザー";
+            this.NGUserStripMenuItem.Click += new System.EventHandler(this.NGUserStripMenuItem_Click);
             // 
             // toolStripSeparator5
             // 
@@ -747,11 +754,11 @@
             this.groupBox1.TabIndex = 22;
             this.groupBox1.TabStop = false;
             // 
-            // cbUseHQ
+            // mUseHQ
             // 
             this.mUseHQ.AutoSize = true;
             this.mUseHQ.Location = new System.Drawing.Point(7, -1);
-            this.mUseHQ.Name = "cbUseHQ";
+            this.mUseHQ.Name = "mUseHQ";
             this.mUseHQ.Size = new System.Drawing.Size(72, 16);
             this.mUseHQ.TabIndex = 31;
             this.mUseHQ.Text = "外部配信";
@@ -1015,13 +1022,6 @@
             this.mXSplitTimer.Enabled = true;
             this.mXSplitTimer.Interval = 1000;
             this.mXSplitTimer.Tick += new System.EventHandler(this.mXSplitTimer_Tick);
-            // 
-            // NGUserStripMenuItem
-            // 
-            this.NGUserStripMenuItem.Name = "NGUserStripMenuItem";
-            this.NGUserStripMenuItem.Size = new System.Drawing.Size(221, 22);
-            this.NGUserStripMenuItem.Text = "NGユーザー";
-            this.NGUserStripMenuItem.Click += new System.EventHandler(this.NGUserStripMenuItem_Click);
             // 
             // Form1
             // 
