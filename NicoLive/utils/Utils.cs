@@ -10,6 +10,7 @@ using System.Drawing;
 using System;
 using System.IO;
 using System.Collections.Generic;
+using System.Net;
 
 //-------------------------------------------------------------------------
 // クラス実装
@@ -388,7 +389,7 @@ namespace NicoLive
         public static void AddComment(ref DataGridView iView, Comment iCmt, System.Drawing.Color iColor, ref List<DataGridViewRow> iPastChatList)
         {
 
-            
+
             DataGridViewRow row = makeCommentRow(ref iView, iCmt, iColor);
 
             if (Properties.Settings.Default.comment_sort_desc)
@@ -674,6 +675,64 @@ namespace NicoLive
                 sub = (int)(info.Time + passed_sec - info.StartTime);
             }
             return sub;
+        }
+
+        //-------------------------------------------------------------------------
+        // 汎用HTTP GET
+        //-------------------------------------------------------------------------
+        public static string HTTP_GET(string url)
+        {
+            HttpWebRequest req = (HttpWebRequest)WebRequest.Create(url);
+            req.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
+            string result = "";
+            try
+            {
+                WebResponse res = req.GetResponse();
+
+                // read response
+                Stream resStream = res.GetResponseStream();
+                using (StreamReader sr = new StreamReader(resStream, System.Text.Encoding.UTF8))
+                {
+                    result = sr.ReadToEnd();
+                    sr.Close();
+                    resStream.Close();
+                }
+            }
+            catch (Exception e)
+            {
+                Utils.WriteLog("HTTP_GET():" + e.Message);
+            }
+            return result;
+        }
+
+        //-------------------------------------------------------------------------
+        // 汎用HTTP GET(クッキー食べる)
+        //-------------------------------------------------------------------------
+        public static string HTTP_GET(string url, ref CookieContainer cc)
+        {
+            HttpWebRequest req = (HttpWebRequest)WebRequest.Create(url);
+            req.CookieContainer = cc;
+            req.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
+            req.UserAgent = "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.1; WOW64; Trident/6.0;)";
+            string result = "";
+            try
+            {
+                WebResponse res = req.GetResponse();
+
+                // read response
+                Stream resStream = res.GetResponseStream();
+                using (StreamReader sr = new StreamReader(resStream, System.Text.Encoding.UTF8))
+                {
+                    result = sr.ReadToEnd();
+                    sr.Close();
+                    resStream.Close();
+                }
+            }
+            catch (Exception e)
+            {
+                Utils.WriteLog("HTTP_GET():" + e.Message);
+            }
+            return result;
         }
 
 

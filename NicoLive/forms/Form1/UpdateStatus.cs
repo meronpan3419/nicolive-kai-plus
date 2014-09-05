@@ -8,7 +8,7 @@ using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
-using System.Net;
+
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -366,29 +366,11 @@ namespace NicoLive
             Thread th = new Thread(delegate()
             {
                 string url = "http://nicolive-wakusu.b72.in/getwakusu.php?ver=" + Program.VERSION_KAI_PLUS;
-                HttpWebRequest req = (HttpWebRequest)WebRequest.Create(url);
-                req.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
-                string result = "";
-                try
-                {
-                    WebResponse res = req.GetResponse();
-
-                    // read response
-                    Stream resStream = res.GetResponseStream();
-                    using (StreamReader sr = new StreamReader(resStream, System.Text.Encoding.UTF8))
-                    {
-                        result = sr.ReadToEnd();
-                        sr.Close();
-                        resStream.Close();
-                    }
-                }
-                catch (Exception e)
-                {
-                    Utils.WriteLog("UpdateWakumachi:" + e.Message);
-                }
+                
+                string xml = Utils.HTTP_GET(url);
 
                 Match match;
-                match = Regex.Match(result, "<wakusu>(.*?)</wakusu>");
+                match = Regex.Match(xml, "<wakusu>(.*?)</wakusu>");
                 if (match.Success)
                 {
                     _Wakusu = match.Groups[1].Value;
@@ -398,7 +380,7 @@ namespace NicoLive
                 {
                     _Wakusu = "?";
                 }
-                match = Regex.Match(result, "<wakumachi>(.*?)</wakumachi>");
+                match = Regex.Match(xml, "<wakumachi>(.*?)</wakumachi>");
                 if (match.Success)
                 {
                     _Wakumachi = match.Groups[1].Value;
@@ -424,6 +406,8 @@ namespace NicoLive
             th.Start();
 
         }
+
+
 
     }
 }

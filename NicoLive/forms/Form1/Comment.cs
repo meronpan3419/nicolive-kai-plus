@@ -12,6 +12,8 @@ using Microsoft.VisualBasic;
 using System.IO;
 using System.Data.SQLite;
 using System.Collections.Generic;
+using System.Net;
+
 
 namespace NicoLive
 {
@@ -91,7 +93,15 @@ namespace NicoLive
                     if (cmt.Valid)
                     {
                         WriteLog(cmt.Xml);
-                        RecvComment(cmt);
+                        try
+                        {
+                            RecvComment(cmt);
+                        }
+                        catch (Exception e)
+                        {
+                            Utils.WriteLog("ParseComment(): RecvComment(cmt): " + e.Message);
+                            Utils.WriteLog("ParseComment(): RecvComment(cmt): " + e.StackTrace);
+                        }
                     }
                 }
             }
@@ -222,6 +232,9 @@ namespace NicoLive
 
             // 相性
             Aishou(iCmt);
+
+            // 天気
+            Tenki(iCmt);
 
             // NGコメント通知
             SendNGCommentNotice(int.Parse(iCmt.No));
@@ -733,6 +746,69 @@ namespace NicoLive
             }
 
         }
+
+        //-------------------------------------------------------------------------
+        // 天気
+        //-------------------------------------------------------------------------
+        private void Tenki(Comment iCmt)
+        {
+            if (iCmt.IsOwner) return;
+            if (!iCmt.Text.Contains("天気は")) return;
+
+            Thread t = new Thread(delegate()
+            {
+
+                string pattern = "(?<keyword>.*?)の天気は";
+                Match match = Regex.Match(iCmt.Text, pattern);
+                if (!match.Success) return;
+
+                string keyword = match.Groups["keyword"].Value;
+                string url = "http://weather.yahoo.co.jp/weather/search/?p=";
+
+                CookieContainer cc = new CookieContainer();
+                Utils.HTTP_GET("http://weather.yahoo.co.jp/", ref cc); //クッキーを食わせる
+
+                url = url + System.Web.HttpUtility.UrlEncode(keyword);
+
+                string html = Utils.HTTP_GET(url, ref cc);
+                if (html == "") return;
+
+                string place_url = "";
+                string place_name = "";
+                string place_weather = "";
+
+                pattern = @"<td><a href=""(?<url>http://weather.yahoo.co.jp/weather/.*?\.html)"">(?<place>.*?)</a></td>";
+                match = Regex.Match(html, pattern);
+                if (!match.Success) return;
+
+                place_url = match.Groups["url"].Value;
+                place_name = match.Groups["place"].Value;
+
+                html = Utils.HTTP_GET(place_url, ref cc);
+                if (html == "") return;
+
+                pattern = @"<td><img src=""([^_]*?).gif"" border=0 width=40 height=40 alt=""(?<weather>.*?)""><br>";
+                match = Regex.Match(html, pattern);
+                if (!match.Success) return;
+
+                place_weather = match.Groups["weather"].Value;
+
+
+                string post_msg = keyword + "の天気は" + place_weather + "です";
+
+
+                this.Invoke((Action)delegate()
+                {
+                    this.SendComment(post_msg, true);
+                });
+            });
+            t.Name = "Tenki";
+            t.Start();
+
+
+
+        }
+
 
         //-------------------------------------------------------------------------
         // 相性
