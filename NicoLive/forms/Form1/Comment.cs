@@ -752,11 +752,12 @@ namespace NicoLive
         //-------------------------------------------------------------------------
         private void Tenki(Comment iCmt)
         {
-            if (iCmt.IsOwner) return;
-            if (!iCmt.Text.Contains("天気は")) return;
+            //if (iCmt.IsOwner) return;
+            if (!iCmt.Text.Contains("天気は？")) return;
 
             Thread t = new Thread(delegate()
             {
+                string post_msg = "";
 
                 string pattern = "(?<keyword>.*?)の天気は";
                 Match match = Regex.Match(iCmt.Text, pattern);
@@ -779,24 +780,36 @@ namespace NicoLive
 
                 pattern = @"<td><a href=""(?<url>http://weather.yahoo.co.jp/weather/.*?\.html)"">(?<place>.*?)</a></td>";
                 match = Regex.Match(html, pattern);
-                if (!match.Success) return;
+                if (!match.Success)
+                {
+                    post_msg = keyword + "の天気は、わかりません。";
+                    goto POST_MESSAGE;
+                }
 
                 place_url = match.Groups["url"].Value;
                 place_name = match.Groups["place"].Value;
 
                 html = Utils.HTTP_GET(place_url, ref cc);
-                if (html == "") return;
+                if (html == "")
+                {
+                    post_msg = place_name + "の天気が取得できませんでした。";
+                    goto POST_MESSAGE;
+                }
 
                 pattern = @"<td><img src=""([^_]*?).gif"" border=0 width=40 height=40 alt=""(?<weather>.*?)""><br>";
                 match = Regex.Match(html, pattern);
-                if (!match.Success) return;
+                if (!match.Success)
+                {
+                    post_msg = place_name + "の天気が取得できませんでした。";
+                    goto POST_MESSAGE;
+                }
 
                 place_weather = match.Groups["weather"].Value;
 
 
-                string post_msg = keyword + "の天気は" + place_weather + "です";
+                post_msg = keyword + "(" + place_name + ")の天気は" + place_weather + "です";
 
-
+            POST_MESSAGE:
                 this.Invoke((Action)delegate()
                 {
                     this.SendComment(post_msg, true);
