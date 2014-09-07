@@ -1649,6 +1649,13 @@ namespace NicoLive
             {
                 return WakuErr.ERR_KIYAKU;
             }
+       
+            match = Regex.Match(res, "<h2.*?エラーが発生しました.*?/h2>");
+            if (match.Success)
+            {
+                return WakuErr.ERR_KIYAKU;
+            }
+
 
             match = Regex.Match(res, "editstream/(lv[0-9]+)\"");
             if (match.Success)
