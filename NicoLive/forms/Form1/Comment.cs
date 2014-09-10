@@ -148,7 +148,7 @@ namespace NicoLive
             }
             else
             {
-                // ユーザー名収集スレッドスタート
+                // ユーザー名収集リストに追加
                 GetUsername(iCmt.Uid);
             }
 
@@ -794,6 +794,9 @@ namespace NicoLive
                 if (!match.Success) return;
 
                 string keyword = match.Groups["keyword"].Value;
+
+                if (keyword.Contains("天気は？")) return;
+                
                 keyword = keyword.Replace("/", "");
                 string url = "http://weather.yahoo.co.jp/weather/search/?p=";
 
@@ -1179,15 +1182,15 @@ namespace NicoLive
 
             if (iCmt.IsOwner) return;
             if (iCmt.IsOperator) return;
-            if (!iCmt.Text.Contains("@")) return;
-            if (!iCmt.Text.Contains("＠")) return;
 
             string comment = iCmt.Text.Replace("＠", "@");
 
-            int idx = iCmt.Text.LastIndexOf("@");
+            if (!comment.Contains("@")) return;
+
+            int idx = comment.LastIndexOf("@");
             if (idx < 0) return;
 
-            string nick = iCmt.Text.Substring(idx + 1);
+            string nick = comment.Substring(idx + 1);
 
             if (!mUid.Contains(iCmt.Uid))
             {
@@ -1273,11 +1276,12 @@ namespace NicoLive
             {
 
                 WakuResult result = WakuResult.ERR;
+                string old_lv = LiveID;
                 string new_lv = "";
 
                 if (Properties.Settings.Default.use_auto_wakutiri_dialog)
                 {
-                    WakuDlg dlg = new WakuDlg(LiveID, false);
+                    WakuDlg dlg = new WakuDlg(old_lv, false);
                     dlg.ShowDialog();
 
                     if (dlg.mState != WakuResult.NO_ERR) return;
@@ -1289,7 +1293,7 @@ namespace NicoLive
                     Wakutori mk = new Wakutori();
                     mk.MyOwner = this;
                     mk.AutoWaku = true;
-                    mk.ReuseLv = this.LiveID;
+                    mk.ReuseLv = old_lv;
 
                     mk.ShowDialog();
 
@@ -1317,8 +1321,8 @@ namespace NicoLive
                             mNico.LiveStart(new_lv, token, true);
                         }
 
-                        mNico.SendOwnerComment(LiveID, "/perm 次枠こちら：http://nico.ms/" + new_lv, "", mLiveInfo.Token);
-                        mNico.SendOwnerComment(LiveID, "/disconnect", "", mLiveInfo.Token);
+                        mNico.SendOwnerComment(old_lv, "/perm 次枠こちら：http://nico.ms/" + new_lv, "", mLiveInfo.Token);
+                        mNico.SendOwnerComment(old_lv, "/disconnect", "", mLiveInfo.Token);
                     }
                     catch (Exception e)
                     {
