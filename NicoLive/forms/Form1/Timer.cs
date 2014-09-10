@@ -144,7 +144,7 @@ namespace NicoLive
 
 
                 //３０分で終了
-                if (!mContWaku.Checked && mLiveInfo.StartTime != 0 && !mIsExtend)
+                if (!mContWaku.Checked && mLiveInfo.StartTime != 0 && !mIsExtend && !mDoingGetNextWaku)
                 {
                     uint now = Utils.GetUnixTime(DateTime.Now);
                     uint end_time = mLiveInfo.EndTime;
