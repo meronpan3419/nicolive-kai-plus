@@ -8,7 +8,6 @@ using System;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
 using System.Threading;
-using Microsoft.VisualBasic;
 using System.IO;
 using System.Data.SQLite;
 using System.Collections.Generic;
@@ -235,6 +234,9 @@ namespace NicoLive
 
             // 天気
             Tenki(iCmt);
+
+            // 引き算
+            Hikizan(iCmt);
 
             // NGコメント通知
             SendNGCommentNotice(int.Parse(iCmt.No));
@@ -748,6 +750,34 @@ namespace NicoLive
         }
 
         //-------------------------------------------------------------------------
+        // 引き算
+        //-------------------------------------------------------------------------
+        private void Hikizan(Comment iCmt)
+        {
+            if (iCmt.IsOwner) return;
+            string post_msg = "";
+            string pattern = @"([0-9]+)([-ー－―‐])([0-9]+)";
+            Match match = Regex.Match(iCmt.Text, pattern);
+            if (!match.Success) return;
+            int i = 0;
+            try
+            {
+                i = int.Parse(match.Groups[1].Value) - int.Parse(match.Groups[3].Value);
+                post_msg = match.Groups[1].Value + "-" + match.Groups[3].Value + "は、" + i + "です";
+            }
+            catch
+            {
+                post_msg = match.Groups[1].Value + "-" + match.Groups[3].Value + "は、わかりませんでした。";
+            }
+            this.Invoke((Action)delegate()
+            {
+                this.SendComment(post_msg, true);
+            });
+
+
+        }
+
+        //-------------------------------------------------------------------------
         // 天気
         //-------------------------------------------------------------------------
         private void Tenki(Comment iCmt)
@@ -764,6 +794,7 @@ namespace NicoLive
                 if (!match.Success) return;
 
                 string keyword = match.Groups["keyword"].Value;
+                keyword = keyword.Replace("/", "");
                 string url = "http://weather.yahoo.co.jp/weather/search/?p=";
 
                 CookieContainer cc = new CookieContainer();
@@ -831,35 +862,41 @@ namespace NicoLive
             if (mAishouList.Count < 2) return;
             if (iCmt.IsOwner) return;
 
-            if (iCmt.Text.Contains("相性"))
+            if (!iCmt.Text.Contains("相性")) return;
+
+            string name;
+            if (mUid.Contains(iCmt.Uid))
             {
-                string name;
-                if (mUid.Contains(iCmt.Uid))
-                {
-                    name = mUid.CheckNickname(iCmt.Uid);
-                }
-                else
-                {
-                    name = ">>" + iCmt.No;
-                }
+                name = mUid.CheckNickname(iCmt.Uid);
+                name = name.Replace("/", "");
+            }
+            else
+            {
+                name = ">>" + iCmt.No;
+            }
 
-                mAishouList.Remove(name);
-                string name2;
-                int i = new Random().Next(mAishouList.Count);
-                name2 = mAishouList[i];
-                mAishouList.Add(name);
+            mAishouList.Remove(name);
+            string name2;
+            int i = new Random().Next(mAishouList.Count);
+            name2 = mAishouList[i];
+            mAishouList.Add(name);
 
 
-                string post_msg;
-                int s = new Random().Next(400);
-                post_msg = name + "さんと" + name2 + "さんの相性は、" + s + "%です！";
-
+            string post_msg;
+            int s = new Random().Next(400);
+            post_msg = name + "さんと" + name2 + "さんの相性は、" + s + "%です！";
+            
+            Thread t = new Thread(delegate()
+            {
                 this.Invoke((Action)delegate()
                 {
                     this.SendComment(post_msg, true);
                 });
+            });
+            t.Name = "Aisho";
+            t.Start();
 
-            }
+
         }
 
         //-------------------------------------------------------------------------
@@ -876,6 +913,7 @@ namespace NicoLive
                 if (mUid.Contains(iCmt.Uid))
                 {
                     name = mUid.CheckNickname(iCmt.Uid);
+                    name = name.Replace("/", "");
                 }
                 else
                 {
@@ -906,11 +944,15 @@ namespace NicoLive
                     }
 
                 }
-
-                this.Invoke((Action)delegate()
+                Thread t = new Thread(delegate()
                 {
-                    this.SendComment(post_msg, true);
+                    this.Invoke((Action)delegate()
+                    {
+                        this.SendComment(post_msg, true);
+                    });
                 });
+                t.Name = "Omikuji";
+                t.Start();
 
 
             }
@@ -928,11 +970,15 @@ namespace NicoLive
 
                 string post_msg;
                 post_msg = name + "さんは、おみくじはあります！";
-
-                this.Invoke((Action)delegate()
+                Thread t = new Thread(delegate()
                 {
-                    this.SendComment(post_msg, true);
+                    this.Invoke((Action)delegate()
+                    {
+                        this.SendComment(post_msg, true);
+                    });
                 });
+                t.Name = "Omikuji";
+                t.Start();
 
                 if (mOmikujiList.Contains(iCmt.Uid))
                 {
@@ -1072,6 +1118,7 @@ namespace NicoLive
 
                             if (nick != null)
                             {
+                                nick = nick.Replace("/", "");
                                 msg = msg.Replace("@name", nick);
                             }
                             else
@@ -1129,40 +1176,40 @@ namespace NicoLive
         //-------------------------------------------------------------------------
         private void SaveHandle(Comment iCmt)
         {
-            string tmp = Strings.StrConv(iCmt.Text, VbStrConv.Narrow, 0x0411);
-            string regex = "@[0-9].*";
-            Match match = Regex.Match(tmp, regex);
 
-            if (!match.Success)
+            if (iCmt.IsOwner) return;
+            if (iCmt.IsOperator) return;
+            if (!iCmt.Text.Contains("@")) return;
+            if (!iCmt.Text.Contains("＠")) return;
+
+            string comment = iCmt.Text.Replace("＠", "@");
+
+            int idx = iCmt.Text.LastIndexOf("@");
+            if (idx < 0) return;
+
+            string nick = iCmt.Text.Substring(idx + 1);
+
+            if (!mUid.Contains(iCmt.Uid))
             {
-                tmp = iCmt.Text.Replace("＠", "@");
-                if (tmp.Contains("@") && !iCmt.IsOwner && !iCmt.IsOperator)
+                // ユーザー名が登録されてない
+                this.Invoke((Action)delegate()
                 {
-                    int idx = tmp.LastIndexOf("@");
-                    if (idx >= 0)
-                    {
-                        string nick = tmp.Substring(idx + 1);
-                        if (!mUid.Contains(iCmt.Uid))
-                        {
-                            // ユーザー名が登録されてない
-                            this.Invoke((Action)delegate()
-                            {
-                                AddNickname(iCmt.Uid, nick);
-                                iCmt.Handle = nick;
-                            });
-                        }
-                        else
-                        {
-                            // すでに登録されているユーザー名を変更
-                            this.Invoke((Action)delegate()
-                            {
-                                SetNickname(iCmt.Uid, nick);
-                                iCmt.Handle = nick;
-                            });
-                        }
-                    }
-                }
+                    AddNickname(iCmt.Uid, nick);
+                    iCmt.Handle = nick;
+                });
             }
+            else
+            {
+                // すでに登録されているユーザー名を変更
+                this.Invoke((Action)delegate()
+                {
+                    SetNickname(iCmt.Uid, nick);
+                    iCmt.Handle = nick;
+                });
+            }
+
+
+
         }
 
         //-------------------------------------------------------------------------
@@ -1226,7 +1273,7 @@ namespace NicoLive
             {
 
                 WakuResult result = WakuResult.ERR;
-                string lv = "";
+                string new_lv = "";
 
                 if (Properties.Settings.Default.use_auto_wakutiri_dialog)
                 {
@@ -1235,7 +1282,7 @@ namespace NicoLive
 
                     if (dlg.mState != WakuResult.NO_ERR) return;
                     result = dlg.mState;
-                    lv = dlg.mLv;
+                    new_lv = dlg.mLv;
                 }
                 else
                 {
@@ -1248,7 +1295,7 @@ namespace NicoLive
 
                     if (mk.mState != WakuResult.NO_ERR) return;
                     result = mk.mState;
-                    lv = mk.mLv;
+                    new_lv = mk.mLv;
                 }
 
                 if (result != WakuResult.NO_ERR) return;
@@ -1257,8 +1304,20 @@ namespace NicoLive
                 {
                     try
                     {
+
                         mNico.SendOwnerComment(LiveID, "/cls", "", mLiveInfo.Token);
-                        mNico.SendOwnerComment(LiveID, "/perm 次枠こちら：http://nico.ms/" + lv, "", mLiveInfo.Token);
+
+                        // 配信開始コマンド撃っとく
+                        Utils.WriteLog("GetNextWaku(): LiveStart():");
+                        string token = "";
+                        Dictionary<string, string> info_PublishStatus = mNico.GetPublishStatus(new_lv);
+                        if (info_PublishStatus != null && info_PublishStatus.ContainsKey("token"))
+                        {
+                            token = info_PublishStatus["token"];
+                            mNico.LiveStart(new_lv, token, true);
+                        }
+
+                        mNico.SendOwnerComment(LiveID, "/perm 次枠こちら：http://nico.ms/" + new_lv, "", mLiveInfo.Token);
                         mNico.SendOwnerComment(LiveID, "/disconnect", "", mLiveInfo.Token);
                     }
                     catch (Exception e)
@@ -1273,7 +1332,7 @@ namespace NicoLive
                 {
                     this.Invoke((Action)delegate()
                     {
-                        this.LiveID = lv;
+                        this.LiveID = new_lv;
                     });
                 }
                 catch (Exception e)

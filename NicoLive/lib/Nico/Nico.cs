@@ -147,7 +147,7 @@ namespace NicoLive
         //-------------------------------------------------------------------------
         // LiveStart
         //-------------------------------------------------------------------------
-        public bool LiveStart(string iLV, string iToken)
+        public bool LiveStart(string iLV, string iToken, bool iIsNextLV = false)
         {
             if (iLV.Length <= 2) return false;
             if (iToken.Length <= 0) return false;
@@ -155,14 +155,20 @@ namespace NicoLive
             // 配信の種別セット、value(0: 通常配信, 1: 外部配信) 
             string url = URI_STARTFME2 + iLV + "&key=hq&value=1&token=" + iToken;
             string xml = HttpGet(url, ref this.mCookieLogin);
+
             if (xml == null) return false;
             if (!xml.Contains("status=\"ok\"")) return false;
 
             // 配信開始コマンド exclude
             url = URI_STARTFME2 + iLV + "&key=exclude&value=0&token=" + iToken;
             xml = HttpGet(url, ref this.mCookieLogin);
+
             if (xml == null) return false;
             if (!xml.Contains("status=\"ok\"")) return false;
+
+
+            // 次枠の配信開始コマンドの時はここで終わり
+            if (iIsNextLV) return true; 
 
             //
             // ついでにstart_timeとend_timeのセット
@@ -778,7 +784,7 @@ namespace NicoLive
                         {
                             ret["watch_count"] = reader.ReadString();
                         }
-                        // 来場者数取得
+                        // エラーコード
                         else if (reader.LocalName.Equals("code"))
                         {
                             ret["code"] = reader.ReadString();
@@ -940,7 +946,13 @@ namespace NicoLive
 
                 if (h == null)
                 {
-                    Utils.WriteLog("unable get movieinfo");
+                    Utils.WriteLog("SendComment(): unable get movieinfo");
+                    return false;
+                }
+
+                if (h["status"].ToString().CompareTo("ok") != 0)
+                {
+                    Utils.WriteLog("SendComment(): unable get movieinfo: " + h["code"].ToString());
                     return false;
                 }
                 mUserID = h["user_id"];
