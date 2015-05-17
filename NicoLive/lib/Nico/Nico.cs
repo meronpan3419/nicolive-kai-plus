@@ -91,6 +91,7 @@ namespace NicoLive
 
         // uri of api to logging in
         private readonly string URI_LOGIN = "https://secure.nicovideo.jp/secure/login?site=niconico";
+        //private readonly string URI_LOGIN = "https://account.nicovideo.jp/login?site=niconico";
         //private readonly string URI_LOGIN = "https://secure.nicovideo.jp/secure/login?site=nicolivespweb";
 
 
@@ -151,6 +152,7 @@ namespace NicoLive
         {
             if (iLV.Length <= 2) return false;
             if (iToken.Length <= 0) return false;
+            if (this.mCookieLogin == null) return false;
 
             // 配信の種別セット、value(0: 通常配信, 1: 外部配信) 
             string url = URI_STARTFME2 + iLV + "&key=hq&value=1&token=" + iToken;
@@ -168,7 +170,7 @@ namespace NicoLive
 
 
             // 次枠の配信開始コマンドの時はここで終わり
-            if (iIsNextLV) return true; 
+            if (iIsNextLV) return true;
 
             //
             // ついでにstart_timeとend_timeのセット
@@ -203,6 +205,7 @@ namespace NicoLive
         //-------------------------------------------------------------------------
         public bool LiveStop(string iLV, string iToken)
         {
+            if (this.mCookieLogin == null) return false;
             if (iLV.Length <= 2) return false;
             if (iToken.Length <= 0) return false;
 
@@ -281,6 +284,8 @@ namespace NicoLive
 
             if (!Login(username, password)) return result_lv;
 
+            if (this.mCookieLogin == null) return result_lv;
+
             string html = HttpGet(uri, ref this.mCookieLogin);
 
             if (html == null) return result_lv;
@@ -312,7 +317,7 @@ namespace NicoLive
             // hashtable to hold the arguments of POST request.
             Dictionary<string, string> post_arg = new Dictionary<string, string>(3);
 
-            post_arg["mail"] = username;
+            post_arg["mail_tel"] = username;
             post_arg["password"] = password;
             post_arg["next_url"] = "";
 
@@ -434,12 +439,16 @@ namespace NicoLive
             }
 
             string user_session = "";
+            string user_session2 = "";
 
             //CookieからセッションＩＤ取得
             Uri uri = new Uri(URI_LOGIN);
             CookieCollection cc = this.mCookieLogin.GetCookies(uri);
-            user_session = cc["user_session"].ToString();
-            string user_session2 = addSessionidExpires(user_session);
+            if (!(cc["user_session"] == null))
+            {
+                user_session = cc["user_session"].ToString();
+                user_session2 = addSessionidExpires(user_session);
+            }
             if (user_session.Equals(""))
             {
                 Utils.WriteLog("Nico: Login()  Login by ID-PASS, user_session is null ");
@@ -538,6 +547,7 @@ namespace NicoLive
         public string GetUsername(string iUserID)
         {
             if (iUserID.Length <= 0) return "";
+            if (this.mCookieLogin == null) return "";
 
             string name = "";
             string uri = "http://www.nicovideo.jp/user/" + iUserID;
@@ -767,16 +777,19 @@ namespace NicoLive
                         // コメントサーバーアドレス取得
                         else if (reader.LocalName.Equals("addr"))
                         {
+                            if (ret.ContainsKey("addr")) continue;
                             ret["addr"] = reader.ReadString();
                         }
                         // コメントサーバーポート取得
                         else if (reader.LocalName.Equals("port"))
                         {
+                            if (ret.ContainsKey("port")) continue;
                             ret["port"] = reader.ReadString();
                         }
                         // スレッド取得
                         else if (reader.LocalName.Equals("thread"))
                         {
+                            if (ret.ContainsKey("thread")) continue;
                             ret["thread"] = reader.ReadString();
                         }
                         // 来場者数取得
@@ -877,6 +890,8 @@ namespace NicoLive
             if (!IsLogin)
                 return false;
 
+            if (this.mCookieLogin == null) return false;
+
             string uri = "http://watch.live.nicovideo.jp/api/broadcast/" + iLiveID;
 
             Dictionary<string, string> post_arg = new Dictionary<string, string>();
@@ -929,6 +944,8 @@ namespace NicoLive
 
             if (!IsLogin)
                 return false;
+
+            if (this.mCookieLogin == null) return false;
 
             if (iComment.Length <= 0)
             {
@@ -1315,6 +1332,9 @@ namespace NicoLive
         //-------------------------------------------------------------------------
         public Dictionary<string, string> GetFMEProfile(string iLV)
         {
+            if (this.mCookieLogin == null)
+                return null;
+
             string api_url = URI_GETFMEPROFILE + iLV;
             string xml = HttpGet(api_url, ref this.mCookieLogin);
 
@@ -1371,6 +1391,8 @@ namespace NicoLive
         //-------------------------------------------------------------------------
         public bool GetOldLiveInfo(string iLv, ref Dictionary<string, string> iInfo, ref Dictionary<string, string> iCom, ref Dictionary<string, string> iTag, ref Dictionary<string, string> iTaglock)
         {
+            if (this.mCookieLogin == null) return false;
+
             string lv = iLv.Replace("lv", "");
             string url = "http://live.nicovideo.jp/editstream?reuseid=" + lv;
             string res = HttpGet(url, ref mCookieLogin);
@@ -1419,7 +1441,8 @@ namespace NicoLive
             List<string> livetags = new List<string>();
             List<string> taglock = new List<string>();
 
-            mc = Regex.Matches(res, @"<input type=""text"" value=""(.*?)""\s+?style=""width: 100px;"" name=""livetags(.*?)""", RegexOptions.Multiline);
+            // <input type="text" value="ppp" class="input_livetag" name="livetags1" id="livetags1">
+            mc = Regex.Matches(res, @"<input type=""text"" value=""(.*?)"" class=""input_livetag"" name=""livetags(.*?)""", RegexOptions.Multiline);
             if (mc.Count > 0)
             {
                 foreach (Match m in mc)
@@ -1428,6 +1451,7 @@ namespace NicoLive
                 }
             }
 
+            //<input type="checkbox" value="ロックする" name="taglock1" id="taglock1" >
             mc = Regex.Matches(res, @"<input type=""checkbox"" value=""ロックする"" name=""taglock.*?"" id=""taglock.*?"".*?>", RegexOptions.Multiline);
             if (mc.Count > 0)
             {
@@ -1549,6 +1573,8 @@ namespace NicoLive
         //-------------------------------------------------------------------------
         public WakuErr GetWaku(ref Dictionary<string, string> iParam, ref string iLv)
         {
+            if (this.mCookieLogin == null) return WakuErr.ERR_LOGIN;
+
             string url = "http://live.nicovideo.jp/editstream";
             string location = "";
             string res = HttpPost2(url, iParam, ref mCookieLogin, out location);
@@ -1661,7 +1687,7 @@ namespace NicoLive
             {
                 return WakuErr.ERR_KIYAKU;
             }
-       
+
             match = Regex.Match(res, "<h2.*?エラーが発生しました.*?/h2>");
             if (match.Success)
             {
@@ -1697,19 +1723,24 @@ namespace NicoLive
         {
 
             string lv = "";
-            if (Login(username, password))
+
+
+            if (!Login(username, password))
+                return lv;
+            if (this.mCookieLogin == null)
+                return lv;
+
+            string url = "http://live.nicovideo.jp/my";
+            string res = HttpGet(url, ref mCookieLogin);
+
+            if (res == null) return lv;
+
+            Match match = Regex.Match(res, "http://live.nicovideo.jp/editstream/lv(.*?)\"");
+            if (match.Success)
             {
-                string url = "http://live.nicovideo.jp/my";
-                string res = HttpGet(url, ref mCookieLogin);
-
-                if (res == null) return lv;
-
-                Match match = Regex.Match(res, "http://live.nicovideo.jp/editstream/lv(.*?)\"");
-                if (match.Success)
-                {
-                    lv = "lv" + match.Groups[1].Value;
-                }
+                lv = "lv" + match.Groups[1].Value;
             }
+
             return lv;
         }
 
@@ -1718,6 +1749,9 @@ namespace NicoLive
         //-------------------------------------------------------------------------
         public Dictionary<string, string> GetJunban(string iLv)
         {
+            if (this.mCookieLogin == null)
+                return null;
+
             iLv.Replace("lv", "");
 
             Dictionary<string, string> wait_info = new Dictionary<string, string>();
@@ -1983,6 +2017,9 @@ namespace NicoLive
         //-------------------------------------------------------------------------
         public bool GetSaleList(string iLv, ref List<SaleList> iSaleList)
         {
+            if (this.mCookieLogin == null)
+                return false;
+
             string url = "http://watch.live.nicovideo.jp/api/getsalelist?v=" + iLv;
             string xml = HttpGet(url, ref mCookieLogin);
 
@@ -2095,6 +2132,9 @@ namespace NicoLive
         //-------------------------------------------------------------------------
         public bool Purchase(string iLv, string iToken, SaleList iItem)
         {
+            if (this.mCookieLogin == null) return false;
+
+
             string url = "http://watch.live.nicovideo.jp/api/usepoint?v=" + iLv + "&code=" + iItem.mCode + "&item=" + iItem.mItem + "&token=" + iToken + "&num=" + iItem.mNum;
             string xml = HttpGet(url, ref mCookieLogin);
 
@@ -2111,6 +2151,8 @@ namespace NicoLive
 
         public Dictionary<string, string> GetNGUser(string iLv)
         {
+
+            if (this.mCookieLogin == null) return null;
 
             // <id, token>
             Dictionary<string, string> ng_user = new Dictionary<string, string>();

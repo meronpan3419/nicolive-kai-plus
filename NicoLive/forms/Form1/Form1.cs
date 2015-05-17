@@ -88,7 +88,7 @@ namespace NicoLive
         private bool mDoingGetNextWaku = false;
 
         // 残り3分通知したかどうか
-        private bool mTalkLimit = false;
+        private bool mTalkRestMin = false;
 
         // ロガー
         private StreamWriter mLogger = null;
@@ -287,10 +287,11 @@ namespace NicoLive
             mTwPost = false;
             mOwnLive = false;
             mDisconnect = true;
-            mTalkLimit = false;
+            mTalkRestMin = false;
             mDoingGetNextWaku = false;
             mNextGC = 0;
-            mNico.Comment = "";
+            if(mNico != null)
+                mNico.Comment = "";
             mTargetVisitorCnt = 10;
 
             mSpeakList.Clear();

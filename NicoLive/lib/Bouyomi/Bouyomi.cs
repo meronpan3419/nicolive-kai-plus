@@ -57,7 +57,7 @@ namespace NicoLive
                 }
                 catch (Exception)
                 {
-                    Utils.WriteLog("接続失敗");
+                    Utils.WriteLog("bouyomi 接続失敗");
                 }
 
                 if (tc != null)
@@ -113,7 +113,7 @@ namespace NicoLive
             }
             catch (Exception)
             {
-                Utils.WriteLog("接続失敗");
+                Utils.WriteLog("bouyomi 接続失敗");
             }
 
             if (tc != null)

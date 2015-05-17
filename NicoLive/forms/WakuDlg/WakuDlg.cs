@@ -112,8 +112,8 @@ namespace NicoLive
             SetLabelFromThread("放送履歴取得中", Color.Black, false);
             Utils.WriteLog("WakuDlg: mWorker_DoWork(): 放送履歴取得中");
 
-            if (mLv.Length <= 2)
-                mLv = mNico.GetRecentLive(Properties.Settings.Default.user_id,
+            if (lv.Length <= 2)
+                lv = mNico.GetRecentLive(Properties.Settings.Default.user_id,
                                 Properties.Settings.Default.password);
 
             SetLabelFromThread("前枠番組情報の取得中", Color.Black, false);
@@ -126,7 +126,7 @@ namespace NicoLive
             Dictionary<string, string> tag = new Dictionary<string, string>();
             Dictionary<string, string> taglock = new Dictionary<string, string>();
         GET_OLD_INFO:
-            if (!mNico.GetOldLiveInfo(mLv, ref arr, ref comu, ref tag, ref taglock))
+            if (!mNico.GetOldLiveInfo(lv, ref arr, ref comu, ref tag, ref taglock))
             {
                 if (mAbort) return;
 
@@ -143,7 +143,7 @@ namespace NicoLive
                 return;
             }
 
-            if (mAbort) return;
+            if (mAbort) goto END;
 
             // タイトルの番号の自動更新
             if (Properties.Settings.Default.title_auto_inc)
@@ -235,7 +235,8 @@ namespace NicoLive
             bool accept_kiyaku = false;
 
         RETRY:
-            if (mAbort) return;
+            if (mAbort)
+                goto END;
 
             WakuErr err = mNico.GetWaku(ref arr, ref lv);
             Utils.WriteLog("WakuErr:" + err.ToString());
@@ -253,6 +254,8 @@ namespace NicoLive
 
                 SetLabelFromThread("枠取り完了", Color.Black, true);
                 Utils.WriteLog("WakuDlg: mWorker_DoWork(): 枠取り完了");
+
+                goto END;
             }
             else if (err == WakuErr.ERR_MAINTE)
             {
@@ -370,7 +373,13 @@ namespace NicoLive
                         SetLabelFromThread("枠取り完了", Color.Black, true);
                         Utils.WriteLog("WakuDlg: mWorker_DoWork(): 枠取り完了");
                         mState = WakuResult.NO_ERR;
-                        break;
+
+                        using (Bouyomi bm = new Bouyomi())
+                        {
+                            MessageSettings msg = MessageSettings.Instance;
+                            bm.Talk(msg.GetMessage("枠が取れたよ"));
+                        }
+                        goto END;
                     }
                     else
                     {
@@ -412,6 +421,16 @@ namespace NicoLive
                     {
                         mLv = lv;
                         mState = WakuResult.NO_ERR;
+
+                        using (Bouyomi bm = new Bouyomi())
+                        {
+                            MessageSettings msg = MessageSettings.Instance;
+                            bm.Talk(msg.GetMessage("枠が取れたよ"));
+                        }
+
+                        SetLabelFromThread("枠取り完了", Color.Black, true);
+                        Utils.WriteLog("WakuDlg: mWorker_DoWork(): 枠取り完了");
+                        goto END;
                     }
                     try_cnt++;
                     Thread.Sleep(1000);
@@ -438,6 +457,7 @@ namespace NicoLive
                 SetLabelFromThread("ERR:予期せぬエラーです。", Color.Red, false);
                 Utils.WriteLog("WakuDlg: mWorker_DoWork(): WakuErr.ERR_UNKOWN");
             }
+            END:
             arr = null;
         }
 

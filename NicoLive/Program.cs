@@ -19,7 +19,7 @@ namespace NicoLive
 {
     static class Program
     {
-        public static string VERSION_KAI_PLUS = "kai_p12";
+        public static string VERSION_KAI_PLUS = "kai_p12_20150412";
 
 
         /// <summary>
@@ -107,19 +107,49 @@ namespace NicoLive
             }
             //------------------------------------------------
 
-            try
-            {
+
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
+                Application.ThreadException +=
+                    new System.Threading.ThreadExceptionEventHandler(
+                        Application_ThreadException);
+                System.Threading.Thread.GetDomain().UnhandledException += 
+                    new UnhandledExceptionEventHandler(Application_UnhandledException);
                 Form1 form = new Form1();
                 form.mAutoConnect = auto_connect;
                 form.mFastLive = fastlive_mode;
                 Application.Run(form);
-            }
-            catch (Exception e)
+
+        }
+
+        //ThreadExceptionイベントハンドラ
+        private static void Application_ThreadException(object sender,
+            System.Threading.ThreadExceptionEventArgs e)
+        {
+            try
             {
-                Utils.WriteLog("Main() " + e.Message);
-                Utils.WriteLog("Main() " + e.StackTrace);
+                Utils.WriteLog("Main() " + e.Exception.Message);
+                Utils.WriteLog("Main() " + e.Exception.StackTrace);
+            }
+            finally
+            {
+                //アプリケーションを終了する
+                Application.Exit();
+            }
+        }
+
+        public static void Application_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            try
+            {
+                Exception ex = e.ExceptionObject as Exception;
+                Utils.WriteLog("Main() " + ex.Message);
+                Utils.WriteLog("Main() " + ex.StackTrace);
+            }
+            finally
+            {
+                //アプリケーションを終了する
+                Application.Exit();
             }
         }
     }

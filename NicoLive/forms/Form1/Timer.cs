@@ -129,8 +129,8 @@ namespace NicoLive
 
                 this.Invoke((Action)delegate()
                 {
-                    //　残り時間3分以下で文字色を赤に
-                    if (remaining_sec < 3 * 60)
+                    //　残り時間3分以下30分以上で文字色を赤に
+                    if (remaining_sec < 3 * 60 || remaining_sec > 30 * 60)
                     {
                         mRemainingTime.ForeColor = System.Drawing.Color.Red;
                     }
@@ -144,16 +144,15 @@ namespace NicoLive
 
 
                 //３０分で終了
-                if (!mContWaku.Checked && mLiveInfo.StartTime != 0 && !mIsExtend && !mDoingGetNextWaku)
+                if (!mContWaku.Checked 
+                    && mLiveInfo.StartTime != 0 
+                    && !mIsExtend 
+                    && !mDoingGetNextWaku
+                    && remaining_sec　< 0)
                 {
-                    uint now = Utils.GetUnixTime(DateTime.Now);
-                    uint end_time = mLiveInfo.EndTime;
-
-                    if (now > end_time) // 30分経過
-                    {
                         mNico.SendOwnerComment(LiveID, "/disconnect", "", mLiveInfo.Token);
                         mNico.LiveStop(LiveID, mLiveInfo.Token);
-                    }
+                    
 
                 }
             }

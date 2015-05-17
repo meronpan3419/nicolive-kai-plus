@@ -49,7 +49,6 @@
             this.toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
             this.mBouyomiBtn = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.mVisitorBtn = new System.Windows.Forms.ToolStripButton();
             this.mCaptchaSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.mContWaku = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
@@ -124,6 +123,7 @@
             this.mGatherUserIDWorker = new System.ComponentModel.BackgroundWorker();
             this.mXSplitTimer = new System.Windows.Forms.Timer(this.components);
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.mVisitorBtn = new System.Windows.Forms.ToolStripButton();
             this.mToolStrip.SuspendLayout();
             this.mStatusStrip.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
@@ -158,7 +158,7 @@
             this.toolStripSeparator9});
             this.mToolStrip.Location = new System.Drawing.Point(0, 0);
             this.mToolStrip.Name = "mToolStrip";
-            this.mToolStrip.Size = new System.Drawing.Size(962, 25);
+            this.mToolStrip.Size = new System.Drawing.Size(780, 25);
             this.mToolStrip.TabIndex = 0;
             this.mToolStrip.Text = "toolStrip1";
             // 
@@ -276,18 +276,6 @@
             this.toolStripSeparator1.Name = "toolStripSeparator1";
             this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
             // 
-            // mVisitorBtn
-            // 
-            this.mVisitorBtn.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.mVisitorBtn.CheckOnClick = true;
-            this.mVisitorBtn.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.mVisitorBtn.Image = ((System.Drawing.Image)(resources.GetObject("mVisitorBtn.Image")));
-            this.mVisitorBtn.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.mVisitorBtn.Name = "mVisitorBtn";
-            this.mVisitorBtn.Size = new System.Drawing.Size(84, 22);
-            this.mVisitorBtn.Text = "来場者数読上";
-            this.mVisitorBtn.CheckStateChanged += new System.EventHandler(this.mVisitorBtn_CheckStateChanged);
-            // 
             // mCaptchaSeparator
             // 
             this.mCaptchaSeparator.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
@@ -394,9 +382,9 @@
             this.mWakumachi,
             this.mUpLink,
             this.mDownLink});
-            this.mStatusStrip.Location = new System.Drawing.Point(0, 411);
+            this.mStatusStrip.Location = new System.Drawing.Point(0, 258);
             this.mStatusStrip.Name = "mStatusStrip";
-            this.mStatusStrip.Size = new System.Drawing.Size(962, 25);
+            this.mStatusStrip.Size = new System.Drawing.Size(780, 25);
             this.mStatusStrip.TabIndex = 1;
             this.mStatusStrip.Text = "statusStrip1";
             // 
@@ -529,7 +517,7 @@
             this.tableLayoutPanel1.RowCount = 2;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 85F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(962, 383);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(780, 230);
             this.tableLayoutPanel1.TabIndex = 2;
             // 
             // mCommentList
@@ -565,7 +553,7 @@
             this.mCommentList.RowHeadersVisible = false;
             this.mCommentList.RowTemplate.Height = 21;
             this.mCommentList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.mCommentList.Size = new System.Drawing.Size(958, 292);
+            this.mCommentList.Size = new System.Drawing.Size(776, 292);
             this.mCommentList.TabIndex = 3;
             this.mCommentList.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.mCommentList_CellDoubleClick);
             this.mCommentList.RowsAdded += new System.Windows.Forms.DataGridViewRowsAddedEventHandler(this.mCommentList_RowsAdded);
@@ -722,12 +710,12 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(5, 5);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(952, 79);
+            this.panel1.Size = new System.Drawing.Size(770, 79);
             this.panel1.TabIndex = 4;
             // 
             // btnBouyomiClear
             // 
-            this.btnBouyomiClear.Location = new System.Drawing.Point(439, 12);
+            this.btnBouyomiClear.Location = new System.Drawing.Point(379, 13);
             this.btnBouyomiClear.Name = "btnBouyomiClear";
             this.btnBouyomiClear.Size = new System.Drawing.Size(76, 27);
             this.btnBouyomiClear.TabIndex = 23;
@@ -748,7 +736,7 @@
             this.groupBox1.Controls.Add(this.mUseFME);
             this.groupBox1.Controls.Add(this.mUpdateFMLEProfileListBtn);
             this.groupBox1.Controls.Add(this.mFMLEProfileList);
-            this.groupBox1.Location = new System.Drawing.Point(634, 1);
+            this.groupBox1.Location = new System.Drawing.Point(452, 1);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(311, 70);
             this.groupBox1.TabIndex = 22;
@@ -872,17 +860,17 @@
             // 
             // mNextWakuFastBtn
             // 
-            this.mNextWakuFastBtn.Location = new System.Drawing.Point(275, 12);
+            this.mNextWakuFastBtn.Location = new System.Drawing.Point(246, 13);
             this.mNextWakuFastBtn.Name = "mNextWakuFastBtn";
-            this.mNextWakuFastBtn.Size = new System.Drawing.Size(76, 27);
+            this.mNextWakuFastBtn.Size = new System.Drawing.Size(38, 27);
             this.mNextWakuFastBtn.TabIndex = 18;
-            this.mNextWakuFastBtn.Text = "いつでも次枠";
+            this.mNextWakuFastBtn.Text = "次枠";
             this.mNextWakuFastBtn.UseVisualStyleBackColor = true;
             this.mNextWakuFastBtn.Click += new System.EventHandler(this.mNextWakuFastBtn_Click);
             // 
             // mDisconnectBtn
             // 
-            this.mDisconnectBtn.Location = new System.Drawing.Point(357, 12);
+            this.mDisconnectBtn.Location = new System.Drawing.Point(290, 13);
             this.mDisconnectBtn.Name = "mDisconnectBtn";
             this.mDisconnectBtn.Size = new System.Drawing.Size(76, 27);
             this.mDisconnectBtn.TabIndex = 17;
@@ -905,13 +893,13 @@
             // 
             this.mCommandBox.Location = new System.Drawing.Point(178, 50);
             this.mCommandBox.Name = "mCommandBox";
-            this.mCommandBox.Size = new System.Drawing.Size(91, 19);
+            this.mCommandBox.Size = new System.Drawing.Size(62, 19);
             this.mCommandBox.TabIndex = 12;
             // 
             // mResetBtn
             // 
             this.mResetBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.mResetBtn.Location = new System.Drawing.Point(561, 46);
+            this.mResetBtn.Location = new System.Drawing.Point(379, 46);
             this.mResetBtn.Name = "mResetBtn";
             this.mResetBtn.Size = new System.Drawing.Size(63, 25);
             this.mResetBtn.TabIndex = 10;
@@ -922,7 +910,7 @@
             // mCommentPostBtn
             // 
             this.mCommentPostBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.mCommentPostBtn.Location = new System.Drawing.Point(492, 46);
+            this.mCommentPostBtn.Location = new System.Drawing.Point(310, 46);
             this.mCommentPostBtn.Name = "mCommentPostBtn";
             this.mCommentPostBtn.Size = new System.Drawing.Size(63, 25);
             this.mCommentPostBtn.TabIndex = 4;
@@ -944,11 +932,11 @@
             // 
             this.mCommentBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.mCommentBox.Location = new System.Drawing.Point(275, 49);
+            this.mCommentBox.Location = new System.Drawing.Point(246, 49);
             this.mCommentBox.Multiline = true;
             this.mCommentBox.Name = "mCommentBox";
             this.mCommentBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.mCommentBox.Size = new System.Drawing.Size(211, 21);
+            this.mCommentBox.Size = new System.Drawing.Size(58, 21);
             this.mCommentBox.TabIndex = 2;
             this.mCommentBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.mCommentBox_KeyDown);
             this.mCommentBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.mCommentBox_KeyPress);
@@ -1023,10 +1011,22 @@
             this.mXSplitTimer.Interval = 1000;
             this.mXSplitTimer.Tick += new System.EventHandler(this.mXSplitTimer_Tick);
             // 
+            // mVisitorBtn
+            // 
+            this.mVisitorBtn.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.mVisitorBtn.CheckOnClick = true;
+            this.mVisitorBtn.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.mVisitorBtn.Image = ((System.Drawing.Image)(resources.GetObject("mVisitorBtn.Image")));
+            this.mVisitorBtn.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.mVisitorBtn.Name = "mVisitorBtn";
+            this.mVisitorBtn.Size = new System.Drawing.Size(84, 22);
+            this.mVisitorBtn.Text = "来場者数読上";
+            this.mVisitorBtn.CheckStateChanged += new System.EventHandler(this.mVisitorBtn_CheckStateChanged);
+            // 
             // Form1
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.ClientSize = new System.Drawing.Size(962, 436);
+            this.ClientSize = new System.Drawing.Size(780, 283);
             this.Controls.Add(this.tableLayoutPanel1);
             this.Controls.Add(this.mStatusStrip);
             this.Controls.Add(this.mToolStrip);
@@ -1069,7 +1069,6 @@
         private System.Windows.Forms.ToolStripStatusLabel mTotalCnt;
         private System.Windows.Forms.ToolStripStatusLabel mActiveCnt;
         private System.Windows.Forms.ToolStripStatusLabel mLogLabel;
-        private System.Windows.Forms.ToolStripButton mVisitorBtn;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.ToolStripDropDownButton toolStripDropDownButton1;
@@ -1145,6 +1144,7 @@
         private System.Windows.Forms.CheckBox mUseHQ;
         private System.Windows.Forms.Button btnBouyomiClear;
         private System.Windows.Forms.ToolStripMenuItem NGUserStripMenuItem;
+        private System.Windows.Forms.ToolStripButton mVisitorBtn;
     }
 }
 

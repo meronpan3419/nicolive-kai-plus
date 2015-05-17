@@ -181,7 +181,13 @@ namespace NicoLive
 
                 foreach (System.Diagnostics.Process p in ps)
                 {
-                    p.Kill();
+                    try
+                    {
+                        p.Kill();
+                    }
+                    catch(Exception e) {
+                        Utils.WriteLog("FMLE() " + e.Message);
+                    }
                 }
 
                 ps = Process.GetProcessesByName("FlashMediaLiveEncoder");

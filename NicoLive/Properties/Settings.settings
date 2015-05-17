@@ -342,7 +342,7 @@
       <Value Profile="(Default)">&gt;&gt;@nameさんいらっしゃい！</Value>
     </Setting>
     <Setting Name="geocode_address_url" Type="System.String" Scope="User">
-      <Value Profile="(Default)">http://geocode.didit.jp/reverse/</Value>
+      <Value Profile="(Default)">http://nicolive_wakusu.b72.in/getAddressNicolive.php</Value>
     </Setting>
     <Setting Name="welcome_message184" Type="System.String" Scope="User">
       <Value Profile="(Default)">&gt;&gt;@no @name(184: @id)さんいらっしゃい！</Value>

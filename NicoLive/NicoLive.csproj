@@ -5,9 +5,11 @@
     <OutputPath>bin\x86\Debug\</OutputPath>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <DefineConstants>TRACE;DEBUG</DefineConstants>
-    <Optimize>true</Optimize>
+    <Optimize>false</Optimize>
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>
+    </DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -34,6 +36,10 @@
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
     <OldToolsVersion>3.5</OldToolsVersion>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+    <StartupObject>NicoLive.Program</StartupObject>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -48,15 +54,11 @@
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <TargetFrameworkProfile>
-    </TargetFrameworkProfile>
-    <StartupObject>NicoLive.Program</StartupObject>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
+    <Optimize>true</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -73,28 +75,26 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CookieGetterSharp">
-      <HintPath>CookieGetterSharp.dll</HintPath>
+    <Reference Include="AxInterop.ShockwaveFlashObjects, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>.\AxInterop.ShockwaveFlashObjects.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="Interop.ShockwaveFlashObjects, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>bin\x86\Debug\Interop.ShockwaveFlashObjects.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Core">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.SQLite, Version=1.0.66.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>.\System.Data.SQLite.dll</HintPath>
     </Reference>
-    <Reference Include="System.Data.SQLite, Version=1.0.66.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=x86" />
     <Reference Include="System.Management" />
     <Reference Include="System.Web" />
-    <Reference Include="System.Xml.Linq">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="System.Data.DataSetExtensions">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="System.Data" />
-    <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
@@ -103,12 +103,6 @@
     </Reference>
     <Reference Include="Hammock.ClientProfile">
       <HintPath>Hammock.ClientProfile.dll</HintPath>
-    </Reference>
-    <Reference Include="AxInterop.ShockwaveFlashObjects">
-      <HintPath>AxInterop.ShockwaveFlashObjects.dll</HintPath>
-    </Reference>
-    <Reference Include="Interop.ShockwaveFlashObjects">
-      <HintPath>..\..\..\..\デスクトップ\nicolive_dev\nicolive-kai-p11фti\Interop.ShockwaveFlashObjects.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -360,33 +354,33 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="app.ico" />
-    <None Include="Resources\err.bmp" />
-    <None Include="Resources\bro_ok2.bmp" />
-    <Content Include="Resources\extend_fail.bmp" />
-    <None Include="Resources\FMEng.bmp" />
-    <None Include="Resources\FMEstart.bmp" />
-    <None Include="Resources\FMEstop.bmp" />
-    <None Include="Resources\nico.bmp" />
-    <None Include="Resources\haishin.bmp" />
-    <None Include="Resources\Image1.bmp" />
-    <None Include="Resources\NLEkihon2.bmp" />
-    <None Include="Resources\NLEkihon.bmp" />
-    <None Include="Resources\NLEstart.bmp" />
-    <None Include="Resources\NLEstop.bmp" />
-    <Content Include="Resources\stop_fme.bmp" />
-    <None Include="Resources\fme.bmp" />
-    <None Include="Resources\start_fme.bmp" />
-    <None Include="Resources\open_chat.bmp" />
-    <None Include="Resources\pre_chat.bmp" />
-    <None Include="Resources\5002.bmp" />
-    <None Include="Resources\500.bmp" />
-    <None Include="Resources\ok3.bmp" />
-    <None Include="Resources\free2.bmp" />
-    <None Include="Resources\yes2.bmp" />
-    <None Include="Resources\bro_ok.bmp" />
-    <None Include="Resources\start.bmp" />
-    <None Include="Resources\encho.bmp" />
-    <None Include="Resources\ending.bmp" />
+    <None Include="forms\Resources\err.bmp" />
+    <None Include="forms\Resources\bro_ok2.bmp" />
+    <Content Include="forms\Resources\extend_fail.bmp" />
+    <None Include="forms\Resources\FMEng.bmp" />
+    <None Include="forms\Resources\FMEstart.bmp" />
+    <None Include="forms\Resources\FMEstop.bmp" />
+    <None Include="forms\Resources\nico.bmp" />
+    <None Include="forms\Resources\haishin.bmp" />
+    <None Include="forms\Resources\Image1.bmp" />
+    <None Include="forms\Resources\NLEkihon2.bmp" />
+    <None Include="forms\Resources\NLEkihon.bmp" />
+    <None Include="forms\Resources\NLEstart.bmp" />
+    <None Include="forms\Resources\NLEstop.bmp" />
+    <Content Include="forms\Resources\stop_fme.bmp" />
+    <None Include="forms\Resources\fme.bmp" />
+    <None Include="forms\Resources\start_fme.bmp" />
+    <None Include="forms\Resources\open_chat.bmp" />
+    <None Include="forms\Resources\pre_chat.bmp" />
+    <None Include="forms\Resources\5002.bmp" />
+    <None Include="forms\Resources\500.bmp" />
+    <None Include="forms\Resources\ok3.bmp" />
+    <None Include="forms\Resources\free2.bmp" />
+    <None Include="forms\Resources\yes2.bmp" />
+    <None Include="forms\Resources\bro_ok.bmp" />
+    <None Include="forms\Resources\start.bmp" />
+    <None Include="forms\Resources\encho.bmp" />
+    <None Include="forms\Resources\ending.bmp" />
     <None Include="lib\Twitter\.svn\entries" />
     <None Include="lib\Twitter\.svn\text-base\oAuth.cs.svn-base" />
     <None Include="lib\Twitter\.svn\text-base\oAuthTwitter.cs.svn-base" />

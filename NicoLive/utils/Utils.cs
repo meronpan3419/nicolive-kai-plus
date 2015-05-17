@@ -646,34 +646,36 @@ namespace NicoLive
 
             if (info.EndTime != 0)
             {
-                if (info.StartTime > info.Time)
-                {
-                    sub = (int)(info.Time - info.StartTime);
-                }
-                else
-                {
-                    sub = (int)(info.EndTime - info.Time);  // 残り時間
-                    if (info.EndTime < info.Time)
-                        sub = 0;
-                }
+                //if (info.StartTime > info.Time)
+                //{
+                //    //sub = (int)(info.Time - info.StartTime);
+                //    sub = (int)(info.EndTime - Utils.GetUnixTime(DateTime.Now)) + 60 * 5;
+                //}
+                //else
+                //{
+                    sub = (int)(info.EndTime - Utils.GetUnixTime(DateTime.Now));  // 残り時間
 
-                UInt32 passed_sec = (Utils.GetUnixTime(DateTime.Now) - info.UnixTime);
-                if (info.StartTime > info.Time + passed_sec)
-                {
-                    sub = (int)(info.Time - info.StartTime + passed_sec);
-                }
-                else
-                {
-                    sub = (int)(info.EndTime - info.Time - passed_sec);  // 残り時間
-                    //if (info.EndTime < info.Time + passed_sec)
-                    //    sub = 0;
-                }
+                //}
+
+                //UInt32 passed_sec = (Utils.GetUnixTime(DateTime.Now) - info.UnixTime);
+                //if (info.StartTime > info.Time + passed_sec)
+                //{
+                //    sub = (int)(info.Time - info.StartTime + passed_sec);
+                //}
+                //else
+                //{
+                //    sub = (int)(info.EndTime - info.Time - passed_sec);  // 残り時間
+                //    //if (info.EndTime < info.Time + passed_sec)
+                //    //    sub = 0;
+                //}
             }
             else
             {
-                UInt32 passed_sec = (Utils.GetUnixTime(DateTime.Now) - info.UnixTime);
-                sub = (int)(info.Time + passed_sec - info.StartTime);
+                //UInt32 passed_sec = (Utils.GetUnixTime(DateTime.Now) - info.UnixTime);
+                //sub = (int)(info.Time + passed_sec - info.StartTime);
+                sub = (int)(info.Time  - info.StartTime);
             }
+            Utils.WriteLog("CalcRemainingTime(): " + sub);
             return sub;
         }
 

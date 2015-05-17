@@ -113,12 +113,12 @@ namespace NicoLive
 
 
 
-            UInt32 time_sec = mLiveInfo.Time;
-            UInt32 btime_sec = mLiveInfo.StartTime;
+
+            int remaining_sec = Utils.CalcRemainingTime();
 
             //30分経過で自動継枠取り
             if (mUseHQ.Checked &&
-                (time_sec - btime_sec > 30 * 60) &&
+                remaining_sec < 0 &&
                 !mDoingGetNextWaku &&
                  mContWaku.Checked)
             {
@@ -139,52 +139,41 @@ namespace NicoLive
             // 経過時間取得
             if (Properties.Settings.Default.talk_3min)
             {
-                if (btime_sec < time_sec)
+
+                // 残り3分通事
+                if (!mIsExtend)
                 {
-                    UInt32 lim_sec = 30 * 60;        // 30分
-                    UInt32 sub_sec = time_sec - btime_sec;  // 経過時間
 
-                    //
-                    if (sub_sec > lim_sec)
+                    int rest_min = Properties.Settings.Default.rest_time;
+                    string msg = String.Format(mMsg.GetMessage("のこり{0}ふんくらいです。"), rest_min);
+                    if (!this.mTalkRestMin && remaining_sec < rest_min * 60)
                     {
-                        UInt32 mod = sub_sec / lim_sec;
-                        sub_sec = sub_sec - mod * lim_sec;
-                    }
+                        this.mTalkRestMin = true;
 
-                    // 残り3分通事
-                    if (!mIsExtend)
-                    {
-
-                        int rest_min = Properties.Settings.Default.rest_time;
-                        string msg = String.Format(mMsg.GetMessage("のこり{0}ふんくらいです。"), rest_min);
-                        if (!this.mTalkLimit && sub_sec > (lim_sec - rest_min * 60))
+                        // 連続枠取り通知
+                        if (Properties.Settings.Default.cont_waku_notice)
                         {
-                            this.mTalkLimit = true;
-
-                            // 連続枠取り通知
-                            if (Properties.Settings.Default.cont_waku_notice)
+                            if (mContWaku.Checked)
                             {
-                                if (mContWaku.Checked)
-                                {
-                                    msg = msg + "連続枠取が設定されています";
-                                }
-                                else
-                                {
-                                    msg = msg + "連続枠取が設定されていません";
-                                }
+                                msg = msg + "連続枠取が設定されています";
                             }
-                            this.mBouyomi.Talk(msg);
+                            else
+                            {
+                                msg = msg + "連続枠取が設定されていません";
+                            }
                         }
+                        this.mBouyomi.Talk(msg);
+                    }
 
-                    }
-                    if (sub_sec < 1 * 60)
-                    {
-                        this.mTalkLimit = false;
-                    }
-                    Utils.WriteLog("Time: " + sub_sec.ToString());
-                    Utils.WriteLog("StartTime: " + mLiveInfo.StartTime);
-                    Utils.WriteLog("EndTime: " + mLiveInfo.EndTime);
                 }
+                if (remaining_sec < 1 * 60)
+                {
+                    this.mTalkRestMin = false;
+                }
+
+                Utils.WriteLog("StartTime: " + mLiveInfo.StartTime);
+                Utils.WriteLog("EndTime: " + mLiveInfo.EndTime);
+
             }
 
             // 自分の配信かどうか
@@ -366,7 +355,7 @@ namespace NicoLive
             Thread th = new Thread(delegate()
             {
                 string url = "http://nicolive-wakusu.b72.in/getwakusu.php?ver=" + Program.VERSION_KAI_PLUS;
-                
+
                 string xml = Utils.HTTP_GET(url);
 
                 Match match;

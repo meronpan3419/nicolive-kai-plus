@@ -23,7 +23,7 @@ namespace NicoLive
         private readonly string MY_URL = "http://live.nicovideo.jp/my";
         private readonly string EDIT_URL = "http://live.nicovideo.jp/editstream";
         private readonly string WATCH_URL = "http://live.nicovideo.jp/watch";
-        private readonly string LOGIN_URL = "https://secure.nicovideo.jp/secure/login_form";
+        private readonly string LOGIN_URL = "https://account.nicovideo.jp/login";
 
         private string mReuseID = "";
 
@@ -558,8 +558,8 @@ namespace NicoLive
             if (uri.StartsWith(LOGIN_URL))
             {
                 // ＩＤとパスワード入力
-                SetElementValueByID("mail", Properties.Settings.Default.user_id);
-                SetElementValueByID("password", Properties.Settings.Default.password);
+                SetElementValueByID("input__mailtel", Properties.Settings.Default.user_id);
+                SetElementValueByID("input__password", Properties.Settings.Default.password);
                 // ログインボタンを押す
                 //InvokeButtonById("submit");
                 HtmlElement login_botton= FindLoginSubmitBotton();
