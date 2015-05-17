@@ -136,11 +136,11 @@ namespace NicoLive
             }
 
 
-            // 経過時間取得
+            // 残り時間を言う
             if (Properties.Settings.Default.talk_3min)
             {
 
-                // 残り3分通事
+                // 延長してないときだけ
                 if (!mIsExtend)
                 {
 
@@ -166,7 +166,7 @@ namespace NicoLive
                     }
 
                 }
-                if (remaining_sec < 1 * 60)
+                if (remaining_sec > 25 * 60)
                 {
                     this.mTalkRestMin = false;
                 }
