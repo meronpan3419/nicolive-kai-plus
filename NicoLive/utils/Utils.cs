@@ -675,7 +675,7 @@ namespace NicoLive
                 //sub = (int)(info.Time + passed_sec - info.StartTime);
                 sub = (int)(info.Time  - info.StartTime);
             }
-            Utils.WriteLog("CalcRemainingTime(): " + sub);
+            //Utils.WriteLog("CalcRemainingTime(): " + sub);
             return sub;
         }
 
