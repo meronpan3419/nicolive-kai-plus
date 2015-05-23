@@ -108,15 +108,35 @@ namespace NicoLive
             //    //return;
             //}
 
+            try_cnt = 1;
 
-            SetLabelFromThread("放送履歴取得中", Color.Black, false);
-            Utils.WriteLog("WakuDlg: mWorker_DoWork(): 放送履歴取得中");
+        GET_RECENT_LIVE:
+
+            SetLabelFromThread("放送履歴取得中: " + try_cnt, Color.Black, false);
+            Utils.WriteLog("WakuDlg: mWorker_DoWork(): 放送履歴取得中: " + try_cnt);
+
+            lv = mNico.GetRecentLive(Properties.Settings.Default.user_id,
+                                    Properties.Settings.Default.password);
 
             if (lv.Length <= 2)
-                lv = mNico.GetRecentLive(Properties.Settings.Default.user_id,
-                                Properties.Settings.Default.password);
+            {
+                if (mAbort) return;
 
-            SetLabelFromThread("前枠番組情報の取得中", Color.Black, false);
+                try_cnt++;
+
+                if (try_cnt <= 10)
+                {
+                                        
+                    goto GET_RECENT_LIVE;
+                }
+                SetLabelFromThread("ERR:放送履歴取得に失敗", Color.Red, false);
+                Utils.WriteLog("WakuDlg: mWorker_DoWork(): ERR:放送履歴取得に失敗");
+                return;
+            }
+
+            try_cnt = 1;
+
+            SetLabelFromThread("前枠番組情報の取得中: " + try_cnt, Color.Black, false);
             Utils.WriteLog("WakuDlg: mWorker_DoWork(): 前枠番組情報の取得中");
 
             // Utils.WriteLog(mLv);
@@ -125,14 +145,16 @@ namespace NicoLive
             Dictionary<string, string> comu = new Dictionary<string, string>();
             Dictionary<string, string> tag = new Dictionary<string, string>();
             Dictionary<string, string> taglock = new Dictionary<string, string>();
+
         GET_OLD_INFO:
             if (!mNico.GetOldLiveInfo(lv, ref arr, ref comu, ref tag, ref taglock))
             {
                 if (mAbort) return;
 
                 try_cnt++;
-                if (try_cnt < 10)
+                if (try_cnt <= 10)
                 {
+                    SetLabelFromThread("前枠番組情報の取得中: " + try_cnt, Color.Black, false);
                     Utils.WriteLog("WakuDlg: mWorker_DoWork(): 前枠番組情報の取得中: " + try_cnt);
                     Thread.Sleep(100);
                     goto GET_OLD_INFO;
@@ -457,7 +479,7 @@ namespace NicoLive
                 SetLabelFromThread("ERR:予期せぬエラーです。", Color.Red, false);
                 Utils.WriteLog("WakuDlg: mWorker_DoWork(): WakuErr.ERR_UNKOWN");
             }
-            END:
+        END:
             arr = null;
         }
 

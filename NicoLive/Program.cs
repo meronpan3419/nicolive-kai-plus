@@ -19,7 +19,7 @@ namespace NicoLive
 {
     static class Program
     {
-        public static string VERSION_KAI_PLUS = "kai_p12_20150412";
+        public static string VERSION_KAI_PLUS = "kai_p12_20150517";
 
 
         /// <summary>

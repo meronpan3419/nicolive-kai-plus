@@ -15,7 +15,7 @@ namespace NicoLive
         private bool mLastHQ = false;
 
         //-------------------------------------------------------------------------
-        // タイマー
+        // タイマー 200ms毎
         //-------------------------------------------------------------------------
         private void UITimer_Tick(object sender, EventArgs e)
         {

@@ -313,7 +313,29 @@ namespace NicoLive
         //-------------------------------------------------------------------------
         public bool Login(string username, string password)
         {
+                        
+            this.mCookieLogin = new CookieContainer();
+            string user_session = "";
 
+            string ret = "ログインエラー";
+
+            if (LoginTest(Properties.Settings.Default.user_session))
+            {
+                Utils.WriteLog("Nico: Login() LoginTest() local user_session OK");
+
+                Cookie c = new Cookie("user_session", Properties.Settings.Default.user_session, "/", ".nicovideo.jp");
+                c.Expires = DateTime.Now.AddDays(30);
+                this.mCookieLogin.Add(c);
+
+                user_session = Properties.Settings.Default.user_session;
+
+                goto login_success;
+
+            }
+
+            Utils.WriteLog("Nico: Login() login with user_session failed");
+            Utils.WriteLog("Nico: Login() Login by ID-PASS");
+            
             // hashtable to hold the arguments of POST request.
             Dictionary<string, string> post_arg = new Dictionary<string, string>(3);
 
@@ -325,121 +347,23 @@ namespace NicoLive
             mThread = "";
             mBaseTime = 0;
 
-            // create cookie-container
-            this.mCookieLogin = new CookieContainer();
-
-            string ret = "ログインエラー";
-
-            if (LoginTest(Properties.Settings.Default.user_session))
-            {
-                Utils.WriteLog("Nico: Login() LoginTest() local user_session OK");
-                Cookie c = new Cookie("user_session", Properties.Settings.Default.user_session, "/", ".nicovideo.jp");
-                c.Expires = DateTime.Now.AddDays(30);
-                this.mCookieLogin.Add(c);
-                // IEのCookieを書き換える
-
-                OverrideIECookie(addSessionidExpires(Properties.Settings.Default.user_session));
-
-                mIsLogin = true;
-                return true;
-
-            }
-            else
-            {
-                Utils.WriteLog("Nico: Login() local user_session failed");
-            }
-
-
-
-            // ブラウザのクッキーを用いてログインを試みる
-            //if (Properties.Settings.Default.UseBrowserCookie)
-            //{
-
-            //    Utils.WriteLog("Nico: Login() Login by Cookie");
-
-            //    ICookieGetter[] cookieGetters = CookieGetter.CreateInstances(true);
-
-            //    ICookieGetter s = null;
-            //    foreach (ICookieGetter es in cookieGetters)
-            //    {
-            //        if (es.ToString().Equals(Properties.Settings.Default.Browser))
-            //        {
-            //            s = es;
-            //            break;
-            //        }
-            //    }
-            //    if (s != null)
-            //    {
-            //        Utils.WriteLog("Nico: Login() has Cookie");
-            //        try
-            //        {
-            //            //System.Net.Cookie cookie = s.GetCookie(new Uri("http://live.nicovideo.jp/"), "user_session");
-
-            //            System.Net.CookieCollection collection = s.GetCookieCollection(new Uri("http://live.nicovideo.jp/"));
-
-            //            Utils.WriteLog("Nico: Login() user_session: " + collection["user_session"].Value);
-
-            //            if (collection["user_session"] != null)
-            //            {
-            //                this.mCookieLogin.Add(new Cookie("user_session", collection["user_session"].Value, "/", ".nicovideo.jp"));
-            //                if (LoginTest(collection["user_session"].Value))
-            //                {
-            //                    Utils.WriteLog("Nico: Login() LoginTest() OK");
-
-            //                    // IEのCookieを書き換える
-            //                    OverrideIECookie(addSessionidExpires(collection["user_session"].Value));
-            //                    Properties.Settings.Default.user_session = collection["user_session"].Value;
-            //                    mIsLogin = true;
-            //                    return true;
-
-            //                }
-            //                else
-            //                {
-            //                    Utils.WriteLog("Nico: Login() has Cookie, user_session null");
-            //                }
-            //            }
-            //            else
-            //            {
-            //                Utils.WriteLog("Nico: Login() LoginTest() NG");
-            //            }
-
-            //        }
-            //        catch (Exception ex)
-            //        {
-            //            //System.Windows.Forms.MessageBox.Show(ex.Message);
-            //            Utils.WriteLog("Nico: Login() has Cookie: " + ex.Message);
-            //        }
-            //    }
-            //    else
-            //    {
-            //        Utils.WriteLog("Nico: Login() not has Cookie");
-            //    }
-            //}
-
-            Utils.WriteLog("Nico: Login() Login by ID-PASS");
-
             // send POST request
             ret = HttpPost(URI_LOGIN, post_arg, ref this.mCookieLogin /*, Properties.Settings.Default.nicolive_login_user_agent*/);
             if (ret == null)
             {
-                Utils.WriteLog("Nico: Login() Login by ID-PASS, ret == null");
+                Utils.WriteLog("Nico: Login() Login with ID-PASS, ret == null");
                 this.mCookieLogin = null;
                 mIsLogin = false;
                 return false;
             }
 
-
-            // check if result contains "ログインエラー"
             if (ret.IndexOf("ログインエラー") != -1)
             {
-                Utils.WriteLog("Nico: Login() Login by ID-PASS, ログインエラー");
+                Utils.WriteLog("Nico: Login() Login with ID-PASS, ログインエラー");
                 this.mCookieLogin = null;
                 mIsLogin = false;
                 return false;
-            }
-
-            string user_session = "";
-            string user_session2 = "";
+            }          
 
             //CookieからセッションＩＤ取得
             Uri uri = new Uri(URI_LOGIN);
@@ -447,22 +371,27 @@ namespace NicoLive
             if (!(cc["user_session"] == null))
             {
                 user_session = cc["user_session"].ToString();
-                user_session2 = addSessionidExpires(user_session);
             }
             if (user_session.Equals(""))
             {
-                Utils.WriteLog("Nico: Login()  Login by ID-PASS, user_session is null ");
+                Utils.WriteLog("Nico: Login()  Login with ID-PASS, user_session is null ");
+                this.mCookieLogin = null;
                 mIsLogin = false;
                 return false;
             }
 
-            // IEのCookieを書き換える
-            OverrideIECookie(user_session2);
+            Utils.WriteLog("Nico: Login()  Login by ID-PASS, success");
+            
+
+        login_success:
+                        
+            // IEのクッキーにuser_sessionを上書き
+            OverrideIECookie(addSessionidExpires(user_session));
+
             Properties.Settings.Default.user_session = user_session.Replace("user_session=", "");
             Properties.Settings.Default.Save();
 
             // ログイン済みフラグを立てる
-            Utils.WriteLog("Nico: Login()  Login by ID-PASS, piiiiii");
             mIsLogin = true;
             return true;
         }
@@ -522,11 +451,6 @@ namespace NicoLive
             { }
             return false;
 
-        }
-
-        private void IEIsProtectedModeProcess()
-        {
-            throw new NotImplementedException();
         }
 
         //-------------------------------------------------------------------------
@@ -1392,6 +1316,7 @@ namespace NicoLive
         public bool GetOldLiveInfo(string iLv, ref Dictionary<string, string> iInfo, ref Dictionary<string, string> iCom, ref Dictionary<string, string> iTag, ref Dictionary<string, string> iTaglock)
         {
             if (this.mCookieLogin == null) return false;
+            if (iLv == "") return false;
 
             string lv = iLv.Replace("lv", "");
             string url = "http://live.nicovideo.jp/editstream?reuseid=" + lv;
