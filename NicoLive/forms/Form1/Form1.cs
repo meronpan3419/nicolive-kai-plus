@@ -290,7 +290,7 @@ namespace NicoLive
             mTalkRestMin = false;
             mDoingGetNextWaku = false;
             mNextGC = 0;
-            if(mNico != null)
+            if (mNico != null)
                 mNico.Comment = "";
             mTargetVisitorCnt = 10;
 
@@ -324,7 +324,7 @@ namespace NicoLive
                 mLogger = null;
             }
 
-            
+
             this.Invoke((Action)delegate()
             {
                 if (this.mLiveID.Text.Length == 0)
@@ -638,44 +638,6 @@ namespace NicoLive
                 bm.Clear();
             }
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     }
 }

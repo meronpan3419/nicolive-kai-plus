@@ -42,20 +42,18 @@
             this.ViewerMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.LiveConsoleStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.NGUserStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.mAutoExtendBtn = new System.Windows.Forms.ToolStripButton();
+            this.mVisitorBtn = new System.Windows.Forms.ToolStripButton();
+            this.mImakokoBtn = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.SettingMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
             this.AboutpMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
             this.mBouyomiBtn = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.mCaptchaSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.mContWaku = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
-            this.mAutoExtendBtn = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.mImakokoBtn = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.mCopyBtn = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.mWakutoriBtn = new System.Windows.Forms.ToolStripButton();
@@ -123,7 +121,6 @@
             this.mGatherUserIDWorker = new System.ComponentModel.BackgroundWorker();
             this.mXSplitTimer = new System.Windows.Forms.Timer(this.components);
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.mVisitorBtn = new System.Windows.Forms.ToolStripButton();
             this.mToolStrip.SuspendLayout();
             this.mStatusStrip.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
@@ -143,15 +140,9 @@
             this.toolStripDropDownButton1,
             this.toolStripSeparator8,
             this.mBouyomiBtn,
-            this.toolStripSeparator1,
-            this.mVisitorBtn,
             this.mCaptchaSeparator,
             this.mContWaku,
             this.toolStripSeparator7,
-            this.mAutoExtendBtn,
-            this.toolStripSeparator2,
-            this.mImakokoBtn,
-            this.toolStripSeparator3,
             this.mCopyBtn,
             this.toolStripSeparator4,
             this.mWakutoriBtn,
@@ -193,6 +184,9 @@
             this.ViewerMenuItem,
             this.LiveConsoleStripMenuItem,
             this.NGUserStripMenuItem,
+            this.mAutoExtendBtn,
+            this.mVisitorBtn,
+            this.mImakokoBtn,
             this.toolStripSeparator5,
             this.SettingMenuItem,
             this.toolStripMenuItem1,
@@ -223,6 +217,42 @@
             this.NGUserStripMenuItem.Size = new System.Drawing.Size(221, 22);
             this.NGUserStripMenuItem.Text = "NGユーザー";
             this.NGUserStripMenuItem.Click += new System.EventHandler(this.NGUserStripMenuItem_Click);
+            // 
+            // mAutoExtendBtn
+            // 
+            this.mAutoExtendBtn.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.mAutoExtendBtn.CheckOnClick = true;
+            this.mAutoExtendBtn.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.mAutoExtendBtn.Image = ((System.Drawing.Image)(resources.GetObject("mAutoExtendBtn.Image")));
+            this.mAutoExtendBtn.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.mAutoExtendBtn.Name = "mAutoExtendBtn";
+            this.mAutoExtendBtn.Size = new System.Drawing.Size(84, 22);
+            this.mAutoExtendBtn.Text = "自動無料延長";
+            this.mAutoExtendBtn.CheckStateChanged += new System.EventHandler(this.mAutoExtendBtn_CheckStateChanged);
+            this.mAutoExtendBtn.Click += new System.EventHandler(this.AutoExtendBtn_Click);
+            // 
+            // mVisitorBtn
+            // 
+            this.mVisitorBtn.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.mVisitorBtn.CheckOnClick = true;
+            this.mVisitorBtn.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.mVisitorBtn.Image = ((System.Drawing.Image)(resources.GetObject("mVisitorBtn.Image")));
+            this.mVisitorBtn.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.mVisitorBtn.Name = "mVisitorBtn";
+            this.mVisitorBtn.Size = new System.Drawing.Size(84, 22);
+            this.mVisitorBtn.Text = "来場者数読上";
+            this.mVisitorBtn.CheckStateChanged += new System.EventHandler(this.mVisitorBtn_CheckStateChanged);
+            // 
+            // mImakokoBtn
+            // 
+            this.mImakokoBtn.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.mImakokoBtn.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.mImakokoBtn.Image = ((System.Drawing.Image)(resources.GetObject("mImakokoBtn.Image")));
+            this.mImakokoBtn.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.mImakokoBtn.Name = "mImakokoBtn";
+            this.mImakokoBtn.Size = new System.Drawing.Size(36, 22);
+            this.mImakokoBtn.Text = "今ｺｺ";
+            this.mImakokoBtn.Click += new System.EventHandler(this.ImakokoBtn_Click);
             // 
             // toolStripSeparator5
             // 
@@ -270,12 +300,6 @@
             this.mBouyomiBtn.CheckStateChanged += new System.EventHandler(this.mBouyomiBtn_CheckStateChanged);
             this.mBouyomiBtn.Click += new System.EventHandler(this.BouyomiBtn_Click);
             // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
-            // 
             // mCaptchaSeparator
             // 
             this.mCaptchaSeparator.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
@@ -299,42 +323,6 @@
             this.toolStripSeparator7.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
             this.toolStripSeparator7.Name = "toolStripSeparator7";
             this.toolStripSeparator7.Size = new System.Drawing.Size(6, 25);
-            // 
-            // mAutoExtendBtn
-            // 
-            this.mAutoExtendBtn.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.mAutoExtendBtn.CheckOnClick = true;
-            this.mAutoExtendBtn.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.mAutoExtendBtn.Image = ((System.Drawing.Image)(resources.GetObject("mAutoExtendBtn.Image")));
-            this.mAutoExtendBtn.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.mAutoExtendBtn.Name = "mAutoExtendBtn";
-            this.mAutoExtendBtn.Size = new System.Drawing.Size(84, 22);
-            this.mAutoExtendBtn.Text = "自動無料延長";
-            this.mAutoExtendBtn.CheckStateChanged += new System.EventHandler(this.mAutoExtendBtn_CheckStateChanged);
-            this.mAutoExtendBtn.Click += new System.EventHandler(this.AutoExtendBtn_Click);
-            // 
-            // toolStripSeparator2
-            // 
-            this.toolStripSeparator2.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
-            // 
-            // mImakokoBtn
-            // 
-            this.mImakokoBtn.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.mImakokoBtn.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.mImakokoBtn.Image = ((System.Drawing.Image)(resources.GetObject("mImakokoBtn.Image")));
-            this.mImakokoBtn.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.mImakokoBtn.Name = "mImakokoBtn";
-            this.mImakokoBtn.Size = new System.Drawing.Size(36, 22);
-            this.mImakokoBtn.Text = "今ｺｺ";
-            this.mImakokoBtn.Click += new System.EventHandler(this.ImakokoBtn_Click);
-            // 
-            // toolStripSeparator3
-            // 
-            this.toolStripSeparator3.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 25);
             // 
             // mCopyBtn
             // 
@@ -715,11 +703,11 @@
             // 
             // btnBouyomiClear
             // 
-            this.btnBouyomiClear.Location = new System.Drawing.Point(379, 13);
+            this.btnBouyomiClear.Location = new System.Drawing.Point(334, 13);
             this.btnBouyomiClear.Name = "btnBouyomiClear";
-            this.btnBouyomiClear.Size = new System.Drawing.Size(76, 27);
+            this.btnBouyomiClear.Size = new System.Drawing.Size(65, 27);
             this.btnBouyomiClear.TabIndex = 23;
-            this.btnBouyomiClear.Text = "棒読みクリア";
+            this.btnBouyomiClear.Text = "棒読クリア";
             this.btnBouyomiClear.UseVisualStyleBackColor = true;
             this.btnBouyomiClear.Click += new System.EventHandler(this.btnBouyomiClear_Click);
             // 
@@ -872,9 +860,9 @@
             // 
             this.mDisconnectBtn.Location = new System.Drawing.Point(290, 13);
             this.mDisconnectBtn.Name = "mDisconnectBtn";
-            this.mDisconnectBtn.Size = new System.Drawing.Size(76, 27);
+            this.mDisconnectBtn.Size = new System.Drawing.Size(38, 27);
             this.mDisconnectBtn.TabIndex = 17;
-            this.mDisconnectBtn.Text = "配信終了";
+            this.mDisconnectBtn.Text = "終了";
             this.mDisconnectBtn.UseVisualStyleBackColor = true;
             this.mDisconnectBtn.Click += new System.EventHandler(this.mDisconnectBtn_Click);
             // 
@@ -1011,18 +999,6 @@
             this.mXSplitTimer.Interval = 1000;
             this.mXSplitTimer.Tick += new System.EventHandler(this.mXSplitTimer_Tick);
             // 
-            // mVisitorBtn
-            // 
-            this.mVisitorBtn.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.mVisitorBtn.CheckOnClick = true;
-            this.mVisitorBtn.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.mVisitorBtn.Image = ((System.Drawing.Image)(resources.GetObject("mVisitorBtn.Image")));
-            this.mVisitorBtn.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.mVisitorBtn.Name = "mVisitorBtn";
-            this.mVisitorBtn.Size = new System.Drawing.Size(84, 22);
-            this.mVisitorBtn.Text = "来場者数読上";
-            this.mVisitorBtn.CheckStateChanged += new System.EventHandler(this.mVisitorBtn_CheckStateChanged);
-            // 
             // Form1
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -1063,25 +1039,20 @@
         private System.Windows.Forms.ToolStripButton mConnectBtn;
         private System.Windows.Forms.ToolStripStatusLabel mLoginLabel;
         private System.Windows.Forms.Timer mUITimer;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripButton mBouyomiBtn;
         private System.Windows.Forms.ToolStripStatusLabel mUniqCnt;
         private System.Windows.Forms.ToolStripStatusLabel mTotalCnt;
         private System.Windows.Forms.ToolStripStatusLabel mActiveCnt;
         private System.Windows.Forms.ToolStripStatusLabel mLogLabel;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.ToolStripDropDownButton toolStripDropDownButton1;
         private System.Windows.Forms.ToolStripMenuItem SettingMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem AboutpMenuItem;
         private System.Windows.Forms.ContextMenuStrip mCmtCxtMenu;
         private System.Windows.Forms.ToolStripMenuItem mCopyComment;
-        private System.Windows.Forms.ToolStripButton mImakokoBtn;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
         private System.Windows.Forms.ToolStripButton mWakutoriBtn;
         private System.ComponentModel.BackgroundWorker mUpdateInfoWorker;
-        private System.Windows.Forms.ToolStripButton mAutoExtendBtn;
         private System.ComponentModel.BackgroundWorker mAutoExtendWorker;
         private System.ComponentModel.BackgroundWorker mCommentWorker;
         private System.Windows.Forms.ToolStripMenuItem mRename;
@@ -1144,6 +1115,8 @@
         private System.Windows.Forms.CheckBox mUseHQ;
         private System.Windows.Forms.Button btnBouyomiClear;
         private System.Windows.Forms.ToolStripMenuItem NGUserStripMenuItem;
+        private System.Windows.Forms.ToolStripButton mAutoExtendBtn;
+        private System.Windows.Forms.ToolStripButton mImakokoBtn;
         private System.Windows.Forms.ToolStripButton mVisitorBtn;
     }
 }
